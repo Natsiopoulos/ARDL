@@ -1,0 +1,20 @@
+citHeader("To cite ARDL in publications use:")
+
+year <- sub("-.*", "", utils::packageDate('ARDL'))
+note <- paste("R package version", meta$Version)
+
+citEntry(entry = "PhdThesis",
+    title   = "{ARDL}: ARDL, ECM and Bounds-Test for Cointegration",
+    author  = personList(as.person("Kleanthis Natsiopoulos"),
+                as.person("Nickolaos Tzeremes")),
+    school  = "University of Thessaly, Department of Economics",
+    year    = year,
+    note    = note,
+    url     = "https://github.com/Natsiopoulos",
+
+  textVersion  =
+  paste0("Kleanthis Natsiopoulos and Nickolaos Tzeremes (", year,"). ",
+        "ARDL: ARDL, ECM and Bounds-Test for Cointegration. ",
+        note, ". ",
+        "University of Thessaly, Department of Economics. ",
+        "https://github.com/Natsiopoulos."))

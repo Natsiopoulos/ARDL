@@ -1,0 +1,35 @@
+Package: ARDL
+Type: Package
+Title: Autoregressive Distributed Lag Models, Error Correction Models and
+    Bounds-Test for Cointegration
+Description: Creates complex Autoregressive Distributed Lag models providing
+    just the order and automatically constructs the underlying unrestricted and
+    restricted ECM. It also performs the bounds-test for cointegration and
+    provides the multipliers and the cointegrating equation.
+Version: 0.1.0
+Authors@R: c(
+  person("Kleanthis", "Natsiopoulos", 
+  email = "klnatsio@gmail.com", role = c("aut", "cre", "dis"), 
+  comment = c(ORCID = "0000-0003-1180-2984")), 
+  person("Nickolaos", "Tzeremes", 
+  email = "bus9nt@econ.uth.gr", role = "ths",
+  comment = c(ORCID = "0000-0002-6938-3404")), 
+  person("University of Thessaly, Department of Economics", role = "dgg"))
+License: GPL-3 | file LICENSE
+URL: https://github.com/Natsiopoulos
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 3.2.0)
+Suggests: 
+    qpcR,
+    xts
+Imports: 
+    aod,
+    dplyr,
+    dynlm,
+    lmtest,
+    msm,
+    stringr,
+    zoo
+RoxygenNote: 7.1.0
