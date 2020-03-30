@@ -4,17 +4,17 @@ year <- sub("-.*", "", utils::packageDate('ARDL'))
 note <- paste("R package version", meta$Version)
 
 citEntry(entry = "PhdThesis",
-    title   = "{ARDL}: ARDL, ECM and Bounds-Test for Cointegration",
+    title   = "{ARDL}: Autoregressive Distributed Lag Models, Error Correction Models and Bounds-Test for Cointegration",
     author  = personList(as.person("Kleanthis Natsiopoulos"),
                 as.person("Nickolaos Tzeremes")),
     school  = "University of Thessaly, Department of Economics",
     year    = year,
     note    = note,
-    url     = "https://github.com/Natsiopoulos",
+    url     = "https://github.com/Natsiopoulos/ARDL",
 
   textVersion  =
   paste0("Kleanthis Natsiopoulos and Nickolaos Tzeremes (", year,"). ",
-        "ARDL: ARDL, ECM and Bounds-Test for Cointegration. ",
+        "ARDL: Autoregressive Distributed Lag Models, Error Correction Models and Bounds-Test for Cointegration. ",
         note, ". ",
         "University of Thessaly, Department of Economics. ",
-        "https://github.com/Natsiopoulos."))
+        "https://github.com/Natsiopoulos/ARDL."))

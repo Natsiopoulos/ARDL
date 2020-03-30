@@ -16,7 +16,7 @@ Authors@R: c(
   comment = c(ORCID = "0000-0002-6938-3404")), 
   person("University of Thessaly, Department of Economics", role = "dgg"))
 License: GPL-3 | file LICENSE
-URL: https://github.com/Natsiopoulos
+URL: https://github.com/Natsiopoulos/ARDL
 Encoding: UTF-8
 LazyData: true
 Depends: 

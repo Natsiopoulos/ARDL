@@ -4,7 +4,7 @@
 #'
 #' @keywords internal
 #' @docType package
-#' @name ARDL-package	
+#' @name ARDL-package
 #'
 #' @importFrom dplyr %>%
 #' @importFrom zoo merge.zoo
@@ -16,6 +16,9 @@ globalVariables(c("."))
 	local_version = paste("R package version", utils::packageVersion('ARDL'))
 	year <- sub("-.*", "", utils::packageDate('ARDL'))
 	packageStartupMessage('To cite ARDL in publications use:
-  \nKleanthis Natsiopoulos and Nickolaos Tzeremes (', year, '). ARDL: ARDL, ECM and Bounds-Test for
-  Cointegration. ', local_version,'. University of Thessaly, Department of Economics. https://github.com/Natsiopoulos.')
+  \nKleanthis Natsiopoulos and Nickolaos Tzeremes (',
+  year,
+  '). ARDL: Autoregressive Distributed Lag Models, Error Correction Models and Bounds-Test for Cointegration. ',
+  local_version,
+  '. University of Thessaly, Department of Economics. https://github.com/Natsiopoulos/ARDL.')
 }

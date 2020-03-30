@@ -16,7 +16,7 @@ Creates complex Autoregressive Distributed Lag models providing
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/Natsiopoulos}
+  \item \url{https://github.com/Natsiopoulos/ARDL}
 }
 
 }
