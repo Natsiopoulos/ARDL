@@ -126,7 +126,7 @@ den <- cbind.zoo(LRM = denmark[,"LRM"], ce)
 den <- xts(den)
 
 # make the plot
-den <- xts(den, legend.loc = "right")
+den <- xts(den)
 plot(den, legend.loc = "right")
 ```
 

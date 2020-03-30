@@ -14,7 +14,7 @@ Why `ARDL`?
 -----------
 
 -   Estimate complex ARDL models just providing the ARDL order
--   Estimate the conditional ECM just providing the underlying ARDL or the order
+-   Estimate the conditional ECM just providing the underlying ARDL model or the order
 -   Estimate the long-run multipliers
 -   Apply the bound test for no cointegration (*Pesaran et al., 2001*)
     -   Both the *F-test* and the *t-test* are available
@@ -252,7 +252,7 @@ den <- cbind.zoo(LRM = denmark[,"LRM"], ce)
 den <- xts(den)
 
 # make the plot
-den <- xts(den, legend.loc = "right")
+den <- xts(den)
 plot(den, legend.loc = "right")
 ```
 
