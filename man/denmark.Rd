@@ -4,7 +4,8 @@
 \name{denmark}
 \alias{denmark}
 \title{The Danish data on money income prices and interest rates}
-\format{A data frame with 55 rows and 5 variables. Time period from 1974:Q1
+\format{
+A data frame with 55 rows and 5 variables. Time period from 1974:Q1
 until 1987:Q3.
 \describe{
   \item{LRM}{logarithm of real money, M2}
@@ -12,7 +13,8 @@ until 1987:Q3.
   \item{LPY}{logarithm of price deflator}
   \item{IBO}{bond rate}
   \item{IDE}{bank deposit rate}
-}}
+}
+}
 \source{
 \url{http://web.math.ku.dk/~sjo/data/danish_data.html}
 }

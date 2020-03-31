@@ -1,3 +1,3 @@
-# ARDL v0.1.0  (29 Mar 2020)
+# ARDL v0.1.0  (31 Mar 2020)
 
 ## Released to CRAN
