@@ -7,7 +7,7 @@
 #' \cite{Pesaran et al. (2001)}.
 #'
 #' The \code{formula} should contain only variables that exist in the data
-#' privided through \code{data} plus some additional functions supported by
+#' provided through \code{data} plus some additional functions supported by
 #' \code{\link[dynlm]{dynlm}} (i.e., \code{trend()}).
 #'
 #' You can also specify fixed variables that are not supposed to be lagged (e.g.
@@ -168,7 +168,7 @@ parse_formula <- function(formula, colnames_data) {
 #'   variables (excluding the fixed ones). If the input is \code{order} or
 #'   \code{max_order} it should only contain positive integers or 0. If the
 #'   input is \code{fixed_order} it should also contain the value '-1'
-#'   indicating that a spesific order should not be fixed. An integer could be
+#'   indicating that a specific order should not be fixed. An integer could be
 #'   provided if all variables are of the same order (or all '-1' in the case of
 #'   \code{fixed_order}).
 #' @param order_name The name of the function argument that is passed into

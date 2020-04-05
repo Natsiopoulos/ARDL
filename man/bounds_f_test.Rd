@@ -65,7 +65,7 @@ A list with class "htest" containing the following components:
      bounds.}
   \item{\code{p.value}}{the p-value of the test.}
   \item{\code{tab}}{data.frame containing the statistic, the critical value
-     bounds, the alpha level of singificance and the p-value.}
+     bounds, the alpha level of significance and the p-value.}
 }
 \description{
 \code{bounds_f_test} performs the Wald bounds-test for no cointegration

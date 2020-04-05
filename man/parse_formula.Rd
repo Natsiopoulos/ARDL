@@ -27,7 +27,7 @@ The notation we follow (e.g., using y, x, z, w etc.) is according to
 \cite{Pesaran et al. (2001)}.
 
 The \code{formula} should contain only variables that exist in the data
-privided through \code{data} plus some additional functions supported by
+provided through \code{data} plus some additional functions supported by
 \code{\link[dynlm]{dynlm}} (i.e., \code{trend()}).
 
 You can also specify fixed variables that are not supposed to be lagged (e.g.

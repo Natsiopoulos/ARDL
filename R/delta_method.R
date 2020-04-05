@@ -7,7 +7,7 @@
 #' objects of \code{\link[base]{class}} 'ardl' and one for objects of
 #' \code{class} 'uecm'. This is because of the different (but equivalent)
 #' transformation functions that are used for each class/model ('ardl' and
-#' 'uecm') to estiamte the multipliers.
+#' 'uecm') to estimate the multipliers.
 #'
 #' @inheritParams multipliers
 #'

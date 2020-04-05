@@ -11,7 +11,7 @@ parse_order(orders, order_name, kz, restriction = FALSE)
 variables (excluding the fixed ones). If the input is \code{order} or
 \code{max_order} it should only contain positive integers or 0. If the
 input is \code{fixed_order} it should also contain the value '-1'
-indicating that a spesific order should not be fixed. An integer could be
+indicating that a specific order should not be fixed. An integer could be
 provided if all variables are of the same order (or all '-1' in the case of
 \code{fixed_order}).}
 

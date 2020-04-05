@@ -23,6 +23,7 @@ Depends:
     R (>= 3.2.0)
 Suggests: 
     qpcR,
+    sandwich,
     xts
 Imports: 
     aod,

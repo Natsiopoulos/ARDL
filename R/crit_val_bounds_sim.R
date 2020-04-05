@@ -15,7 +15,7 @@
 #' @return \code{f_test_custom} returns a list containing the F-statistic and
 #'   the numerator's degrees of freedom.
 #' @seealso \code{\link{vcov_custom}} \code{\link{f_bounds_sim}}
-#'   \code{\link{t_bounds_sim}}
+#'   \code{\link{t_bounds_sim}}independent
 #' @author Kleanthis Natsiopoulos, \email{klnatsio@@gmail.com}
 #' @keywords internal
 #'
@@ -65,7 +65,7 @@ vcov_custom <- function(indep_vars, model_res){
 #' @param case An integer from 1-5 specifying whether the 'intercept' and/or the
 #'   trend' have to participate in the long-run/cointegrating
 #'   relationship/equation (see section 'Cases' in \code{\link{bounds_f_test}}).
-#' @param k The number of indeoendent variables.
+#' @param k The number of independent variables.
 #' @param alpha A numeric vector between 0 and 1 indicating the significance
 #'   level of the critical value bounds. Multiple values can be used.
 #' @param T An integer indicating the number of observations.
@@ -228,7 +228,7 @@ f_bounds_sim <- function(case, k, alpha, T, R = 40000) {
 #' @param case An integer (1, 3 or 5) specifying whether the 'intercept' and/or
 #'   the trend' have to participate in the short-run relationship (see section
 #'   'Cases' in \code{\link{bounds_t_test}}).
-#' @param k The number of indeoendent variables.
+#' @param k The number of independent variables.
 #' @param alpha A numeric vector between 0 and 1 indicating the significance
 #'   level of the critical value bounds. Multiple values can be used.
 #' @param T An integer indicating the number of observations.

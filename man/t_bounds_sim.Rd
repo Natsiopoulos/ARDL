@@ -12,7 +12,7 @@ t_bounds_sim(case, k, alpha, T, R = 40000)
 the trend' have to participate in the short-run relationship (see section
 'Cases' in \code{\link{bounds_t_test}}).}
 
-\item{k}{The number of indeoendent variables.}
+\item{k}{The number of independent variables.}
 
 \item{alpha}{A numeric vector between 0 and 1 indicating the significance
 level of the critical value bounds. Multiple values can be used.}

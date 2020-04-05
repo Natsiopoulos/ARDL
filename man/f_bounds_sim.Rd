@@ -12,7 +12,7 @@ f_bounds_sim(case, k, alpha, T, R = 40000)
 trend' have to participate in the long-run/cointegrating
 relationship/equation (see section 'Cases' in \code{\link{bounds_f_test}}).}
 
-\item{k}{The number of indeoendent variables.}
+\item{k}{The number of independent variables.}
 
 \item{alpha}{A numeric vector between 0 and 1 indicating the significance
 level of the critical value bounds. Multiple values can be used.}

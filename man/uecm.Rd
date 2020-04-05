@@ -54,7 +54,7 @@ which is the UECM of the underlying ARDL.
 }
 \details{
 The \code{formula} should contain only variables that exist in the data
-privided through \code{data} plus some additional functions supported by
+provided through \code{data} plus some additional functions supported by
 \code{\link[dynlm]{dynlm}} (i.e., \code{trend()}).
 
 You can also specify fixed variables that are not supposed to be lagged (e.g.

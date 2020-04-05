@@ -43,7 +43,7 @@
 #'      bounds.}
 #'   \item{\code{p.value}}{the p-value of the test.}
 #'   \item{\code{tab}}{data.frame containing the statistic, the critical value
-#'      bounds, the alpha level of singificance and the p-value.}
+#'      bounds, the alpha level of significance and the p-value.}
 #'
 #' @section Hypothesis testing: \deqn{\Delta y_{t} = c_{0} + c_{1}t +
 #'   \pi_{y}y_{t-1} + \sum_{j=1}^{k}\pi_{j}x_{j,t-1} +

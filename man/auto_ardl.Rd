@@ -142,6 +142,8 @@ data(denmark)
 # Up to 5 for the autoregressive order (p) and 4 for the rest (q1, q2, q3)
 
 # Using the defaults search_type = "vertical", grid = FALSE and selection = "AIC"
+# ("Not run" indications only for testing purposes)
+\dontrun{
 model1 <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
                     max_order = c(5,4,4,4))
 model1$top_orders
@@ -155,8 +157,6 @@ model1_h$top_orders
 ## Find the global optimum ARDL order ----------------------------------
 
 # It may take more than 10 seconds
-# ("Not run" indications only for testing purposes)
-\dontrun{
 model_grid <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
                         max_order = c(5,4,4,4), grid = TRUE)
 
@@ -186,8 +186,6 @@ model1_adjr2 <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
                            max_order = c(5,4,4,4), selection = "adjr2",
                            selection_minmax = "max")
 model1_adjr2$top_orders
-
-}
 
 ## DIfferent starting order --------------------------------------------
 
@@ -239,6 +237,7 @@ model1_lrm3_ibo2$top_orders
 model1_76q1 <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
                         max_order = c(5,4,4,4), start = "1976 Q1")
 start(model1_76q1$best_model)
+}
 }
 \seealso{
 \code{\link{ardl}}

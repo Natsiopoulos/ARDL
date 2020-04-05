@@ -8,9 +8,9 @@
 #' objects of \code{\link[base]{class}} 'ardl' and one for objects of
 #' \code{class} 'uecm'. This is because of the different (but equivalent)
 #' transformation functions that are used for each class/model ('ardl' and
-#' 'uecm') to estiamte the multipliers.
+#' 'uecm') to estimate the multipliers.
 #'
-#' Currently only the long-run (total) multipliers are suported (\code{type =
+#' Currently only the long-run (total) multipliers are supported (\code{type =
 #' "lr"}). Other choices, including short-run (impact) and interim multipliers
 #' are going to be available in future versions.
 #'

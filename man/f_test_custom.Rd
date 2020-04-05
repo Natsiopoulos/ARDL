@@ -29,7 +29,7 @@ this is about 10 times faster than extracting it from a regression using
 }
 \seealso{
 \code{\link{vcov_custom}} \code{\link{f_bounds_sim}}
-  \code{\link{t_bounds_sim}}
+  \code{\link{t_bounds_sim}}independent
 }
 \author{
 Kleanthis Natsiopoulos, \email{klnatsio@gmail.com}
