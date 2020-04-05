@@ -51,6 +51,23 @@ are going to be available in future versions.
 The delta method is used for approximating the standard errors (and thus the
 t-statistics and p-values) of the estimated multipliers.
 }
+\section{Mathematical Formula}{
+ \strong{Long-Run Multipliers:}
+\describe{
+  \item{As derived from an ARDL:}{}
+}
+\deqn{\mu = \frac{c_{0}}{1-\sum_{i=1}^{p}}}
+\deqn{\delta = \frac{c_{1}}{1-\sum_{i=1}^{p}}}
+\deqn{\theta_{j} = \frac{\sum_{l=0}^{q_{j}}b_{j,l}}{1-\sum_{i=1}^{p}} \;\;\;\;\; \forall j=1,\dots,k}
+
+\describe{
+  \item{As derived from an Unrestricted ECM:}{}
+}
+\deqn{\mu = \frac{c_{0}}{-\pi_{y}}}
+\deqn{\delta = \frac{c_{1}}{-\pi_{y}}}
+\deqn{\theta_{j} = \frac{\pi_{j}}{-\pi_{y}} \;\;\;\;\; \forall j=1,\dots,k}
+}
+
 \examples{
 data(denmark)
 

@@ -69,6 +69,16 @@ A list with class "htest" containing the following components:
 \cite{Pesaran et al. (2001)}. It is a t-test on the parameters of a UECM
 (Unrestricted Error Correction Model).
 }
+\section{Hypothesis testing}{
+ \deqn{\Delta y_{t} = c_{0} + c_{1}t +
+  \pi_{y}y_{t-1} + \sum_{j=1}^{k}\pi_{j}x_{j,t-1} +
+  \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} +
+  \sum_{j=1}^{k}\sum_{l=1}^{q_{j}-1} \psi_{j,l}\Delta x_{j,t-l} +
+  \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t}}
+  \deqn{\mathbf{H_{0}:} \pi_{y} = 0}
+  \deqn{\mathbf{H_{1}:} \pi_{y} \neq 0}
+}
+
 \section{alpha, bounds and p-value}{
  In this section it is explained how the
   critical value bounds and p-values are obtained.

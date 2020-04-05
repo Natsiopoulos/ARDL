@@ -36,13 +36,18 @@
 #'   \code{c("dynlm", "lm", "ardl")}. In addition, attributes 'order', 'data',
 #'   'parsed_formula' and 'full_formula' are provided.
 #'
+#' @section Mathematical Formula:
+#' The general form of an \eqn{ARDL(p,q_{1},\dots,q_{k})}{ARDL(p,q1,...,qk)} is:
+#' \deqn{y_{t} = c_{0} + c_{1}t + \sum_{i=1}^{p}b_{y,i}y_{t-i} +
+#' \sum_{j=1}^{k}\sum_{l=0}^{q_{j}}b_{j,l}x_{j,t-l} + \epsilon_{t}}
+#'
 #' @seealso \code{\link{uecm}}, \code{\link{recm}}
 #' @author Kleanthis Natsiopoulos, \email{klnatsio@@gmail.com}
 #' @keywords models ts
 #' @export
 #' @examples
 #' data(denmark)
-#' 
+#'
 #' ## Estimate an ARDL(3,1,3,2) model -------------------------------------
 #'
 #' ardl_3132 <- ardl(LRM ~ LRY + IBO + IDE, data = denmark, order = c(3,1,3,2))
@@ -63,7 +68,7 @@
 #'                       BIC = c(BIC(ardl_3132), BIC(ardl_3132_d)))
 #' rownames(compare) <- c("no ummy", "with dummy")
 #' compare
-#' 
+#'
 #' ## Estimate an ARDL(3,1,3,2) model with a linear trend -----------------
 #'
 #' ardl_3132_tr <- ardl(LRM ~ LRY + IBO + IDE + trend(LRM),
@@ -84,7 +89,7 @@
 #'                        order = c(3,1,3,2), start = c(1975,4))
 #' identical(ardl_3132_sub, ardl_3132_sub2)
 #' summary(ardl_3132_sub)
-#' 
+#'
 #' ## Ease of use ---------------------------------------------------------
 #'
 #' # The model specification of the ardl_3132 model can be created as easy as order=c(3,1,3,2)

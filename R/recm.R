@@ -17,6 +17,28 @@
 #'   \code{c("dynlm", "lm", "recm")}. In addition, attributes 'order', 'data',
 #'   'parsed_formula' and 'full_formula' are provided.
 #'
+#' @section Mathematical Formula: The formula of a Restricted ECM conditional to
+#'   an \eqn{ARDL(p,q_{1},\dots,q_{k})}{ARDL(p,q1,...,qk)} is: \deqn{\Delta
+#'   y_{t} = c_{0} + c_{1}t + \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} +
+#'   \sum_{j=1}^{k}\sum_{l=1}^{q_{j}-1} \psi_{j,l}\Delta x_{j,t-l} +
+#'   \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \pi_{y}ECT_{t} + \epsilon_{t}}
+#' \describe{
+#'   \item{Under Case 1:}{\itemize{
+#'      \item \eqn{c_{0}=c_{1}=0}
+#'      \item \eqn{ECT = y_{t-1} - (\sum_{j=1}^{k} \theta_{j} x_{j,t-1})}}}
+#'   \item{Under Case 2:}{\itemize{
+#'      \item \eqn{c_{0}=c_{1}=0}
+#'      \item \eqn{ECT = y_{t-1} - (\mu + \sum_{j=1}^{k}\theta_{j} x_{j,t-1})}}}
+#'   \item{Under Case 3:}{\itemize{
+#'      \item \eqn{c_{1}=0}
+#'      \item \eqn{ECT = y_{t-1} - (\sum_{j=1}^{k} \theta_{j} x_{j,t-1})}}}
+#'   \item{Under Case 4:}{\itemize{
+#'      \item \eqn{c_{1}=0}
+#'      \item \eqn{ECT = y_{t-1} - (\delta(t-1)+ \sum_{j=1}^{k} \theta_{j} x_{j,t-1})}}}
+#'   \item{Under Case 5:}{\itemize{
+#'      \item \eqn{ECT = y_{t-1} - (\sum_{j=1}^{k} \theta_{j} x_{j,t-1})}}}
+#' }
+#'
 #' @section Cases: According to \cite{Pesaran et al. (2001)}, we distinguish the
 #' long-run relationship (cointegrating equation) (and thus the bounds-test and
 #' the Restricted ECMs) between 5 different cases. These differ in terms of
@@ -51,6 +73,7 @@
 #' case=3)} if the object is an ARDL (or UECM) model with no intercept. The same
 #' way, you can't compute \code{bounds_f_test(object, case=5)} if the object is
 #' an ARDL (or UECM) model with no linear trend.
+#'
 #' @section References: Pesaran, M. H., Shin, Y., & Smith, R. J. (2001). Bounds
 #'   testing approaches to the analysis of level relationships. \emph{Journal of
 #'   Applied Econometrics}, 16(3), 289-326

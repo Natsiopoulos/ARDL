@@ -28,6 +28,30 @@ tested using the corresponding t-statistic (or the p-value) because it
 doesn't follow a standard t-distribution. Instead, the
 \code{\link{bounds_t_test}} should be used.
 }
+\section{Mathematical Formula}{
+ The formula of a Restricted ECM conditional to
+  an \eqn{ARDL(p,q_{1},\dots,q_{k})}{ARDL(p,q1,...,qk)} is: \deqn{\Delta
+  y_{t} = c_{0} + c_{1}t + \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} +
+  \sum_{j=1}^{k}\sum_{l=1}^{q_{j}-1} \psi_{j,l}\Delta x_{j,t-l} +
+  \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \pi_{y}ECT_{t} + \epsilon_{t}}
+\describe{
+  \item{Under Case 1:}{\itemize{
+     \item \eqn{c_{0}=c_{1}=0}
+     \item \eqn{ECT = y_{t-1} - (\sum_{j=1}^{k} \theta_{j} x_{j,t-1})}}}
+  \item{Under Case 2:}{\itemize{
+     \item \eqn{c_{0}=c_{1}=0}
+     \item \eqn{ECT = y_{t-1} - (\mu + \sum_{j=1}^{k}\theta_{j} x_{j,t-1})}}}
+  \item{Under Case 3:}{\itemize{
+     \item \eqn{c_{1}=0}
+     \item \eqn{ECT = y_{t-1} - (\sum_{j=1}^{k} \theta_{j} x_{j,t-1})}}}
+  \item{Under Case 4:}{\itemize{
+     \item \eqn{c_{1}=0}
+     \item \eqn{ECT = y_{t-1} - (\delta(t-1)+ \sum_{j=1}^{k} \theta_{j} x_{j,t-1})}}}
+  \item{Under Case 5:}{\itemize{
+     \item \eqn{ECT = y_{t-1} - (\sum_{j=1}^{k} \theta_{j} x_{j,t-1})}}}
+}
+}
+
 \section{Cases}{
  According to \cite{Pesaran et al. (2001)}, we distinguish the
 long-run relationship (cointegrating equation) (and thus the bounds-test and

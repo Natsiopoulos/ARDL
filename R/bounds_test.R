@@ -45,6 +45,14 @@
 #'   \item{\code{tab}}{data.frame containing the statistic, the critical value
 #'      bounds, the alpha level of singificance and the p-value.}
 #'
+#' @section Hypothesis testing: \deqn{\Delta y_{t} = c_{0} + c_{1}t +
+#'   \pi_{y}y_{t-1} + \sum_{j=1}^{k}\pi_{j}x_{j,t-1} +
+#'   \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} +
+#'   \sum_{j=1}^{k}\sum_{l=1}^{q_{j}-1} \psi_{j,l}\Delta x_{j,t-l} +
+#'   \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t}}
+#'   \deqn{\mathbf{H_{0}:} \pi_{y} = \pi_{1} = \dots = \pi_{k} = 0}
+#'   \deqn{\mathbf{H_{1}:} \pi_{y} \neq \pi_{1} \neq \dots \neq \pi_{k} \neq 0}
+#'
 #' @section alpha, bounds and p-value: In this section it is explained how the
 #'   critical value bounds and p-values are obtained.
 #'   \itemize{
@@ -101,7 +109,7 @@
 #' bounds_f_test(ardl_3132_c, case = "uc")
 #' # or
 #' bounds_f_test(ardl_3132_c, case = 3)
-#' 
+#'
 #' # For the model with constant and trend
 #' # Including the constant term in the short-run and the trend in the long-run relationship
 #' # (unrestricted constant and restricted trend)
@@ -115,7 +123,7 @@
 #' bounds_f_test(ardl_3132_ct, case = "ucut")
 #' # or
 #' bounds_f_test(ardl_3132_ct, case = 5)
-#' 
+#'
 #' ## Note that you can't restrict a deterministic term that doesn't exist
 #'
 #' # For example, the following tests will produce an error:
@@ -124,7 +132,7 @@
 #' bounds_f_test(ardl_3132_ct, case = 3)
 #' bounds_f_test(ardl_3132_c, case = 4)
 #' }
-#' 
+#'
 #' ## Asymptotic p-value and critical value bounds (assuming T = 1000) ----
 #'
 #' # Include critical value bounds for a certain level of significance
@@ -137,7 +145,7 @@
 #' # F-statistic is slightly larger than the I(1) bound (for a=0.005)
 #' # as p-value is slightly smaller than 0.005
 #' bounds_f_test(ardl_3132_c, case = 2, alpha = 0.005)
-#' 
+#'
 #' ## Exact sample size p-value and critical value bounds -----------------
 #'
 #' # Setting a seed is suggested to allow the replication of results
@@ -351,6 +359,15 @@ bounds_f_test <- function(object, case, alpha = NULL, pvalue = TRUE, exact = FAL
 #'   test can't be applied for cases 2 and 4.
 #' @inheritParams bounds_f_test
 #' @inherit bounds_f_test return
+#' 
+#' @section Hypothesis testing: \deqn{\Delta y_{t} = c_{0} + c_{1}t +
+#'   \pi_{y}y_{t-1} + \sum_{j=1}^{k}\pi_{j}x_{j,t-1} +
+#'   \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} +
+#'   \sum_{j=1}^{k}\sum_{l=1}^{q_{j}-1} \psi_{j,l}\Delta x_{j,t-l} +
+#'   \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t}}
+#'   \deqn{\mathbf{H_{0}:} \pi_{y} = 0}
+#'   \deqn{\mathbf{H_{1}:} \pi_{y} \neq 0}
+#' 
 #' @inheritSection bounds_f_test alpha, bounds and p-value
 #' @inheritSection bounds_f_test Cases
 #' @inheritSection bounds_f_test References
@@ -386,14 +403,14 @@ bounds_f_test <- function(object, case, alpha = NULL, pvalue = TRUE, exact = FAL
 #' bounds_t_test(ardl_3132_c, case = "uc")
 #' # or
 #' bounds_t_test(ardl_3132_c, case = 3)
-#' 
+#'
 #' # For the model with constant and trend
 #' # Including the constant term and the trend in the short-run relationship
 #' # (unrestricted constant and unrestricted trend)
 #' bounds_t_test(ardl_3132_ct, case = "ucut")
 #' # or
 #' bounds_t_test(ardl_3132_ct, case = 5)
-#' 
+#'
 #' ## Note that you can't use bounds t-test for cases 2 and 4, or use a wrong model
 #'
 #' # For example, the following tests will produce an error:
@@ -414,7 +431,7 @@ bounds_f_test <- function(object, case, alpha = NULL, pvalue = TRUE, exact = FAL
 #'
 #' # t-statistic doesn't exceed the I(1) bound (for a=0.005) as p-value is greater than 0.005
 #' bounds_t_test(ardl_3132_c, case = 3, alpha = 0.005)
-#' 
+#'
 #' ## Exact sample size p-value and critical value bounds -----------------
 #'
 #' # Setting a seed is suggested to allow the replication of results

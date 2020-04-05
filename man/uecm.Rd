@@ -64,6 +64,15 @@ should not be considered in \code{order}. Note that the \code{|} notion
 should not be confused with the same notion in \code{dynlm} where it
 introduces instrumental variables.
 }
+\section{Mathematical Formula}{
+ The formula of an Unrestricted ECM conditional
+  to an \eqn{ARDL(p,q_{1},\dots,q_{k})}{ARDL(p,q1,...,qk)} is: \deqn{\Delta
+  y_{t} = c_{0} + c_{1}t + \pi_{y}y_{t-1} + \sum_{j=1}^{k}\pi_{j}x_{j,t-1} +
+  \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} +
+  \sum_{j=1}^{k}\sum_{l=1}^{q_{j}-1} \psi_{j,l}\Delta x_{j,t-l} +
+  \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t}}
+}
+
 \examples{
 data(denmark)
 

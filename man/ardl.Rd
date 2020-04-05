@@ -51,6 +51,13 @@ should not be considered in \code{order}. Note that the \code{|} notion
 should not be confused with the same notion in \code{dynlm} where it
 introduces instrumental variables.
 }
+\section{Mathematical Formula}{
+
+The general form of an \eqn{ARDL(p,q_{1},\dots,q_{k})}{ARDL(p,q1,...,qk)} is:
+\deqn{y_{t} = c_{0} + c_{1}t + \sum_{i=1}^{p}b_{y,i}y_{t-i} +
+\sum_{j=1}^{k}\sum_{l=0}^{q_{j}}b_{j,l}x_{j,t-l} + \epsilon_{t}}
+}
+
 \examples{
 data(denmark)
 
