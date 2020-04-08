@@ -8,7 +8,7 @@ ARDL <img src="man/figures/logo.png" align="right" width="120" />
 Overview
 --------
 
-`ARDL` creates complex autoregressive distributed lag (ARDL) models providing just the order and automatically constructs the underlying unrestricted and restricted error correction model (ECM). It also performs the bounds-test for cointegration as described in Pesaran et al. (2001) <doi:10.1002/jae.616> and provides the multipliers and the cointegrating equation.
+`ARDL` creates complex autoregressive distributed lag (ARDL) models providing just the order and automatically constructs the underlying unrestricted and restricted error correction model (ECM). It also performs the bounds-test for cointegration as described in [Pesaran et al. (2001)](doi:10.1002/jae.616) and provides the multipliers and the cointegrating equation.
 
 Why `ARDL`?
 -----------
