@@ -8,3 +8,18 @@
 0 errors | 0 warnings | 1 note
 
 * This is a new release.
+
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Shorten the title to a maximum of 65 characters.
+
+* Explained acronyms/abbreviations in the description field.
+
+* Properly capitalized the description field.
+
+* Added the reference in the description field.
+
+* Deleted the license file and changed the relevant field in the DESCRIPTION file.
+
+* Changed accordingly the title and description in the README file.
