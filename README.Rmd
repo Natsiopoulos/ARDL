@@ -101,9 +101,10 @@ tbounds
 tbounds$tab
 ```
 
-Here we have the long-run multipliers (with standard errors, t-statistics and p-values).
+Here we have the short-run and the long-run multipliers (with standard errors, t-statistics and p-values).
 
-```{r lr-mult}
+```{r mult}
+multipliers(ardl_3132, type = "sr")
 multipliers(ardl_3132)
 ```
 

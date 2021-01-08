@@ -7,12 +7,12 @@ citEntry(entry = "Manual",
     title   = "{ARDL}: ARDL, ECM and Bounds-Test for Cointegration",
     author  = personList(as.person("Kleanthis Natsiopoulos"),
                 as.person("Nickolaos Tzeremes")),
-    year    = "2020",
+    year    = "2021",
     note    = note,
     url     = "https://CRAN.R-project.org/package=ARDL",
 
   textVersion  =
-  paste0("Kleanthis Natsiopoulos and Nickolaos Tzeremes 2020. " ,
+  paste0("Kleanthis Natsiopoulos and Nickolaos Tzeremes 2021. " ,
         "ARDL: ARDL, ECM and Bounds-Test for Cointegration. ",
         note, ". ",
         "https://CRAN.R-project.org/package=ARDL"))

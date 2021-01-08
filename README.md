@@ -1,28 +1,35 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-ARDL <img src="man/figures/logo.png" align="right" width="120" />
-=================================================================
+
+# ARDL <img src="man/figures/logo.png" align="right" width="120" />
 
 <!-- badges: start -->
+
 <!-- badges: end -->
-Overview
---------
 
-`ARDL` creates complex autoregressive distributed lag (ARDL) models providing just the order and automatically constructs the underlying unrestricted and restricted error correction model (ECM). It also performs the bounds-test for cointegration as described in [Pesaran et al. (2001)](https://onlinelibrary.wiley.com/doi/abs/10.1002/jae.616) and provides the multipliers and the cointegrating equation.
+## Overview
 
-Why `ARDL`?
------------
+`ARDL` creates complex autoregressive distributed lag (ARDL) models
+providing just the order and automatically constructs the underlying
+unrestricted and restricted error correction model (ECM). It also
+performs the bounds-test for cointegration as described in [Pesaran et
+al. (2001)](https://onlinelibrary.wiley.com/doi/abs/10.1002/jae.616) and
+provides the multipliers and the cointegrating equation.
 
--   Estimate complex ARDL models just providing the ARDL order
--   Estimate the conditional ECM just providing the underlying ARDL model or the order
--   Estimate the long-run multipliers
--   Apply the bound test for no cointegration (*Pesaran et al., 2001*)
-    -   Both the *F-test* and the *t-test* are available
-    -   The *p-value* is also available along with the *critical value bounds* for specific level of statistical significance
-    -   Exact *p-values* and *critical value bounds* are available, along with the asymptotic ones
+## Why `ARDL`?
 
-Installation
-------------
+  - Estimate complex ARDL models just providing the ARDL order
+  - Estimate the conditional ECM just providing the underlying ARDL
+    model or the order
+  - Estimate the long-run multipliers
+  - Apply the bound test for no cointegration (*Pesaran et al., 2001*)
+      - Both the *F-test* and the *t-test* are available
+      - The *p-value* is also available along with the *critical value
+        bounds* for specific level of statistical significance
+      - Exact *p-values* and *critical value bounds* are available,
+        along with the asymptotic ones
+
+## Installation
 
 ``` r
 # You can install the released version of ARDL from CRAN:
@@ -33,22 +40,31 @@ install.packages("devtools")
 devtools::install_github("Natsiopoulos/ARDL")
 ```
 
-Usage
------
+## Usage
 
-This is a basic example which shows how to use the main functions of the `ARDL` package.
+This is a basic example which shows how to use the main functions of the
+`ARDL` package.
 
-Assume that we want to model the `LRM` (logarithm of real money, M2) as a function of `LRY`, `IBO` and `IDE` (see `?denmark`). The problem is that applying an OLS regression on non-stationary data would result into a spurious regression. The estimated parameters would be consistent only if the series were cointegrated.
+Assume that we want to model the `LRM` (logarithm of real money, M2) as
+a function of `LRY`, `IBO` and `IDE` (see `?denmark`). The problem is
+that applying an OLS regression on non-stationary data would result into
+a spurious regression. The estimated parameters would be consistent only
+if the series were cointegrated.
 
 ``` r
 library(ARDL)
 data(denmark)
 ```
 
-First, we find the best ARDL specification. We search up to order 5.
+First, we find the best ARDL specification. We search up to order
+5.
 
 ``` r
 models <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark, max_order = 5)
+#> Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.
+#> Using compatibility `.name_repair`.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_warnings()` to see where this warning was generated.
 
 # The top 20 models according to the AIC
 models$top_orders
@@ -114,7 +130,8 @@ summary(ardl_3132)
 #> F-statistic: 266.8 on 12 and 39 DF,  p-value: < 2.2e-16
 ```
 
-Then we can estimate the UECM (Unrestricted Error Correction Model) of the underlying ARDL(3,1,3,2).
+Then we can estimate the UECM (Unrestricted Error Correction Model) of
+the underlying ARDL(3,1,3,2).
 
 ``` r
 uecm_3132 <- uecm(ardl_3132)
@@ -154,7 +171,9 @@ summary(uecm_3132)
 #> F-statistic: 9.537 on 12 and 39 DF,  p-value: 3.001e-08
 ```
 
-And also the RECM (Restricted Error Correction Model) of the underlying ARDL(3,1,3,2), allowing the constant to join the short-run relationship (case 2), instead of the long-run (case 3).
+And also the RECM (Restricted Error Correction Model) of the underlying
+ARDL(3,1,3,2), allowing the constant to join the short-run relationship
+(case 2), instead of the long-run (case 3).
 
 ``` r
 recm_3132 <- recm(uecm_3132, case = 2)
@@ -191,7 +210,9 @@ summary(recm_3132)
 #> F-statistic: 15.24 on 9 and 43 DF,  p-value: 9.545e-11
 ```
 
-Let's test if there is a long-run levels relationship (cointegration) using the **bounds test** from *Pesaran et al. (2001)*.
+Let’s test if there is a long-run levels relationship (cointegration)
+using the **bounds test** from *Pesaran et al.
+(2001)*.
 
 ``` r
 # The bounds F-test (under the case 2) rejects the NULL hypothesis (let's say, assuming alpha = 0.01) with p-value = 0.004418.
@@ -227,9 +248,16 @@ tbounds$tab
 #> t -4.547939       -3.43       -4.37  0.01 0.005538316
 ```
 
-Here we have the long-run multipliers (with standard errors, t-statistics and p-values).
+Here we have the short-run and the long-run multipliers (with standard
+errors, t-statistics and p-values).
 
 ``` r
+multipliers(ardl_3132, type = "sr")
+#>          term   estimate std.error t.statistic      p.value
+#> 1 (Intercept)  6.2856579 0.7719160   8.1429302 6.107445e-10
+#> 2         LRY  1.6139988 0.1239310  13.0233660 8.809795e-16
+#> 3         IBO -2.5872899 0.5202961  -4.9727264 1.364936e-05
+#> 4         IDE  0.3009803 0.9950853   0.3024668 7.639036e-01
 multipliers(ardl_3132)
 #>          term   estimate std.error t.statistic      p.value
 #> 1 (Intercept)  6.2856579 0.7719160    8.142930 6.107445e-10
@@ -238,7 +266,8 @@ multipliers(ardl_3132)
 #> 4         IDE  2.8915201 0.9950853    2.905801 6.009239e-03
 ```
 
-Now let's graphically check the estimated long-run relationship (cointegrating equation) against the dependent variable `LRM`.
+Now let’s graphically check the estimated long-run relationship
+(cointegrating equation) against the dependent variable `LRM`.
 
 ``` r
 ce <- coint_eq(ardl_3132, case = 2)
@@ -258,18 +287,20 @@ plot(den, legend.loc = "right")
 
 <img src="man/figures/README-lr-plot-1.png" width="100%" />
 
-Ease of use
------------
+## Ease of use
 
-Let's see what it takes to build the above ARDL(3,1,3,2) model.
+Let’s see what it takes to build the above ARDL(3,1,3,2) model.
 
-**Using the `ARDL` package (literally one line of code):**
+**Using the `ARDL` package (literally one line of
+code):**
 
 ``` r
 ardl_model <- ardl(LRM ~ LRY + IBO + IDE, data = denmark, order = c(3,1,3,2))
 ```
 
-**Without the `ARDL` package:**</br> *(Using the `dynlm` package, because striving with the `lm` function would require extra data transformation to behave like time-series)*
+**Without the `ARDL` package:**</br> *(Using the `dynlm` package,
+because striving with the `lm` function would require extra data
+transformation to behave like time-series)*
 
 ``` r
 library(dynlm)
@@ -284,9 +315,12 @@ identical(ardl_model$coefficients, dynlm_ardl_model$coefficients)
 #> [1] TRUE
 ```
 
-An ARDL model has a relatively simple structure, although the difference in typing effort is noticeable.
+An ARDL model has a relatively simple structure, although the difference
+in typing effort is noticeable.
 
-Not to mention the complex transformation for an ECM. The extra typing is the least of your problems trying to do this. First you would need to figure out the exact structure of the model!
+Not to mention the complex transformation for an ECM. The extra typing
+is the least of your problems trying to do this. First you would need to
+figure out the exact structure of the model\!
 
 **Using the `ARDL` package (literally one line of code):**
 
@@ -308,7 +342,8 @@ identical(uecm_model$coefficients, dynlm_uecm_model$coefficients)
 #> [1] TRUE
 ```
 
-References
-----------
+## References
 
-Pesaran, M. H., Shin, Y., & Smith, R. J. (2001). Bounds testing approaches to the analysis of level relationships. *Journal of Applied Econometrics*, 16(3), 289-326
+Pesaran, M. H., Shin, Y., & Smith, R. J. (2001). Bounds testing
+approaches to the analysis of level relationships. *Journal of Applied
+Econometrics*, 16(3), 289-326
