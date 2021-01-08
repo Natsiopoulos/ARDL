@@ -20,5 +20,5 @@ globalVariables(c("."))
   year,
   '). ARDL: ARDL, ECM and Bounds-Test for Cointegration. ',
   local_version,
-  '. University of Thessaly, Department of Economics. https://github.com/Natsiopoulos/ARDL.')
+  '. https://CRAN.R-project.org/package=ARDL')
 }

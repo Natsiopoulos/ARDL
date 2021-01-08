@@ -24,7 +24,7 @@
 #'   number of variables (excluding the fixed ones). It should contain positive
 #'   integers or 0 or only one integer could be provided if the starting order
 #'   for all variables is the same. Default is set to NULL. If unspecified
-#'   (\code{NULL}) and \code{grid = FALSE}, then all possible \eqn{VAR(p)}
+#'   (\code{NULL}) and \code{grid = FALSE}, then all possible \eqn{ARDL(p)}
 #'   models are calculated (constraints are taken into account), where \eqn{p}
 #'   is the minimum value in \code{max_order}. Note that where
 #'   \code{starting_order} is provided, its first element will be the minimum
@@ -74,11 +74,11 @@
 #'
 #'   \code{starting_order = NULL}:
 #'   \tabular{ccccccc}{
-#'   VAR(p) \tab -> \tab p \tab q1 \tab q2 \tab ... \tab qk\cr
-#'   VAR(1) \tab -> \tab 1 \tab 1 \tab 1 \tab ... \tab 1\cr
-#'   VAR(2) \tab -> \tab 2 \tab 2 \tab 2 \tab ... \tab 2\cr
+#'   ARDL(p) \tab -> \tab p \tab q1 \tab q2 \tab ... \tab qk\cr
+#'   ARDL(1) \tab -> \tab 1 \tab 1 \tab 1 \tab ... \tab 1\cr
+#'   ARDL(2) \tab -> \tab 2 \tab 2 \tab 2 \tab ... \tab 2\cr
 #'   : \tab -> \tab : \tab : \tab : \tab : \tab :\cr
-#'   VAR(P) \tab -> \tab P \tab P \tab P \tab ... \tab P
+#'   ARDL(P) \tab -> \tab P \tab P \tab P \tab ... \tab P
 #'   }
 #'
 #'   \code{starting_order = c(3, 0, 1, 2)}:
@@ -101,17 +101,17 @@
 #'
 #' # Up to 5 for the autoregressive order (p) and 4 for the rest (q1, q2, q3)
 #'
-#' # Using the defaults search_type = "vertical", grid = FALSE and selection = "AIC"
+#' # Using the defaults search_type = "horizontal", grid = FALSE and selection = "AIC"
 #' # ("Not run" indications only for testing purposes)
 #' \dontrun{
 #' model1 <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
 #'                     max_order = c(5,4,4,4))
 #' model1$top_orders
 #'
-#' ## Same, with search_type = "horizontal" -------------------------------
+#' ## Same, with search_type = "vertical" -------------------------------
 #'
 #' model1_h <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
-#'                       max_order = c(5,4,4,4), search_type = "horizontal")
+#'                       max_order = c(5,4,4,4), search_type = "vertical")
 #' model1_h$top_orders
 #'
 #' ## Find the global optimum ARDL order ----------------------------------

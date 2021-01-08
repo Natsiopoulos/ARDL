@@ -45,13 +45,30 @@
 #'   \item{\code{tab}}{data.frame containing the statistic, the critical value
 #'      bounds, the alpha level of significance and the p-value.}
 #'
-#' @section Hypothesis testing: \deqn{\Delta y_{t} = c_{0} + c_{1}t +
+#' @section Hypothesis testing:
+#'   \deqn{\Delta y_{t} = c_{0} + c_{1}t +
 #'   \pi_{y}y_{t-1} + \sum_{j=1}^{k}\pi_{j}x_{j,t-1} +
 #'   \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} +
 #'   \sum_{j=1}^{k}\sum_{l=1}^{q_{j}-1} \psi_{j,l}\Delta x_{j,t-l} +
 #'   \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t}}
+#' 
+#' \describe{
+#'   \item{Cases 1, 3, 5:}{}
+#' }
 #'   \deqn{\mathbf{H_{0}:} \pi_{y} = \pi_{1} = \dots = \pi_{k} = 0}
 #'   \deqn{\mathbf{H_{1}:} \pi_{y} \neq \pi_{1} \neq \dots \neq \pi_{k} \neq 0}
+#' 
+#' \describe{
+#'   \item{Case 2:}{}
+#' }
+#'   \deqn{\mathbf{H_{0}:} \pi_{y} = \pi_{1} = \dots = \pi_{k} = c_{0} = 0}
+#'   \deqn{\mathbf{H_{1}:} \pi_{y} \neq \pi_{1} \neq \dots \neq \pi_{k} \neq c_{0} \neq 0}
+#' 
+#' \describe{
+#'   \item{Case 4:}{}
+#' }
+#'   \deqn{\mathbf{H_{0}:} \pi_{y} = \pi_{1} = \dots = \pi_{k} = c_{1} = 0}
+#'   \deqn{\mathbf{H_{1}:} \pi_{y} \neq \pi_{1} \neq \dots \neq \pi_{k} \neq c_{1} \neq 0}
 #'
 #' @section alpha, bounds and p-value: In this section it is explained how the
 #'   critical value bounds and p-values are obtained.

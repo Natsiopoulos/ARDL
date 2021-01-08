@@ -15,8 +15,9 @@ multipliers(object, type = "lr", vcov_matrix = NULL)
 \arguments{
 \item{object}{An object of \code{\link[base]{class}} 'ardl' or 'uecm'.}
 
-\item{type}{A character string describing the type of multipliers. The
-default is "lr" for long-run (total) multipliers (see 'Details').}
+\item{type}{A character string describing the type of multipliers. Use "lr"
+for long-run (total) multipliers (default), "sr" or 0 for short-run (impact)
+multipliers or an integer between 1 and 100 for interim multipliers.}
 
 \item{vcov_matrix}{The estimated covariance matrix of the random variable
 that the transformation function uses to estimate the standard errors (and
@@ -44,28 +45,59 @@ objects of \code{\link[base]{class}} 'ardl' and one for objects of
 transformation functions that are used for each class/model ('ardl' and
 'uecm') to estimate the multipliers.
 
-Currently only the long-run (total) multipliers are supported (\code{type =
-"lr"}). Other choices, including short-run (impact) and interim multipliers
-are going to be available in future versions.
+Note that \code{type = 0} is equivalent to \code{type = "sr"}. Also,
+\code{type = s} will produce the same estimates as \code{type = "lr"} for
+those particular variable for which s >= from their ARDL order.
 
 The delta method is used for approximating the standard errors (and thus the
 t-statistics and p-values) of the estimated multipliers.
 }
 \section{Mathematical Formula}{
- \strong{Long-Run Multipliers:}
+ \strong{Constant and Linear Trend:}
 \describe{
   \item{As derived from an ARDL:}{}
 }
-\deqn{\mu = \frac{c_{0}}{1-\sum_{i=1}^{p}}}
-\deqn{\delta = \frac{c_{1}}{1-\sum_{i=1}^{p}}}
-\deqn{\theta_{j} = \frac{\sum_{l=0}^{q_{j}}b_{j,l}}{1-\sum_{i=1}^{p}} \;\;\;\;\; \forall j=1,\dots,k}
+\deqn{\mu = \frac{c_{0}}{1-\sum_{i=1}^{p}b_{y,i}}}
+\deqn{\delta = \frac{c_{1}}{1-\sum_{i=1}^{p}b_{y,i}}}
 
 \describe{
   \item{As derived from an Unrestricted ECM:}{}
 }
 \deqn{\mu = \frac{c_{0}}{-\pi_{y}}}
 \deqn{\delta = \frac{c_{1}}{-\pi_{y}}}
-\deqn{\theta_{j} = \frac{\pi_{j}}{-\pi_{y}} \;\;\;\;\; \forall j=1,\dots,k}
+
+\strong{Short-Run Multipliers:}
+\describe{
+  \item{As derived from an ARDL:}{}
+}
+\deqn{\frac{\partial y_{t}}{\partial x_{j,t}} = \frac{b_{j,0}}{1-\sum_{i=1}^{p}b_{y,i}} \;\;\;\;\; \forall j=1,\dots,k}
+
+\describe{
+  \item{As derived from an Unrestricted ECM:}{}
+}
+\deqn{\frac{\partial y_{t}}{\partial x_{j,t}} = \frac{\omega_{j}}{-\pi_{y}} \;\;\;\;\; \forall j=1,\dots,k}
+
+\strong{Interim Multipliers:}
+\describe{
+  \item{As derived from an ARDL:}{}
+}
+\deqn{\frac{\partial y_{t+s}}{\partial x_{j,t}} = \frac{\sum_{l=1}^{s}b_{j,l}}{1-\sum_{i=1}^{p}b_{y,i}} \;\;\;\;\; \forall j=1,\dots,k \;\;\;\;\; s \in \{0,\dots,q_{j}\}}
+
+\describe{
+  \item{As derived from an Unrestricted ECM:}{}
+}
+\deqn{\frac{\partial y_{t+s}}{\partial x_{j,t}} = \frac{\pi_{j} + \psi_{j,s}}{-\pi_{y}} \;\;\;\;\; \forall j=1,\dots,k \;\;\;\;\; s \in \{1,\dots,q_{j}-1\}}
+
+\strong{Long-Run Multipliers:}
+\describe{
+  \item{As derived from an ARDL:}{}
+}
+\deqn{\frac{\partial y_{t+\infty}}{\partial x_{j,t}} = \theta_{j} = \frac{\sum_{l=0}^{q_{j}}b_{j,l}}{1-\sum_{i=1}^{p}b_{y,i}} \;\;\;\;\; \forall j=1,\dots,k}
+
+\describe{
+  \item{As derived from an Unrestricted ECM:}{}
+}
+\deqn{\frac{\partial y_{t+\infty}}{\partial x_{j,t}} = \theta_{j} = \frac{\pi_{j}}{-\pi_{y}} \;\;\;\;\; \forall j=1,\dots,k}
 }
 
 \examples{
@@ -84,6 +116,27 @@ mult_uecm <- multipliers(uecm_3132)
 mult_uecm
 
 all.equal(mult_ardl, mult_uecm)
+
+
+## Estimate the short-run multipliers of an ARDL(3,1,3,2) model --------
+
+mult_sr <- multipliers(uecm_3132, type = "sr")
+mult_0 <- multipliers(uecm_3132, type = 0)
+all.equal(mult_sr, mult_0)
+
+
+## Estimate the interim multipliers of an ARDL(3,1,3,2) model ----------
+
+# Note that the estimated interim multipliers match the long-run multipliers
+# for those variables that their ARDL order equals or exceeds the interim step
+mult_lr <- multipliers(uecm_3132, type = "lr")
+mult_1 <- multipliers(uecm_3132, type = 1)
+mult_2 <- multipliers(uecm_3132, type = 2)
+
+uecm_3132$order
+mult_lr
+mult_1
+mult_2
 }
 \seealso{
 \code{\link{ardl}}, \code{\link{uecm}}

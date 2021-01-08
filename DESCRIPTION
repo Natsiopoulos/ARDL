@@ -6,15 +6,14 @@ Description: Creates complex autoregressive distributed lag (ARDL) models
     unrestricted and restricted error correction model (ECM). It also performs
     the bounds-test for cointegration as described in Pesaran et al. (2001) <doi:10.1002/jae.616> and provides the multipliers and the cointegrating
     equation.
-Version: 0.1.0.9000
+Version: 0.1.1
 Authors@R: c(
   person("Kleanthis", "Natsiopoulos", 
-  email = "klnatsio@gmail.com", role = c("aut", "cre", "dis"), 
+  email = "klnatsio@gmail.com", role = c("aut", "cre"), 
   comment = c(ORCID = "0000-0003-1180-2984")), 
   person("Nickolaos", "Tzeremes", 
-  email = "bus9nt@econ.uth.gr", role = "ths",
-  comment = c(ORCID = "0000-0002-6938-3404")), 
-  person("University of Thessaly, Department of Economics", role = "dgg"))
+  email = "bus9nt@econ.uth.gr", role = "aut",
+  comment = c(ORCID = "0000-0002-6938-3404")))
 License: GPL-3
 URL: https://github.com/Natsiopoulos/ARDL
 Encoding: UTF-8
