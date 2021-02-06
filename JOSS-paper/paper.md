@@ -6,7 +6,7 @@ tags:
 - cointegration
 - econometrics
 - R
-date: "3 February 2021"
+date: "6 February 2021"
 output:
   word_document: default
   html_document:
@@ -28,9 +28,11 @@ affiliations:
 
 # Summary
 
-`ARDL` [@ardl-pkg] is an `R` package that aims to help users in the modeling process of Autoregressive Distributed Lag (ARDL) and Error Correction Models (ECM) which are widely used in various economic applications. Also, these models are used in the context of cointegration analysis as a platform to test and analyze the levels (long-run) relationship between variables, and so the ARDL package provides the tools towards the bounds test for cointegration [@Pesaran2001].
+Autoregressive Distributed Lag (ARDL) and Error Correction Models (ECM) are widely used in various economic applications as they are very flexible. Also, these models are used in the context of cointegration analysis as a platform to test and analyze the levels (long-run) relationship between variables. One of the most popular such tests is the bounds test proposed by @Pesaran2001 which allows testing for cointegration while at the same time estimates the level relationship.
 
-`ARDL` is implemented in such a way that researchers can use it as a full featured tool for this specific type of analysis and students of all levels can be aware of how each piece of code works through the analytical [manual](https://cran.r-project.org/web/packages/ARDL/ARDL.pdf) and the examples which cover every functionality of the package.
+# Statement of need
+
+`ARDL` [@ardl-pkg] is an `R` package that aims to help users in the modeling process of ARDL and ECM and it also provides the tools towards the bounds test for cointegration. `ARDL` is implemented in such a way that researchers can use it as a full featured tool for this specific type of analysis and students of all levels can be aware of how each piece of code works through the analytical [manual](https://cran.r-project.org/web/packages/ARDL/ARDL.pdf) and the examples which cover every functionality of the package. A recent example is @Qiu2021 where the software was used to forecast tourist arrivals through an ARDL model, amonth other methods.
 
 # State of the field
 
