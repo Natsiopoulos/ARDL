@@ -6,13 +6,9 @@
 \alias{ARDL-package}
 \title{ARDL: ARDL, ECM and Bounds-Test for Cointegration}
 \description{
-\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Creates complex autoregressive distributed lag (ARDL) models
-    providing just the order and automatically constructs the underlying
-    unrestricted and restricted error correction model (ECM). It also performs
-    the bounds-test for cointegration as described in Pesaran et al. (2001) <doi:10.1002/jae.616> and provides the multipliers and the cointegrating
-    equation.
+Creates complex autoregressive distributed lag (ARDL) models and constructs the underlying unrestricted and restricted error correction model (ECM) automatically, just by providing the order. It also performs the bounds-test for cointegration as described in Pesaran et al. (2001) \doi{10.1002/jae.616} and provides the multipliers and the cointegrating equation. The validity and the accuracy of this package have been verified by successfully replicating the results of Pesaran et al. (2001) in Natsiopoulos and Tzeremes (2022) \doi{10.1002/jae.2919}.
 }
 \seealso{
 Useful links:

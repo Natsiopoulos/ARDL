@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-`ARDL` creates complex autoregressive distributed lag (ARDL) models providing just the order and automatically constructs the underlying unrestricted and restricted error correction model (ECM). It also performs the bounds-test for cointegration as described in [Pesaran et al. (2001)](https://onlinelibrary.wiley.com/doi/abs/10.1002/jae.616) and provides the multipliers and the cointegrating equation.
+`ARDL` creates complex autoregressive distributed lag (ARDL) models and constructs the underlying unrestricted and restricted error correction model (ECM) automatically, just by providing the order. It also performs the bounds-test for cointegration as described in [Pesaran et al. (2001)](https://onlinelibrary.wiley.com/doi/abs/10.1002/jae.616) and provides the multipliers and the cointegrating equation. The validity and the accuracy of this package have been verified by successfully replicating the results of Pesaran et al. (2001) in Natsiopoulos and Tzeremes (2022) doi:10.1002/jae.2919.
 
 ## Why `ARDL`?
 
@@ -180,5 +180,7 @@ identical(uecm_model$coefficients, dynlm_uecm_model$coefficients)
 ```
 
 ## References
+
+Kleanthis Natsiopoulos and Nickolaos G. Tzeremes (2022). ARDL bounds test for cointegration: Replicating the Pesaran et al. (2001) results for the UK earnings equation using R. *Journal of Applied Econometrics*. https://doi.org/10.1002/jae.2919
 
 Pesaran, M. H., Shin, Y., & Smith, R. J. (2001). Bounds testing approaches to the analysis of level relationships. *Journal of Applied Econometrics*, 16(3), 289-326

@@ -4,29 +4,31 @@
 # ARDL <img src="man/figures/logo.png" align="right" width="120" />
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
 ## Overview
 
-`ARDL` creates complex autoregressive distributed lag (ARDL) models
-providing just the order and automatically constructs the underlying
-unrestricted and restricted error correction model (ECM). It also
-performs the bounds-test for cointegration as described in [Pesaran et
-al. (2001)](https://onlinelibrary.wiley.com/doi/abs/10.1002/jae.616) and
-provides the multipliers and the cointegrating equation.
+`ARDL` creates complex autoregressive distributed lag (ARDL) models and
+constructs the underlying unrestricted and restricted error correction
+model (ECM) automatically, just by providing the order. It also performs
+the bounds-test for cointegration as described in [Pesaran et
+al. (2001)](https://onlinelibrary.wiley.com/doi/abs/10.1002/jae.616) and
+provides the multipliers and the cointegrating equation. The validity
+and the accuracy of this package have been verified by successfully
+replicating the results of Pesaran et al. (2001) in Natsiopoulos and
+Tzeremes (2022) <doi:10.1002/jae.2919>.
 
 ## Why `ARDL`?
 
-  - Estimate complex ARDL models just providing the ARDL order
-  - Estimate the conditional ECM just providing the underlying ARDL
+-   Estimate complex ARDL models just providing the ARDL order
+-   Estimate the conditional ECM just providing the underlying ARDL
     model or the order
-  - Estimate the long-run multipliers
-  - Apply the bound test for no cointegration (*Pesaran et al., 2001*)
-      - Both the *F-test* and the *t-test* are available
-      - The *p-value* is also available along with the *critical value
+-   Estimate the long-run multipliers
+-   Apply the bound test for no cointegration (*Pesaran et al., 2001*)
+    -   Both the *F-test* and the *t-test* are available
+    -   The *p-value* is also available along with the *critical value
         bounds* for specific level of statistical significance
-      - Exact *p-values* and *critical value bounds* are available,
+    -   Exact *p-values* and *critical value bounds* are available,
         along with the asymptotic ones
 
 ## Installation
@@ -56,15 +58,14 @@ library(ARDL)
 data(denmark)
 ```
 
-First, we find the best ARDL specification. We search up to order
-5.
+First, we find the best ARDL specification. We search up to order 5.
 
 ``` r
 models <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark, max_order = 5)
 #> Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.
 #> Using compatibility `.name_repair`.
 #> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_warnings()` to see where this warning was generated.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
 
 # The top 20 models according to the AIC
 models$top_orders
@@ -211,8 +212,7 @@ summary(recm_3132)
 ```
 
 Let’s test if there is a long-run levels relationship (cointegration)
-using the **bounds test** from *Pesaran et al.
-(2001)*.
+using the **bounds test** from *Pesaran et al. (2001)*.
 
 ``` r
 # The bounds F-test (under the case 2) rejects the NULL hypothesis (let's say, assuming alpha = 0.01) with p-value = 0.004418.
@@ -291,8 +291,7 @@ plot(den, legend.loc = "right")
 
 Let’s see what it takes to build the above ARDL(3,1,3,2) model.
 
-**Using the `ARDL` package (literally one line of
-code):**
+**Using the `ARDL` package (literally one line of code):**
 
 ``` r
 ardl_model <- ardl(LRM ~ LRY + IBO + IDE, data = denmark, order = c(3,1,3,2))
@@ -320,7 +319,7 @@ in typing effort is noticeable.
 
 Not to mention the complex transformation for an ECM. The extra typing
 is the least of your problems trying to do this. First you would need to
-figure out the exact structure of the model\!
+figure out the exact structure of the model!
 
 **Using the `ARDL` package (literally one line of code):**
 
@@ -343,6 +342,11 @@ identical(uecm_model$coefficients, dynlm_uecm_model$coefficients)
 ```
 
 ## References
+
+Kleanthis Natsiopoulos and Nickolaos G. Tzeremes (2022). ARDL bounds
+test for cointegration: Replicating the Pesaran et al. (2001) results
+for the UK earnings equation using R. *Journal of Applied Econometrics*.
+<https://doi.org/10.1002/jae.2919>
 
 Pesaran, M. H., Shin, Y., & Smith, R. J. (2001). Bounds testing
 approaches to the analysis of level relationships. *Journal of Applied

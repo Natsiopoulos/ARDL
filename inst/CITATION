@@ -3,16 +3,34 @@ citHeader("To cite ARDL in publications use:")
 year <- sub("-.*", "", utils::packageDate('ARDL'))
 note <- paste("R package version", meta$Version)
 
+citEntry(entry = "article",
+    title   = "ARDL bounds test for cointegration: Replicating the Pesaran et al. (2001) results for the UK earnings equation using R",
+    journal = "Journal of Applied Econometrics",
+    volume  = {},
+    number  = {},
+    pages   = {},
+    doi     = "https://doi.org/10.1002/jae.2919",
+    url     = "https://onlinelibrary.wiley.com/doi/abs/10.1002/jae.2919",
+    author  = personList(as.person("Kleanthis Natsiopoulos"),
+                as.person("Nickolaos G. Tzeremes")),
+    year    = "2022",
+  textVersion  =
+  paste0("Kleanthis Natsiopoulos and Nickolaos G. Tzeremes (2022). " ,
+        "ARDL bounds test for cointegration: Replicating the Pesaran et al. (2001) results for the UK earnings equation using R. Journal of Applied Econometrics. https://doi.org/10.1002/jae.2919"))
+
 citEntry(entry = "Manual",
     title   = "{ARDL}: ARDL, ECM and Bounds-Test for Cointegration",
     author  = personList(as.person("Kleanthis Natsiopoulos"),
                 as.person("Nickolaos Tzeremes")),
-    year    = "2021",
+    year    = "2022",
     note    = note,
     url     = "https://CRAN.R-project.org/package=ARDL",
 
   textVersion  =
-  paste0("Kleanthis Natsiopoulos and Nickolaos Tzeremes 2021. " ,
+  paste0("Kleanthis Natsiopoulos and Nickolaos Tzeremes (2022). " ,
         "ARDL: ARDL, ECM and Bounds-Test for Cointegration. ",
         note, ". ",
         "https://CRAN.R-project.org/package=ARDL"))
+
+citFooter("Use the first reference to refer to the validity of the ARDL package.\n
+Use the second reference to cite this specific version of the ARDL package.")

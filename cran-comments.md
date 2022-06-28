@@ -1,10 +1,10 @@
-## Test environments
-* local Linux Mint 19.3 (Ubuntu based), R 3.6.3
-* win-builder (devel and release)
-* R-hub builder Windows Server 2008 R2 SP1, R-devel, 32/64 bit
-* R-hub builder Ubuntu Linux 16.04 LTS, R-release, GCC
-* R-hub builder Fedora Linux, R-devel, clang, gfortran
-
 ## R CMD check results
+There were no ERRORs, WARNINGs or NOTEs.
 
-0 errors | 0 warnings | 0 notes
+## Downstream dependencies
+I have also run R CMD check successfully on the downstream dependency package bootCT.
+
+## Test environments
+* local Linux Mint 20.1 (Ubuntu based), R 4.2.0
+* win-builder (devel, release, old)
+* R-hub builder macOS 10.13.6 High Sierra, R-release, CRAN's setup
