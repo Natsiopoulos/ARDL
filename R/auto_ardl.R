@@ -399,9 +399,9 @@ auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order
         }
 
         # keep top 20 orders
-        top_orders <- dplyr::as_tibble(cbind(matrix(top_orders[,-ncol(top_orders)], ncol = ncol(top_orders)-1), selection = top_orders[,ncol(top_orders)])) %>%
+        top_orders <- dplyr::as_tibble(data.frame(matrix(top_orders[,-ncol(top_orders)], ncol = ncol(top_orders)-1), selection = top_orders[,ncol(top_orders)]) %>%
             dplyr::distinct(.keep_all = TRUE) %>%
-            dplyr::arrange(selection) %>% dplyr::slice(1:20)
+            dplyr::arrange(selection) %>% dplyr::slice(1:20))
     }
 
     # choose best order

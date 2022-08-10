@@ -1,3 +1,11 @@
+# ARDL 0.2.0.9000
+
+### Documentation update
+
+* Made `.onAttach` function simpler, printing essentially the same info (issue #6, @ha0ye).
+
+* Added `BugReports` and `Video` in the `DESCRIPTION` (issue #6, @ha0ye).
+
 # ARDL 0.2.0
 
 ### Documentation update

@@ -6,7 +6,7 @@ tags:
 - cointegration
 - econometrics
 - R
-date: "6 February 2021"
+date: "10 August 2022"
 output:
   word_document: default
   html_document:
@@ -28,11 +28,13 @@ affiliations:
 
 # Summary
 
-Autoregressive Distributed Lag (ARDL) and Error Correction Models (ECM) are widely used in various economic applications as they are very flexible. Also, these models are used in the context of cointegration analysis as a platform to test and analyze the levels (long-run) relationship between variables. One of the most popular such tests is the bounds test proposed by @Pesaran2001 which allows testing for cointegration while at the same time estimates the level relationship.
+Autoregressive Distributed Lag (ARDL) and Error Correction Models (ECM) [@Pesaran1999] are widely used in various economic applications as they are very flexible. Also, these models are used in the context of cointegration analysis as a platform to test and analyze the levels (long-run) relationship between variables. One of the most popular such tests is the bounds test proposed by @Pesaran2001 which allows testing for cointegration while at the same time estimates the level relationship. `ARDL` [@Natsiopoulos2022; @ardl-pkg] is an `R` package that aims to help users in the modeling process of ARDL and ECM and it also provides the tools towards the bounds test for cointegration.
 
 # Statement of need
 
-`ARDL` [@ardl-pkg] is an `R` package that aims to help users in the modeling process of ARDL and ECM and it also provides the tools towards the bounds test for cointegration. `ARDL` is implemented in such a way that researchers can use it as a full featured tool for this specific type of analysis and students of all levels can be aware of how each piece of code works through the analytical [manual](https://cran.r-project.org/web/packages/ARDL/ARDL.pdf) and the examples which cover every functionality of the package. A recent example is @Qiu2021 where the software was used to forecast tourist arrivals through an ARDL model, amonth other methods.
+`ARDL` is implemented in such a way that researchers can use it as a full featured tool for this specific type of analysis and students of all levels can be aware of how each piece of code works through the analytical [manual](https://cran.r-project.org/web/packages/ARDL/ARDL.pdf) and the examples which cover every functionality of the package. One of the greatest advantages of the package is that there is no need for the user to know the complex mathematical equations and write them by hand. Instead, the correct specification of the model is created automatically, just by providing the order of the ARDL. Some recent examples of publications that used the package are @baruah2022 and @Qiu2021.
+
+It is very important to note that the `ARDL` package is the first software which managed to fully replicate the original paper by @Pesaran2001, verifying the validity and accuracy of the package [@Natsiopoulos2022].
 
 # State of the field
 
@@ -42,11 +44,57 @@ On the other hand, `dLagM` and `dynamac` provide additional plotting functionali
 
 In addition, the `ARDL` packages natively supports time-series data, thus sub-sample and balanced sample estimations are possible. It also allows to specify any level of significance for the bounds F-test and t-tests, and includes p-values and exact sample critical values for any possible combination. Also, the estimation of long-run, short-run and interim multipliers accompanied by standard errors and p-values as well as the cointegrating equation are some of the available features.
 
+In the following example, we show how the estimation of an ARDL model can be performed using the `ARDL` package, as opposed to when we use a package specialized in dynamic time series modeling (i.e. `dynlm` [@dynlm-pkg] which is also the package that the `ARDL` package uses under the hood).
+
+For this example we use the Danish data on money income prices and interest rates, from @Johansen1990.
+We model the logarithm of real money, M2 (LRM) using the independent variables LRY, IBO and IDE (see ?denmark), and we estimate the ARDL(3,1,3,2).
+
+Using the `ARDL` package we would write the following code:
+
+``` r
+library(ARDL)
+
+ardl(LRM ~ LRY + IBO + IDE, data = denmark, order = c(3,1,3,2))
+```
+
+While using the `dynlm` package:
+
+``` r
+library(dynlm)
+
+dynlm(LRM ~ L(LRM, 1) + L(LRM, 2) + L(LRM, 3) + LRY + L(LRY, 1) +
+            IBO + L(IBO, 1) + L(IBO, 2) + L(IBO, 3) +
+            IDE + L(IDE, 1) + L(IDE, 2), data = denmark)
+```
+
+Note that if someone wanted to estimate the same regression using the native `lm` function this would be even harder as the lags and differences are not supported inside the `lm` environment.
+
+To convert this ARDL(3,1,3,2) model into an ECM, using the `ARDL` package we would write:
+
+``` r
+uecm_model <- uecm(ardl_model)
+```
+
+While using the `dynlm` package:
+
+``` r
+dynlm(d(LRM) ~ L(LRM, 1) + L(LRY, 1) + L(IBO, 1) +
+                           L(IDE, 1) + d(L(LRM, 1)) + d(L(LRM, 2)) +
+                           d(LRY) + d(IBO) + d(L(IBO, 1)) + d(L(IBO, 2)) +
+                           d(IDE) + d(L(IDE, 1)), data = denmark)
+```
+
+The API of `dynamac` has a similar approach with `dynlm`. One has to define every independent variable one by one, with the limitation that it only accepts models with AR(1) for the dependent variable (i.e. $ARDL(1, q_1, ..., q_k)$).
+The API of `dLagM` requires less typing and the way for one to define an ARDL model is by setting the maximum lags for the dependent and the independent variables (the same maximum order for all the independent ones as in a typical VAR model) and then remove one by one the lags that are not required from each independent variable.
+
+As this is a quick presentation of just one of the functionalities of the package, we are not going to list all the key advantages of the `ARDL` package or compare them with the limitations in other open source or proprietary software. We refere to these two aforementioned packages as these seem to be the R packages that argue that they support the same functionalities as the `ARDL` package.
+We believe that using the `ARDL` package is simpler, faster and less prone to errors.
+
 # Breaking down the ARDL package
 
 ## Model estimation
 
-The package does not explicitly connects the modeling with the bounds test, as the ARDL and ECM model may well be used independently in other research approaches too. This way each function is dedicated to perform a very specific part of the whole process.
+The package does not explicitly connects the modeling with the bounds test, as the ARDL and ECM model may well be used independently in other research approaches. This way each function is dedicated to perform a very specific part of the whole process.
 
 An $ARDL(p, q_1, ..., q_k)$ model can be fully specified by its order. The `ardl` function implements the following formula:
 
@@ -60,53 +108,7 @@ An Unrestricted ECM (UECM) has a 1:1 relationship with the $ARDL(p, q_1, ..., q_
   \Delta y_{t} = c_{0} + c_{1}t + \pi_{y}y_{t-1} + \sum_{j=1}^{k}\pi_{j}x_{j,t-1} + \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} + \sum_{j=1}^{k}\sum_{l=1}^{q_{j}-1} \psi_{j,l}\Delta x_{j,t-l} + \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t}
 \end{equation}
 
-The Restricted ECM (RECM) can also be fully described by the order of the underlying ARDL and the case for potential restriction in the deterministic parameters. The `recm` function performs the modeling using:
-
-\begin{equation}\label{eq:recm}
-  \Delta y_{t} = c_{0} + c_{1}t + \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} + \sum_{j=1}^{k}\sum_{l=1}^{q_{j}-1} \psi_{j,l}\Delta x_{j,t-l} + \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \pi_{y}ECT_{t} + \epsilon_{t}
-\end{equation}
-
-> Under Case 1:
-
-\begin{equation}\label{eq:recm1}
-  \begin{split}
-    &c_{0} =c_{1}=0 \\
-    &ECT = y_{t-1} - (\sum_{j=1}^{k} \theta_{j} x_{j,t-1})
-  \end{split}
-\end{equation}
-
-> Under Case 2:
-
-\begin{equation}\label{eq:recm2}
-  \begin{split}
-    &c_{0} =c_{1}=0 \\
-    &ECT = y_{t-1} - (\mu + \sum_{j=1}^{k}\theta_{j} x_{j,t-1})
-  \end{split}
-\end{equation}
-
-> Under Case 3:
-
-\begin{equation}\label{eq:recm3}
-  \begin{split}
-    &c_{1} =0 \\
-    &ECT = y_{t-1} - (\sum_{j=1}^{k} \theta_{j} x_{j,t-1})
-  \end{split}
-\end{equation}
-
-> Under Case 4:
-
-\begin{equation}\label{eq:recm4}
-  \begin{split}
-    &c_{1} =0 \\
-    &ECT = y_{t-1} - (\delta(t-1)+ \sum_{j=1}^{k} \theta_{j} x_{j,t-1})
-  \end{split}
-\end{equation}
-
-> Under Case 5:
-
-\begin{equation}\label{eq:recm5}
-  ECT = y_{t-1} - (\sum_{j=1}^{k} \theta_{j} x_{j,t-1})
-\end{equation}
+The Restricted ECM (RECM) can also be fully described by the order of the underlying ARDL and the case for potential restriction in the deterministic parameters (constant and linear trend), using the function `recm`.
 
 ## Model relationships
 
@@ -118,133 +120,21 @@ Where $ARDL(p, q_1, ..., q_k)$ represent the ARDL order and Case is the restrict
 
 ## Bounds test
 
-The functions `bounds_f_test` and `bounds_t_test` return a typical `htest` object and they perform a Wald or t test respectively on an UECM. The input of the functions can also be an ARDL model as they are interconnected as described above. The hypothesis tests for the bounds F-test and t-test are based on \autoref{eq:uecm}. For the bounds F-test:
+The functions `bounds_f_test` and `bounds_t_test` return a typical `htest` object and they perform a Wald or t test respectively on an UECM. The input of the functions can also be an ARDL model as they are interconnected as described above. The hypothesis tests for the bounds F-test and t-test are based on \autoref{eq:uecm}.
 
-> Cases 1, 3, 5:
+For the bounds F-test the null hypothesis is $\mathbf{H_{0}:} \pi_{y} = \pi_{1} = \dots = \pi_{k} = c_{0} = c_{1} = 0$, where the restriction of the deterministic trends $c_{0}$ and $c_{1}$ depends on the case chosen.
 
-\begin{equation}\label{eq:fbounds135}
-  \begin{split}
-    \mathbf{H_{0}:} & \pi_{y} = \pi_{1} = \dots = \pi_{k} = 0 \\
-    \mathbf{H_{1}:} & \pi_{y} \neq \pi_{1} \neq \dots \neq \pi_{k} \neq 0
-  \end{split}
-\end{equation}
-
-> Cases 2:
-
-\begin{equation}\label{eq:fbounds2}
-  \begin{split}
-    \mathbf{H_{0}:} & \pi_{y} = \pi_{1} = \dots = \pi_{k} = c_{0} = 0 \\
-    \mathbf{H_{1}:} & \pi_{y} \neq \pi_{1} \neq \dots \neq \pi_{k} \neq c_{0} \neq 0
-  \end{split}
-\end{equation}
-
-> Cases 4:
-
-\begin{equation}\label{eq:fbounds4}
-  \begin{split}
-    \mathbf{H_{0}:} & \pi_{y} = \pi_{1} = \dots = \pi_{k} = c_{1} = 0 \\
-    \mathbf{H_{1}:} & \pi_{y} \neq \pi_{1} \neq \dots \neq \pi_{k} \neq c_{1} \neq 0
-  \end{split}
-\end{equation}
-
-Finally, the bounds t-test can be represented as:
-
-\begin{equation}\label{eq:tbounds}
-  \begin{split}
-    \mathbf{H_{0}:} & \pi_{y} = 0 \\
-    \mathbf{H_{1}:} & \pi_{y} \neq 0
-  \end{split}
-\end{equation}
+The null hypothesis of the bounds t-test is $\mathbf{H_{0}:} & \pi_{y} = 0$.
 
 ## Making inference after cointegration
 
-After the modeling part and if a cointegrating relationship can be established, the long-run (but also the short-run or interim) multipliers can be computed using the `multipliers` function. Note that it is irrelevant whether they are estimated based on an ARDL (\autoref{eq:ardl}) or an UECM (\autoref{eq:uecm}), in terms of the results. The formulas for the multipliers for the constant and the linear trend are:
+After the modeling part and if a cointegrating relationship can be established, the long-run (but also the short-run or interim) multipliers can be computed using the `multipliers` function. Note that it is irrelevant whether they are estimated based on an ARDL (\autoref{eq:ardl}) or an UECM (\autoref{eq:uecm}), in terms of the results.
 
-> When the input is an ARDL:
-
-\begin{equation}\label{eq:mult-c-ardl}
-  \mu = \frac{c_{0}}{1-\sum_{i=1}^{p}b_{y,i}}
-\end{equation}
-
-\begin{equation}\label{eq:mult-t-ardl}
-  \delta = \frac{c_{1}}{1-\sum_{i=1}^{p}b_{y,i}}
-\end{equation}
-
-> When the input in an UECM:
-
-\begin{equation}\label{eq:mult-c-uecm}
-  \mu = \frac{c_{0}}{-\pi_{y}}
-\end{equation}
-
-\begin{equation}\label{eq:mult-t-uecm}
-  \delta = \frac{c_{1}}{-\pi_{y}}
-\end{equation}
-
-The relationships for the short-run multipliers are:
-
-> When the input is an ARDL:
-
-\begin{equation}\label{eq:mult-sr-ardl}
-  \frac{\partial y_{t}}{\partial x_{j,t}} = \frac{b_{j,0}}{1-\sum_{i=1}^{p}b_{y,i}} \;\;\;\;\; \forall j=1,\dots,k
-\end{equation}
-
-> When the input is an UECM:
-
-\begin{equation}\label{eq:mult-sr-uecm}
-  \frac{\partial y_{t}}{\partial x_{j,t}} = \frac{\omega_{j}}{-\pi_{y}} \;\;\;\;\; \forall j=1,\dots,k
-\end{equation}
-
-The relationships for the interim multipliers are:
-
-> When the input is an ARDL:
-
-\begin{equation}\label{eq:mult-int-ardl}
-  \frac{\partial y_{t+s}}{\partial x_{j,t}} = \frac{\sum_{l=1}^{s}b_{j,l}}{1-\sum_{i=1}^{p}b_{y,i}} \;\;\;\;\; \forall j=1,\dots,k \;\;\;\;\; s \in \{0,\dots,q_{j}\}
-\end{equation}
-
-> When the input is an UECM:
-
-\begin{equation}\label{eq:mult-int-uecm}
-  \frac{\partial y_{t+s}}{\partial x_{j,t}} = \frac{\pi_{j} + \psi_{j,s}}{-\pi_{y}} \;\;\;\;\; \forall j=1,\dots,k \;\;\;\;\; s \in \{1,\dots,q_{j}-1\}
-\end{equation}
-
-The relationships for the long-run multipliers are:
-
-> When the input is an ARDL:
-
-\begin{equation}\label{eq:mult-lr-ardl}
-  \frac{\partial y_{t+\infty}}{\partial x_{j,t}} = \theta_{j} = \frac{\sum_{l=0}^{q_{j}}b_{j,l}}{1-\sum_{i=1}^{p}b_{y,i}} \;\;\;\;\; \forall j=1,\dots,k
-\end{equation}
-
-> When the input is an UECM:
-
-\begin{equation}\label{eq:mult-lr-uecm}
-  \frac{\partial y_{t+\infty}}{\partial x_{j,t}} = \theta_{j} = \frac{\pi_{j}}{-\pi_{y}} \;\;\;\;\; \forall j=1,\dots,k
-\end{equation}
-
-Lastly, the cointegrating relationship vector can be constructed using the  function `coint_eq`. The formula is:
-
-> Cases 1, 3, 5:
-
-\begin{equation}\label{eq:cointeq-135}
-  CointEq_{t} = \sum_{j=1}^{k}\theta_{j}x_{j,t} \;\;\;\;\; \forall j=1,\dots,k
-\end{equation}
-
-> Case 2:
-
-\begin{equation}\label{eq:cointeq-2}
-  CointEq_{t} = \mu + \sum_{j=1}^{k}\theta_{j}x_{j,t} \;\;\;\;\; \forall j=1,\dots,k
-\end{equation}
-
-> Case 4:
-
-\begin{equation}\label{eq:cointeq-4}
-  CointEq_{t} = \delta + \sum_{j=1}^{k}\theta_{j}x_{j,t} \;\;\;\;\; \forall j=1,\dots,k
-\end{equation}
+Lastly, the cointegrating relationship vector can be constructed using the function `coint_eq`.
 
 # Conclusion
 
-Using the intuitive API of the `ARDL` package, even the most complex ARDL, UECM or RECM model can be fully specified using the $ARDL(p, q_{1}, ..., q_{k})$ order and the case for the restriction of the constant and linear deterministic parameters. The interconnection between the objects allows for further post-estimation testing. Finally, the detailed estimation formulas are provided in order to enhance the understanding of every step of the analysis giving a reference point for the equations in publications.
+Using the intuitive [API](https://cran.r-project.org/web/packages/ARDL/ARDL.pdf) of the `ARDL` package, even the most complex ARDL, UECM or RECM model can be fully specified using the $ARDL(p, q_{1}, ..., q_{k})$ order and the case for the restriction of the constant and linear deterministic parameters. The interconnection between the objects allows for further post-estimation testing. Finally, the detailed estimation formulas are provided in order to enhance the understanding of every step of the analysis giving a reference point for the equations in publications.
 
 # Acknowledgments
 
