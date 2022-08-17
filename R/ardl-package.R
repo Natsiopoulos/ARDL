@@ -13,7 +13,7 @@
 globalVariables(c("."))
 
 .onAttach <- function(libname, pkgname) {
-    packageStartupMessage(format(citation("ARDL"), bibtex = FALSE)[[1]],
+    packageStartupMessage(format(utils::citation("ARDL"), bibtex = FALSE)[[1]],
                       "\n\n",
-                      format(citation("ARDL"), bibtex = FALSE)[[2]])
+                      format(utils::citation("ARDL"), bibtex = FALSE)[[2]])
 }

@@ -31,11 +31,11 @@
 #' # From an ARDL model (under case 2, restricted constant)
 #' ardl_3132 <- ardl(LRM ~ LRY + IBO + IDE, data = denmark, order = c(3,1,3,2))
 #' ce2_ardl <- coint_eq(ardl_3132, case = 2)
-#' 
+#'
 #' # From an UECM (under case 2, restricted constant)
 #' uecm_3132 <- uecm(ardl_3132)
 #' ce2_uecm <- coint_eq(uecm_3132, case = 2)
-#' 
+#'
 #' # From a RECM (under case 2, restricted constant)
 #' # Notice that if a RECM has already been estimated under a certain case,
 #' # the 'coint_eq()' can't be under different case, so no 'case' argument needed.
@@ -44,7 +44,7 @@
 #' ce2_recm <- coint_eq(recm_3132)
 #'
 #' identical(ce2_ardl, ce2_uecm, ce2_recm)
-#' 
+#'
 #' ## Check for a degenerate level relationship ---------------------------
 #'
 #' # The bounds F-test under both cases reject the Null Hypothesis of no level relationship.
@@ -53,14 +53,14 @@
 #'
 #' # The bounds t-test also rejects the NUll Hypothesis of no level relationship.
 #' bounds_t_test(ardl_3132, case = 3)
-#' 
+#'
 #' # But when the constant enters the long-run equation (case 3)
 #' # this becomes a degenerate relationship.
 #' ce3_ardl <- coint_eq(ardl_3132, case = 3)
 #' den <- cbind.zoo(LRM = denmark[,"LRM"], ce2_ardl, ce3_ardl)
-#' 
+#'
 #' if (requireNamespace("xts", quietly = TRUE)) {
-#'  
+#'
 #' library(xts)
 #' den <- xts(den)
 #' plot(den, legend.loc = "right")

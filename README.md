@@ -62,10 +62,6 @@ First, we find the best ARDL specification. We search up to order 5.
 
 ``` r
 models <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark, max_order = 5)
-#> Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.
-#> Using compatibility `.name_repair`.
-#> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
 
 # The top 20 models according to the AIC
 models$top_orders
@@ -343,10 +339,10 @@ identical(uecm_model$coefficients, dynlm_uecm_model$coefficients)
 
 ## References
 
-Kleanthis Natsiopoulos and Nickolaos G. Tzeremes (2022). ARDL bounds
+Natsiopoulos, Kleanthis, & Tzeremes, Nickolaos G. (2022). ARDL bounds
 test for cointegration: Replicating the Pesaran et al. (2001) results
-for the UK earnings equation using R. *Journal of Applied Econometrics*.
-<https://doi.org/10.1002/jae.2919>
+for the UK earnings equation using R. *Journal of Applied Econometrics*,
+37(5), 1079-1090. <https://doi.org/10.1002/jae.2919>
 
 Pesaran, M. H., Shin, Y., & Smith, R. J. (2001). Bounds testing
 approaches to the analysis of level relationships. *Journal of Applied

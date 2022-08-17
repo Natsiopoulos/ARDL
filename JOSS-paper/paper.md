@@ -28,7 +28,7 @@ affiliations:
 
 # Summary
 
-Autoregressive Distributed Lag (ARDL) and Error Correction Models (ECM) [@Pesaran1999] are widely used in various economic applications as they are very flexible. Also, these models are used in the context of cointegration analysis as a platform to test and analyze the levels (long-run) relationship between variables. One of the most popular such tests is the bounds test proposed by @Pesaran2001 which allows testing for cointegration while at the same time estimates the level relationship. `ARDL` [@Natsiopoulos2022; @ardl-pkg] is an `R` package that aims to help users in the modeling process of ARDL and ECM and it also provides the tools towards the bounds test for cointegration.
+Autoregressive Distributed Lag (ARDL) and Error Correction Models (ECM) [@Pesaran1999] are widely used in various economic, environmental, political science applications etc. These are very flexible because of the autoregressive (AR) and the distributed lag (DL, essentially AR terms of the independent variables) terms in the ARDL model. Also, they are used in the context of cointegration analysis as a platform to test and analyze the levels (long-run) relationship between variables. One of the most popular such tests is the bounds test proposed by @Pesaran2001 which allows testing for cointegration while at the same time estimates the level relationship. `ARDL` [@Natsiopoulos2022; @ardl-pkg] is an `R` package that aims to help users in the modeling process of ARDL and ECM and it also provides the tools towards the bounds test for cointegration.
 
 # Statement of need
 

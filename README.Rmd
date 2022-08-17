@@ -181,6 +181,6 @@ identical(uecm_model$coefficients, dynlm_uecm_model$coefficients)
 
 ## References
 
-Kleanthis Natsiopoulos and Nickolaos G. Tzeremes (2022). ARDL bounds test for cointegration: Replicating the Pesaran et al. (2001) results for the UK earnings equation using R. *Journal of Applied Econometrics*. https://doi.org/10.1002/jae.2919
+Natsiopoulos, Kleanthis, & Tzeremes, Nickolaos G. (2022). ARDL bounds test for cointegration: Replicating the Pesaran et al. (2001) results for the UK earnings equation using R. *Journal of Applied Econometrics*, 37(5), 1079-1090. https://doi.org/10.1002/jae.2919
 
 Pesaran, M. H., Shin, Y., & Smith, R. J. (2001). Bounds testing approaches to the analysis of level relationships. *Journal of Applied Econometrics*, 16(3), 289-326

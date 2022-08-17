@@ -113,7 +113,7 @@ ce3_ardl <- coint_eq(ardl_3132, case = 3)
 den <- cbind.zoo(LRM = denmark[,"LRM"], ce2_ardl, ce3_ardl)
 
 if (requireNamespace("xts", quietly = TRUE)) {
- 
+
 library(xts)
 den <- xts(den)
 plot(den, legend.loc = "right")

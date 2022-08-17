@@ -178,7 +178,7 @@
 #' # 4 4  4  4
 #' # 5 5  5  5
 #' }
-#' 
+#'
 #' ## Add constraints -----------------------------------------------------
 #'
 #' # Restrict only the order of IBO to be 2
@@ -217,13 +217,13 @@ auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order
                                kz = parsed_formula$kz, restriction = -1)
     if (!missing(starting_order)) {
         starting_order_null <- FALSE
-        starting_order <- parse_order(orders = starting_order, order_name = "starting_order", kz = parsed_formula$kz)
         if (starting_order[1] < 1) { stop("In 'starting_order', the starting order of p (first argument) can't be less than 1.", call. = FALSE)}
+        starting_order <- parse_order(orders = starting_order, order_name = "starting_order", kz = parsed_formula$kz)
         if (any(starting_order > max_order)) {stop("'starting_order' can't be greater than 'max_order'.", call. = FALSE)}
     } else {
         starting_order_null <- TRUE
     }
-    if (any(fixed_order > max_order)) {stop("'fixed_order' can't be greater than 'max_order.", call. = FALSE)}
+    if (any(fixed_order > max_order)) {stop("'fixed_order' can't be greater than 'max_order'.", call. = FALSE)}
     start_sample <- start
     end_sample <- end
 

@@ -6,17 +6,18 @@ note <- paste("R package version", meta$Version)
 citEntry(entry = "article",
     title   = "ARDL bounds test for cointegration: Replicating the Pesaran et al. (2001) results for the UK earnings equation using R",
     journal = "Journal of Applied Econometrics",
-    volume  = {},
-    number  = {},
-    pages   = {},
+    volume  = {37},
+    number  = {5},
+    pages   = {1079-1090},
     doi     = "https://doi.org/10.1002/jae.2919",
     url     = "https://onlinelibrary.wiley.com/doi/abs/10.1002/jae.2919",
+    keywords = "ARDL, bounds test, cointegration, earnings equation, R",
     author  = personList(as.person("Kleanthis Natsiopoulos"),
                 as.person("Nickolaos G. Tzeremes")),
     year    = "2022",
   textVersion  =
-  paste0("Kleanthis Natsiopoulos and Nickolaos G. Tzeremes (2022). " ,
-        "ARDL bounds test for cointegration: Replicating the Pesaran et al. (2001) results for the UK earnings equation using R. Journal of Applied Econometrics. https://doi.org/10.1002/jae.2919"))
+  paste0("Natsiopoulos, Kleanthis, and Tzeremes, Nickolaos G. (2022). " ,
+        "ARDL bounds test for cointegration: Replicating the Pesaran et al. (2001) results for the UK earnings equation using R. Journal of Applied Econometrics, 37(5), 1079-1090. https://doi.org/10.1002/jae.2919"))
 
 citEntry(entry = "Manual",
     title   = "{ARDL}: ARDL, ECM and Bounds-Test for Cointegration",

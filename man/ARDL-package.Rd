@@ -14,6 +14,7 @@ Creates complex autoregressive distributed lag (ARDL) models and constructs the 
 Useful links:
 \itemize{
   \item \url{https://github.com/Natsiopoulos/ARDL}
+  \item Report bugs at \url{https://github.com/Natsiopoulos/ARDL/issues}
 }
 
 }
