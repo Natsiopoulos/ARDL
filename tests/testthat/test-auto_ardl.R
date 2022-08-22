@@ -1,11 +1,4 @@
 test_that("Combination of max_order, fixed_order, starting_order and selection", {
-    AIC_pss <- function(model){
-        # maximized log-likelihood value of the model
-        LLp <- logLik(model)
-        # number of freely estimated coefficients
-        sp <- length(model$coefficients)
-        LLp - sp
-    }
     ardl_model <- auto_ardl(w ~ Prod + UR + Wedge + Union | D7475 + D7579,
                             data = PSS2001, start = c(1972, 01),
                             max_order = 6, fixed_order = c(-1,1,-1,-1,-1), starting_order = 5,
@@ -72,13 +65,6 @@ test_that("starting_order is missing", {
                                    Union=c(5,6,5,5,6,5,5,6,5,5,5,4,4,4,4,5,4,4,4,3))
 
     #also checks grid = TRUE & selection_minmax = "max"
-    AIC_pss <- function(model){
-        # maximized log-likelihood value of the model
-        LLp <- logLik(model)
-        # number of freely estimated coefficients
-        sp <- length(model$coefficients)
-        LLp - sp
-    }
     ardl_model_gridT <- auto_ardl(w ~ Prod + UR + Wedge | D7475 + D7579,
                                   data = PSS2001, start = c(1972, 01),
                                   max_order = 6, fixed_order = c(-1,1,-1,-1),

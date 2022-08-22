@@ -5,7 +5,7 @@
 \alias{denmark}
 \title{The Danish data on money income prices and interest rates}
 \format{
-A data frame with 55 rows and 5 variables. Time period from 1974:Q1
+A time-series object with 55 rows and 5 variables. Time period from 1974:Q1
 until 1987:Q3.
 \describe{
   \item{LRM}{logarithm of real money, M2}

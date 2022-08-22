@@ -11,6 +11,10 @@
 * `multipliers()` was giving an error when trying to estimate short-run and
 interim multipliers using a model without a constant term.
 
+### New data
+
+* Added the data used in Pesaran et al. (2001)
+
 ---
 
 # ARDL 0.2.0
