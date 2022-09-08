@@ -169,8 +169,8 @@ summary(uecm_3132)
 ```
 
 And also the RECM (Restricted Error Correction Model) of the underlying
-ARDL(3,1,3,2), allowing the constant to join the short-run relationship
-(case 2), instead of the long-run (case 3).
+ARDL(3,1,3,2), allowing the constant to join the long-run relationship
+(case 2), instead of the short-run (case 3).
 
 ``` r
 recm_3132 <- recm(uecm_3132, case = 2)
