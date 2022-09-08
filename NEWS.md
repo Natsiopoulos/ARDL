@@ -11,9 +11,19 @@
 * `multipliers()` was giving an error when trying to estimate short-run and
 interim multipliers using a model without a constant term.
 
+### Automated tests
+
+* Added automated tests.
+
 ### New data
 
 * Added the data used in Pesaran et al. (2001)
+
+### Minor changes
+
+* Added dependency on R >= 3.5.0 because serialized objects in serialize/load 
+version 3 cannot be read in older versions of R. File(s) containing such 
+objects: ‘ARDL/data/PSS2001.rda’
 
 ---
 

@@ -24,7 +24,7 @@ Video: https://www.youtube.com/watch?v=keDUwWBpHjU
 Encoding: UTF-8
 LazyData: true
 Depends: 
-    R (>= 3.2.0)
+    R (>= 3.5.0)
 Suggests: 
     qpcR,
     sandwich,
