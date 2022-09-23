@@ -1,10 +1,12 @@
-# ARDL 0.2.0.9000
+# ARDL 0.2.1
 
 ### Documentation update
 
 * Added `BugReports` and `Video` in the `DESCRIPTION` (issue #6, @ha0ye).
 
 * Updated the references in `README` and `CITATION`.
+
+* Added codecov and badges.
 
 ### Bug fix
 
