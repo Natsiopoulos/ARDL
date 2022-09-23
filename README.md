@@ -22,8 +22,9 @@ the bounds-test for cointegration as described in [Pesaran et
 al. (2001)](https://onlinelibrary.wiley.com/doi/abs/10.1002/jae.616) and
 provides the multipliers and the cointegrating equation. The validity
 and the accuracy of this package have been verified by successfully
-replicating the results of Pesaran et al. (2001) in Natsiopoulos and
-Tzeremes (2022) <doi:10.1002/jae.2919>.
+replicating the results of Pesaran et al. (2001) in [Natsiopoulos and
+Tzeremes
+(2022)](https://onlinelibrary.wiley.com/doi/abs/10.1002/jae.2919).
 
 ## Why `ARDL`?
 
