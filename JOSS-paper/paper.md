@@ -8,10 +8,10 @@ tags:
 - R
 date: "10 August 2022"
 output:
+  pdf_document: default
   word_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 authors:
 - name: Kleanthis Natsiopoulos
   orcid: 0000-0003-1180-2984
@@ -120,15 +120,15 @@ Where $ARDL(p, q_1, ..., q_k)$ represent the ARDL order and Case is the restrict
 
 ## Bounds test
 
-The functions `bounds_f_test` and `bounds_t_test` return a typical `htest` object and they perform a Wald or t test respectively on an UECM. The input of the functions can also be an ARDL model as they are interconnected as described above. The hypothesis tests for the bounds F-test and t-test are based on \autoref{eq:uecm}.
+The functions `bounds_f_test` and `bounds_t_test` return a typical `htest` object and they perform a Wald or t test respectively on an UECM. The input of the functions can also be an ARDL model as they are interconnected as described above. The hypothesis tests for the bounds F-test and t-test are based on (\ref{eq:uecm}).
 
 For the bounds F-test the null hypothesis is $\mathbf{H_{0}:} \pi_{y} = \pi_{1} = \dots = \pi_{k} = c_{0} = c_{1} = 0$, where the restriction of the deterministic trends $c_{0}$ and $c_{1}$ depends on the case chosen.
 
-The null hypothesis of the bounds t-test is $\mathbf{H_{0}:} & \pi_{y} = 0$.
+The null hypothesis of the bounds t-test is $\mathbf{H_{0}:} \pi_{y} = 0$.
 
 ## Making inference after cointegration
 
-After the modeling part and if a cointegrating relationship can be established, the long-run (but also the short-run or interim) multipliers can be computed using the `multipliers` function. Note that it is irrelevant whether they are estimated based on an ARDL (\autoref{eq:ardl}) or an UECM (\autoref{eq:uecm}), in terms of the results.
+After the modeling part and if a cointegrating relationship can be established, the long-run (but also the short-run or interim) multipliers can be computed using the `multipliers` function. Note that it is irrelevant whether they are estimated based on an ARDL (\ref{eq:ardl}) or an UECM (\ref{eq:uecm}), in terms of the results.
 
 Lastly, the cointegrating relationship vector can be constructed using the function `coint_eq`.
 
