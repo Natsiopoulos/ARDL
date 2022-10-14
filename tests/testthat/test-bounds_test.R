@@ -64,44 +64,60 @@ test_that("exact = FALSE & kx <= 10 & alpha %in% c(0.1, 0.05, 0.025, 0.01)", {
                        order=c(6,1,5,4,5))
     bounds_test <- bounds_f_test(ardl_model, case = 3, alpha = 0.05)
     expected_tab <- data.frame(statistic=5.5500885,
-                               lower.bound = 2.86, upper.bound = 4.01,
+                               lower.bound = 2.8942417, upper.bound = 4.0273194,
                                alpha = 0.05, p.value=0.0044907254)
     row.names(expected_tab) <- "F"
 
     expect_equal(bounds_test$tab, expected_tab)
     expect_equal(bounds_test$null.value, c(k=4, T=1000))
 
+    # & PSS2001 critical values
+    expected_critvals <- c("Lower-bound I(0)" = 2.86, "Upper-bound I(1)" = 4.01)
+    expect_equal(bounds_test$PSS2001parameters, expected_critvals)
+
     # bounds_t_test
     bounds_test <- bounds_t_test(ardl_model, case = 3, alpha = 0.05)
     expected_tab <- data.frame(statistic=-3.9142734,
-                               lower.bound = -2.86, upper.bound = -3.99,
+                               lower.bound = -2.8649811, upper.bound = -4.0002457,
                                alpha = 0.05, p.value=0.060869085)
     row.names(expected_tab) <- "t"
 
     expect_equal(bounds_test$tab, expected_tab)
     expect_equal(bounds_test$null.value, c(k=4, T=1000))
 
+    # & PSS2001 critical values
+    expected_critvals <- c("Lower-bound I(0)" = -2.86, "Upper-bound I(1)" = -3.99)
+    expect_equal(bounds_test$PSS2001parameters, expected_critvals)
+
     # & test = "Chisq" & case %in% c(1, 3, 5)
     bounds_test <- bounds_f_test(ardl_model, case = 3, alpha = 0.1, test = "Chisq")
 
     expected_tab <- data.frame(statistic=27.750442,
-                               lower.bound = 12.25, upper.bound = 17.6,
+                               lower.bound = 12.310873, upper.bound = 17.6785096,
                                alpha = 0.1, p.value=0.0044907254)
     row.names(expected_tab) <- "Chisq"
 
     expect_equal(bounds_test$tab, expected_tab)
     expect_equal(bounds_test$null.value, c(k=4, T=1000))
 
+    # & PSS2001 critical values
+    expected_critvals <- c("Lower-bound I(0)" = 12.25, "Upper-bound I(1)" = 17.60)
+    expect_equal(bounds_test$PSS2001parameters, expected_critvals)
+
     # & test = "Chisq" & case %in% c(2, 4)
     bounds_test <- bounds_f_test(ardl_model, case = 2, alpha = 0.01, test = "Chisq")
 
     expected_tab <- data.frame(statistic=66.391527,
-                               lower.bound = 19.74, upper.bound = 26.22,
+                               lower.bound = 20.0125226, upper.bound = 26.16848,
                                alpha = 0.01, p.value=1e-06)
     row.names(expected_tab) <- "Chisq"
 
     expect_equal(bounds_test$tab, expected_tab)
     expect_equal(bounds_test$null.value, c(k=4, T=1000))
+
+    # & PSS2001 critical values
+    expected_critvals <- c("Lower-bound I(0)" = 19.74, "Upper-bound I(1)" = 26.22)
+    expect_equal(bounds_test$PSS2001parameters, expected_critvals)
 })
 
 test_that("exact = FALSE & kx <= 10 & alpha %in% c(0.005 0.075 0.150 0.200) & test = Chisq", {

@@ -1,5 +1,21 @@
 # ARDL 0.2.1
 
+### New features
+
+* The `bounds_f_test` and `bounds_t_test` functions now have a new returned 
+value `PSS2001parameters`, if `alpha` is one of the 0.1, 0.05, 0.025 or 0.01, 
+`exact = FALSE` and k <= 10. These are the critical value bounds presented in 
+Pesaran et al. (2001) but are less precise. Previously, only these were reported
+in `parameters`.  
+e.g. In the following marginal case, according to the critical values of 
+Pesaran et al. (2001), H0 is rejected but according to the p-value is not.
+
+> m1 <- uecm(w ~ Prod + UR + Wedge + Union | D7475 + D7579,
+           order = c(5, 1, 5, 5, 5), data = PSS2001, start = c(1972, 01))  
+> btt <- bounds_t_test(m1, case = 3, alpha = 0.05)}  
+> btt$tab  
+> btt$PSS2001parameters
+
 ### Documentation update
 
 * Added `BugReports` and `Video` in the `DESCRIPTION` (issue #6, @ha0ye).

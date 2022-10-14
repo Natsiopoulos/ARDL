@@ -64,6 +64,9 @@ A list with class "htest" containing the following components:
   \item{\code{parameters}}{numeric vector containing the critical value
      bounds.}
   \item{\code{p.value}}{the p-value of the test.}
+  \item{\code{PSS2001parameters}}{numeric vector containing the critical
+     value bounds as presented by \cite{Pesaran et al. (2001)}. See section
+     alpha, bounds and p-value' below for details.}
   \item{\code{tab}}{data.frame containing the statistic, the critical value
      bounds, the alpha level of significance and the p-value.}
 }
@@ -114,8 +117,9 @@ or as an F-statistic.
          being one of the 0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.15 or 0.2,
          everything else has to be computed.
      \item If \code{alpha} is one of the 0.1, 0.05, 0.025 or 0.01 (and
-         \code{exact = FALSE} and k <= 10), the critical value bounds are
-         those presented in \cite{Pesaran et al. (2001)}.
+         \code{exact = FALSE} and k <= 10), \code{PSS2001parameters} shows
+         the critical value bounds presented in \cite{Pesaran et al. (2001)}
+         (less precise).
   }
 }
 
@@ -227,6 +231,9 @@ bounds_f_test(ardl_3132_c, case = 4)
 bft <- bounds_f_test(ardl_3132_c, case = 2, alpha = 0.05)
 bft
 bft$tab
+
+# Traditional but less precise critical value bounds, as presented in Pesaran et al. (2001)
+bft$PSS2001parameters
 
 # F-statistic is slightly larger than the I(1) bound (for a=0.005)
 # as p-value is slightly smaller than 0.005

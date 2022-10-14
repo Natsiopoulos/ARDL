@@ -239,7 +239,7 @@ tbounds
 #>  Bounds t-test for no cointegration
 #> 
 #> data:  d(LRM) ~ L(LRM, 1) + L(LRY, 1) + L(IBO, 1) + L(IDE, 1) + d(L(LRM,     1)) + d(L(LRM, 2)) + d(LRY) + d(IBO) + d(L(IBO, 1)) + d(L(IBO,     2)) + d(IDE) + d(L(IDE, 1))
-#> t = -4.5479, Lower-bound I(0) = -3.43, Upper-bound I(1) = -4.37,
+#> t = -4.5479, Lower-bound I(0) = -3.4430, Upper-bound I(1) = -4.3799,
 #> p-value = 0.005538
 #> alternative hypothesis: Possible cointegration
 #> null values:
@@ -249,7 +249,7 @@ tbounds
 # Here is a more clear view of the main results.
 tbounds$tab
 #>   statistic lower.bound upper.bound alpha     p.value
-#> t -4.547939       -3.43       -4.37  0.01 0.005538316
+#> t -4.547939   -3.442978   -4.379886  0.01 0.005538316
 ```
 
 Here we have the short-run and the long-run multipliers (with standard

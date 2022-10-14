@@ -61,6 +61,9 @@ A list with class "htest" containing the following components:
   \item{\code{parameters}}{numeric vector containing the critical value
      bounds.}
   \item{\code{p.value}}{the p-value of the test.}
+  \item{\code{PSS2001parameters}}{numeric vector containing the critical
+     value bounds as presented by \cite{Pesaran et al. (2001)}. See section
+     alpha, bounds and p-value' below for details.}
   \item{\code{tab}}{data.frame containing the statistic, the critical value
      bounds, the alpha level of significance and the p-value.}
 }
@@ -93,8 +96,9 @@ A list with class "htest" containing the following components:
          being one of the 0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.15 or 0.2,
          everything else has to be computed.
      \item If \code{alpha} is one of the 0.1, 0.05, 0.025 or 0.01 (and
-         \code{exact = FALSE} and k <= 10), the critical value bounds are
-         those presented in \cite{Pesaran et al. (2001)}.
+         \code{exact = FALSE} and k <= 10), \code{PSS2001parameters} shows
+         the critical value bounds presented in \cite{Pesaran et al. (2001)}
+         (less precise).
   }
 }
 
@@ -194,6 +198,9 @@ bounds_t_test(ardl_3132_ct, case = 3)
 btt <- bounds_t_test(ardl_3132_c, case = 3, alpha = 0.05)
 btt
 btt$tab
+
+# Traditional but less precise critical value bounds, as presented in Pesaran et al. (2001)
+btt$PSS2001parameters
 
 # t-statistic doesn't exceed the I(1) bound (for a=0.005) as p-value is greater than 0.005
 bounds_t_test(ardl_3132_c, case = 3, alpha = 0.005)

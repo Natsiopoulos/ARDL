@@ -42,6 +42,9 @@
 #'   \item{\code{parameters}}{numeric vector containing the critical value
 #'      bounds.}
 #'   \item{\code{p.value}}{the p-value of the test.}
+#'   \item{\code{PSS2001parameters}}{numeric vector containing the critical
+#'      value bounds as presented by \cite{Pesaran et al. (2001)}. See section
+#'      alpha, bounds and p-value' below for details.}
 #'   \item{\code{tab}}{data.frame containing the statistic, the critical value
 #'      bounds, the alpha level of significance and the p-value.}
 #'
@@ -51,19 +54,19 @@
 #'   \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} +
 #'   \sum_{j=1}^{k}\sum_{l=1}^{q_{j}-1} \psi_{j,l}\Delta x_{j,t-l} +
 #'   \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t}}
-#' 
+#'
 #' \describe{
 #'   \item{Cases 1, 3, 5:}{}
 #' }
 #'   \deqn{\mathbf{H_{0}:} \pi_{y} = \pi_{1} = \dots = \pi_{k} = 0}
 #'   \deqn{\mathbf{H_{1}:} \pi_{y} \neq \pi_{1} \neq \dots \neq \pi_{k} \neq 0}
-#' 
+#'
 #' \describe{
 #'   \item{Case 2:}{}
 #' }
 #'   \deqn{\mathbf{H_{0}:} \pi_{y} = \pi_{1} = \dots = \pi_{k} = c_{0} = 0}
 #'   \deqn{\mathbf{H_{1}:} \pi_{y} \neq \pi_{1} \neq \dots \neq \pi_{k} \neq c_{0} \neq 0}
-#' 
+#'
 #' \describe{
 #'   \item{Case 4:}{}
 #' }
@@ -83,8 +86,9 @@
 #'          being one of the 0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.15 or 0.2,
 #'          everything else has to be computed.
 #'      \item If \code{alpha} is one of the 0.1, 0.05, 0.025 or 0.01 (and
-#'          \code{exact = FALSE} and k <= 10), the critical value bounds are
-#'          those presented in \cite{Pesaran et al. (2001)}.
+#'          \code{exact = FALSE} and k <= 10), \code{PSS2001parameters} shows
+#'          the critical value bounds presented in \cite{Pesaran et al. (2001)}
+#'          (less precise).
 #'   }
 #'
 #' @inheritSection recm Cases
@@ -158,6 +162,9 @@
 #' bft <- bounds_f_test(ardl_3132_c, case = 2, alpha = 0.05)
 #' bft
 #' bft$tab
+#'
+#' # Traditional but less precise critical value bounds, as presented in Pesaran et al. (2001)
+#' bft$PSS2001parameters
 #'
 #' # F-statistic is slightly larger than the I(1) bound (for a=0.005)
 #' # as p-value is slightly smaller than 0.005
@@ -244,33 +251,32 @@ bounds_f_test <- function(object, case, alpha = NULL, pvalue = TRUE, exact = FAL
                      ifelse(case == 4, "iv", "v"))))
         if (!is.null(alpha)) {
             if (alpha %in% c(0.1, 0.05, 0.025, 0.01)) {
-                bounds <- eval(parse(text = paste0("crit_val_bounds_pss2001$f$", caselatin))) %>%
+                bounds_pss2001 <- eval(parse(text = paste0("crit_val_bounds_pss2001$f$", caselatin))) %>%
                     dplyr::filter(alpha %in% !!alpha, k == kx) %>%
                     dplyr::select(I0, I1)
+                if (test != "F") {
+                    if (case %in% c(1, 3, 5)) {
+                        bounds_pss2001 <- bounds_pss2001*(kx+1)
+                    } else {
+                        bounds_pss2001 <- bounds_pss2001*(kx+2)
+                    }
+                }
+            }
+            if (alpha %in% alpha_short_seq) {
+                bounds <- eval(parse(text = paste0("crit_val_bounds$I0$", caselatin))) %>%
+                    dplyr::filter(alpha == !!alpha, k == kx) %>%
+                    dplyr::select(fI0) %>%
+                    dplyr::rename(I0 = fI0)
+                bounds <- cbind(bounds,
+                    eval(parse(text = paste0("crit_val_bounds$I1$", caselatin))) %>%
+                        dplyr::filter(alpha == !!alpha, k == kx) %>%
+                        dplyr::select(fI1) %>%
+                        dplyr::rename(I1 = fI1))
                 if (test != "F") {
                     if (case %in% c(1, 3, 5)) {
                         bounds <- bounds*(kx+1)
                     } else {
                         bounds <- bounds*(kx+2)
-                    }
-                }
-            } else {
-                if (alpha %in% alpha_short_seq) {
-                    bounds <- eval(parse(text = paste0("crit_val_bounds$I0$", caselatin))) %>%
-                        dplyr::filter(alpha == !!alpha, k == kx) %>%
-                        dplyr::select(fI0) %>%
-                        dplyr::rename(I0 = fI0)
-                    bounds <- cbind(bounds,
-                        eval(parse(text = paste0("crit_val_bounds$I1$", caselatin))) %>%
-                            dplyr::filter(alpha == !!alpha, k == kx) %>%
-                            dplyr::select(fI1) %>%
-                            dplyr::rename(I1 = fI1))
-                    if (test != "F") {
-                        if (case %in% c(1, 3, 5)) {
-                            bounds <- bounds*(kx+1)
-                        } else {
-                            bounds <- bounds*(kx+2)
-                        }
                     }
                 }
             }
@@ -354,6 +360,11 @@ bounds_f_test <- function(object, case, alpha = NULL, pvalue = TRUE, exact = FAL
         tab <- cbind(tab, lower.bound = parameters[1], upper.bound = parameters[2],
                                   alpha = alpha)
         rval$parameters <- parameters
+        if (alpha %in% c(0.1, 0.05, 0.025, 0.01)) {
+            PSS2001parameters <- c(bounds_pss2001$I0, bounds_pss2001$I1)
+            names(PSS2001parameters) <- c("Lower-bound I(0)", "Upper-bound I(1)")
+            rval$PSS2001parameters <- PSS2001parameters
+        }
     }
     if (pvalue == TRUE) {
         tab <- cbind(tab, p.value = p_value)
@@ -376,7 +387,7 @@ bounds_f_test <- function(object, case, alpha = NULL, pvalue = TRUE, exact = FAL
 #'   test can't be applied for cases 2 and 4.
 #' @inheritParams bounds_f_test
 #' @inherit bounds_f_test return
-#' 
+#'
 #' @section Hypothesis testing: \deqn{\Delta y_{t} = c_{0} + c_{1}t +
 #'   \pi_{y}y_{t-1} + \sum_{j=1}^{k}\pi_{j}x_{j,t-1} +
 #'   \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} +
@@ -384,7 +395,7 @@ bounds_f_test <- function(object, case, alpha = NULL, pvalue = TRUE, exact = FAL
 #'   \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t}}
 #'   \deqn{\mathbf{H_{0}:} \pi_{y} = 0}
 #'   \deqn{\mathbf{H_{1}:} \pi_{y} \neq 0}
-#' 
+#'
 #' @inheritSection bounds_f_test alpha, bounds and p-value
 #' @inheritSection bounds_f_test Cases
 #' @inheritSection bounds_f_test References
@@ -445,6 +456,9 @@ bounds_f_test <- function(object, case, alpha = NULL, pvalue = TRUE, exact = FAL
 #' btt <- bounds_t_test(ardl_3132_c, case = 3, alpha = 0.05)
 #' btt
 #' btt$tab
+#'
+#' # Traditional but less precise critical value bounds, as presented in Pesaran et al. (2001)
+#' btt$PSS2001parameters
 #'
 #' # t-statistic doesn't exceed the I(1) bound (for a=0.005) as p-value is greater than 0.005
 #' bounds_t_test(ardl_3132_c, case = 3, alpha = 0.005)
@@ -513,21 +527,20 @@ bounds_t_test <- function(object, case, alpha = NULL, pvalue = TRUE,
                      ifelse(case == 3, "iii", "v"))
         if (!is.null(alpha)) {
             if (alpha %in% c(0.1, 0.05, 0.025, 0.01)) {
-                bounds <- eval(parse(text = paste0("crit_val_bounds_pss2001$t$", caselatin))) %>%
+                bounds_pss2001 <- eval(parse(text = paste0("crit_val_bounds_pss2001$t$", caselatin))) %>%
                     dplyr::filter(alpha %in% !!alpha, k == kx) %>%
                     dplyr::select(I0, I1)
-            } else {
-                if (alpha %in% alpha_short_seq) {
-                    bounds <- eval(parse(text = paste0("crit_val_bounds$I0$", caselatin))) %>%
+            }
+            if (alpha %in% alpha_short_seq) {
+                bounds <- eval(parse(text = paste0("crit_val_bounds$I0$", caselatin))) %>%
+                    dplyr::filter(alpha == !!alpha, k == kx) %>%
+                    dplyr::select(tI0) %>%
+                    dplyr::rename(I0 = tI0)
+                bounds <- cbind(bounds,
+                    eval(parse(text = paste0("crit_val_bounds$I1$", caselatin))) %>%
                         dplyr::filter(alpha == !!alpha, k == kx) %>%
-                        dplyr::select(tI0) %>%
-                        dplyr::rename(I0 = tI0)
-                    bounds <- cbind(bounds,
-                        eval(parse(text = paste0("crit_val_bounds$I1$", caselatin))) %>%
-                            dplyr::filter(alpha == !!alpha, k == kx) %>%
-                            dplyr::select(tI1) %>%
-                            dplyr::rename(I1 = tI1))
-                }
+                        dplyr::select(tI1) %>%
+                        dplyr::rename(I1 = tI1))
             }
         }
         if (pvalue == TRUE) {
@@ -593,6 +606,11 @@ bounds_t_test <- function(object, case, alpha = NULL, pvalue = TRUE,
         tab <- cbind(tab, lower.bound = parameters[1], upper.bound = parameters[2],
                                   alpha = alpha)
         rval$parameters <- parameters
+        if (alpha %in% c(0.1, 0.05, 0.025, 0.01)) {
+            PSS2001parameters <- c(bounds_pss2001$I0, bounds_pss2001$I1)
+            names(PSS2001parameters) <- c("Lower-bound I(0)", "Upper-bound I(1)")
+            rval$PSS2001parameters <- PSS2001parameters
+        }
     }
     if (pvalue == TRUE) {
         tab <- cbind(tab, p.value = p_value)
