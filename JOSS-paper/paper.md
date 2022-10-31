@@ -84,7 +84,7 @@ dynlm(d(LRM) ~ L(LRM, 1) + L(LRY, 1) + L(IBO, 1) +
                            d(IDE) + d(L(IDE, 1)), data = denmark)
 ```
 
-The API of `dynamac` has a similar approach with `dynlm`. One has to define every independent variable one by one, with the limitation that it only accepts models with AR(1) for the dependent variable (i.e. $ARDL(1, q_1, ..., q_k)$).
+The API of `dynamac` has a similar approach with `dynlm` and one has to define every independent variable one by one.
 The API of `dLagM` requires less typing and the way for one to define an ARDL model is by setting the maximum lags for the dependent and the independent variables (the same maximum order for all the independent ones as in a typical VAR model) and then remove one by one the lags that are not required from each independent variable.
 
 As this is a quick presentation of just one of the functionalities of the package, we are not going to list all the key advantages of the `ARDL` package or compare them with the limitations in other open source or proprietary software. We refere to these two aforementioned packages as these seem to be the R packages that argue that they support the same functionalities as the `ARDL` package.
