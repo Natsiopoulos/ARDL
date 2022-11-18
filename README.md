@@ -10,7 +10,7 @@
 status](https://www.r-pkg.org/badges/version/ARDL)](https://CRAN.R-project.org/package=ARDL)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-[![codecov](https://codecov.io/gh/Natsiopoulos/ARDL/branch/master/graph/badge.svg?token=PVZAY57F3D)](https://codecov.io/gh/Natsiopoulos/ARDL)
+[![codecov](https://codecov.io/gh/Natsiopoulos/ARDL/branch/master/graph/badge.svg?token=PVZAY57F3D)](https://app.codecov.io/gh/Natsiopoulos/ARDL)
 <!-- badges: end -->
 
 ## Overview

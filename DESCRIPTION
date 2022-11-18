@@ -20,7 +20,6 @@ Authors@R: c(
 BugReports: https://github.com/Natsiopoulos/ARDL/issues
 License: GPL-3
 URL: https://github.com/Natsiopoulos/ARDL
-Video: https://www.youtube.com/watch?v=keDUwWBpHjU
 Encoding: UTF-8
 LazyData: true
 Depends: 

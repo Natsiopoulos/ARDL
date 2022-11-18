@@ -24,7 +24,7 @@
 
 #' The UK earnings equation data
 #'
-#' This data set contains the series used by Pesaran et al. (2001) for estimating the UK earnings equationand.
+#' This data set contains the series used by Pesaran et al. (2001) for estimating the UK earnings equation.
 #' The clean format of the data retrieved from the Data Archive of Natsiopoulos and Tzeremes (2022).
 #'
 #' An object of class "zooreg" "zoo".
@@ -50,6 +50,6 @@
 #' Cointegration: Replicating the Pesaran et al. (2001) Results for the
 #' UK Earnings Equation Using R",
 #' \emph{Journal of Applied Econometrics}, \bold{37, 5}, 1079--1090.
-#' \url{https://doi.org/10.1002/jae.2919}
+#' \doi{10.1002/jae.2919}
 #' @keywords datasets
 "PSS2001"

@@ -18,7 +18,7 @@ Pesaran et al. (2001), H0 is rejected but according to the p-value is not.
 
 ### Documentation update
 
-* Added `BugReports` and `Video` in the `DESCRIPTION` (issue #6, @ha0ye).
+* Added `BugReports` in the `DESCRIPTION`.
 
 * Updated the references in `README` and `CITATION`.
 
