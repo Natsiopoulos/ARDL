@@ -2,7 +2,7 @@
 
 ### New features
 
-* The estimation of the interim multipliers was corrected. Delay multipliers are introduced along with the interim and they are now returned as a list with a data.frame for each variable containing the delay and interim multipliers for each period.
+* The estimation of the interim multipliers was corrected. Delay multipliers are introduced along with the interim and they are now returned as a list with a data.frame for each variable containing the delay and interim multipliers for each period. Also, the maximum period for delay and interim multipliers was raised to 200.
 
 ### Bug fix
 

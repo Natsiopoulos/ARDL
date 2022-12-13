@@ -14,8 +14,8 @@
 #' \code{type = 0} is equivalent to \code{type = "sr"}.
 #'
 #' Note that the interim multipliers are the cumulative sum of the delays, and
-#' that the sum of the interim multipliers (for long enough periods) match the
-#' long-run multipliers.
+#' that the sum of the interim multipliers (for long enough periods) and thus
+#' a distant enough interim multiplier match the long-run multipliers.
 #'
 #' The delay (interim) multiplier can be interpreted as the effect in period
 #' t+s, of an instant (sustained) shock in period t.
@@ -26,7 +26,7 @@
 #' @param object An object of \code{\link[base]{class}} 'ardl' or 'uecm'.
 #' @param type A character string describing the type of multipliers. Use "lr"
 #' for long-run (total) multipliers (default), "sr" or 0 for short-run (impact)
-#' multipliers or an integer between 1 and 100 for delay and interim multipliers.
+#' multipliers or an integer between 1 and 200 for delay and interim multipliers.
 #' @param vcov_matrix The estimated covariance matrix of the random variable
 #'   that the transformation function uses to estimate the standard errors (and
 #'   so the t-statistics and p-values) of the multipliers. The default is
@@ -156,8 +156,8 @@ multipliers.ardl <- function(object, type = "lr", vcov_matrix = NULL) {
     # no visible binding for global variable NOTE solution
     group_id <- coeff <- sums <- NULL; rm(group_id, coeff, sums)
 
-    if (!(type %in% c("lr", "sr", 0:100))) {
-        stop("'type' should be one of 'lr', 'sr' or a number between 0 and 100", call. = FALSE)
+    if (!(type %in% c("lr", "sr", 0:200))) {
+        stop("'type' should be one of 'lr', 'sr' or a number between 0 and 200", call. = FALSE)
     }
 
     if (is.null(vcov_matrix)) vcov_matrix <- stats::vcov(object)
@@ -217,7 +217,7 @@ multipliers.ardl <- function(object, type = "lr", vcov_matrix = NULL) {
             dplyr::slice(-(from:to)) %>% dplyr::slice(b0)
         sr_mult <- cbind(Term = rownames(sr_mult), sr_mult)
         rownames(sr_mult) <- 1:nrow(sr_mult)
-        if (type %in% 1:100) { # anything except 0:100 would have been stopped in the earlier check
+        if (type %in% 1:200) { # anything except 0:200 would have been stopped in the earlier check
             interim = type
             delays_table <- as.data.frame(summary(object)$coefficients) %>%
                 dplyr::slice(-(from:to))
@@ -267,13 +267,13 @@ multipliers.ardl <- function(object, type = "lr", vcov_matrix = NULL) {
 
 multipliers.uecm <- function(object, type = "lr", vcov_matrix = NULL) {
 
-    if (!(type %in% c("lr", "sr", 0:100))) {
-        stop("'type' should be one of 'lr', 'sr' or a number between 0 and 100", call. = FALSE)
+    if (!(type %in% c("lr", "sr", 0:200))) {
+        stop("'type' should be one of 'lr', 'sr' or a number between 0 and 200", call. = FALSE)
     }
 
     if (is.null(vcov_matrix)) vcov_matrix <- stats::vcov(object)
 
-    if (type %in% 1:100) {
+    if (type %in% 1:200) {
         return(multipliers(object = ardl(object), type = type, vcov_matrix = vcov_matrix))
     }
 
