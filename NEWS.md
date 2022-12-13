@@ -2,11 +2,20 @@
 
 ### New features
 
-* The estimation of the interim multipliers was corrected. Delay multipliers are introduced along with the interim and they are now returned as a list with a data.frame for each variable containing the delay and interim multipliers for each period. Also, the maximum period for delay and interim multipliers was raised to 200.
+* The estimation of the interim multipliers was corrected. Delay multipliers are
+introduced along with the interim and they are now returned as a list with a 
+data.frame for each variable containing the delay and interim multipliers for 
+each period. Also, the maximum period for delay and interim multipliers was 
+raised to 200.
+
+* `ardl()` is now a generic function. The default method constructs an ardl 
+model as it used to. The other method takes an uecm model and converts it into
+an ardl.
 
 ### Bug fix
 
-* `multipliers()` does not devide the short-run multipliers by the adjustment factor anymore (correction).
+* `multipliers()` does not devide the short-run multipliers by the adjustment 
+factor anymore (correction).
 
 ---
 

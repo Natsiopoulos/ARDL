@@ -2,7 +2,10 @@
 #'
 #' A simple way to construct complex ARDL specifications providing just the
 #' model order additional to the model formula. It uses
-#' \code{\link[dynlm]{dynlm}} under the hood.
+#' \code{\link[dynlm]{dynlm}} under the hood. \code{ardl} is a generic function
+#' and the default method constructs an 'ardl' model while the other method
+#' takes a model of \code{\link[base]{class}} 'uecm' and converts in into an
+#' 'ardl'.
 #'
 #' The \code{formula} should contain only variables that exist in the data
 #' provided through \code{data} plus some additional functions supported by
@@ -104,7 +107,45 @@
 #' m2 <- dynlm(ardl_3132$full_formula, data = ardl_3132$data)
 #' identical(m$coefficients, m2$coefficients)
 
-ardl <- function(formula, data, order, start = NULL, end = NULL, ...) {
+ardl <- function(...) {
+    UseMethod("ardl")
+}
+
+#' @rdname ardl
+#'
+#' @param object An object of \code{\link[base]{class}} 'uecm'.
+#'
+#' @export
+#'
+
+ardl.uecm <- function(object, ...) {
+    parsed_formula <- object$parsed_formula
+    order <- object$order
+    data <- object$data
+    start <- start(object)
+    end <- end(object)
+    unbuild_formula <- paste0(paste0(parsed_formula$y_part$var, "~"),
+                              paste0(parsed_formula$x_part$var, collapse = "+"),
+                              if (length(parsed_formula$w_part$var) == 0) { # Case I
+                                ""
+                              } else if (parsed_formula$w_part$var[1] == "- 1") { # Cases II & III
+                                  paste0(parsed_formula$w_part$var)
+                              } else { # Cases IV & V
+                                  paste0("+", parsed_formula$w_part$var)
+                              },
+                              ifelse(length(parsed_formula$fixed_part$var) != 0,
+                                     paste0("|", paste0(parsed_formula$fixed_part$var,
+                                                        collapse = "+")), ""))
+
+    return(ardl(stats::formula(unbuild_formula), data = data, order = order, start = start, end = end))
+}
+
+#' @rdname ardl
+#'
+#' @export
+#'
+
+ardl.default <- function(formula, data, order, start = NULL, end = NULL, ...) {
     if (!any(c("ts", "zoo", "zooreg") %in% class(data))) {
         data <- stats::ts(data, start = 1, end = nrow(data), frequency = 1)
     }

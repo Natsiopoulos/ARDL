@@ -2,11 +2,22 @@
 % Please edit documentation in R/ardl.R
 \name{ardl}
 \alias{ardl}
+\alias{ardl.uecm}
+\alias{ardl.default}
 \title{ARDL model regression}
 \usage{
-ardl(formula, data, order, start = NULL, end = NULL, ...)
+ardl(...)
+
+\method{ardl}{uecm}(object, ...)
+
+\method{ardl}{default}(formula, data, order, start = NULL, end = NULL, ...)
 }
 \arguments{
+\item{...}{Additional arguments to be passed to the low level regression
+fitting functions.}
+
+\item{object}{An object of \code{\link[base]{class}} 'uecm'.}
+
 \item{formula}{A "formula" describing the linear model. Details for model
 specification are given under 'Details'.}
 
@@ -25,9 +36,6 @@ integer could be provided if all variables are of the same order.}
 model.}
 
 \item{end}{End of the time period which should be used for fitting the model.}
-
-\item{...}{Additional arguments to be passed to the low level regression
-fitting functions.}
 }
 \value{
 \code{ardl} returns an object of \code{\link[base]{class}}
@@ -37,7 +45,10 @@ fitting functions.}
 \description{
 A simple way to construct complex ARDL specifications providing just the
 model order additional to the model formula. It uses
-\code{\link[dynlm]{dynlm}} under the hood.
+\code{\link[dynlm]{dynlm}} under the hood. \code{ardl} is a generic function
+and the default method constructs an 'ardl' model while the other method
+takes a model of \code{\link[base]{class}} 'uecm' and converts in into an
+'ardl'.
 }
 \details{
 The \code{formula} should contain only variables that exist in the data

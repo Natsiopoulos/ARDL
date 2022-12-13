@@ -43,3 +43,12 @@ test_that("ardl parsed_formula", {
     expect_equal(ardl61545$parsed_formula$kw, 1)
     expect_equal(ardl61545$parsed_formula$kfixed, 2)
 })
+
+test_that("check equivalence of methods", {
+    ardl61545 <- ardl(w ~ Prod + UR + Wedge + Union | D7475 + D7579,
+                      order = c(6,1,5,4,5), data = PSS2001, start = c(1972, 01))
+    uecm61545 <- uecm(w ~ Prod + UR + Wedge + Union | D7475 + D7579,
+                      order = c(6,1,5,4,5), data = PSS2001, start = c(1972, 01))
+
+    expect_equal(ardl61545, ardl(uecm61545))
+})
