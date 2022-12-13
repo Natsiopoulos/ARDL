@@ -1,3 +1,15 @@
+# ARDL 0.2.2
+
+### New features
+
+* The estimation of the interim multipliers was corrected. Delay multipliers are introduced along with the interim and they are now returned as a list with a data.frame for each variable containing the delay and interim multipliers for each period.
+
+### Bug fix
+
+* `multipliers()` does not devide the short-run multipliers by the adjustment factor anymore (correction).
+
+---
+
 # ARDL 0.2.1
 
 ### New features

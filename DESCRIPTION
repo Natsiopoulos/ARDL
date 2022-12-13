@@ -9,7 +9,7 @@ Description: Creates complex autoregressive distributed lag (ARDL) models and
     equation. The validity and the accuracy of this package have been verified 
     by successfully replicating the results of Pesaran et al. (2001) in 
     Natsiopoulos and Tzeremes (2022) <doi:10.1002/jae.2919>.
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: c(
   person("Kleanthis", "Natsiopoulos", 
   email = "klnatsio@gmail.com", role = c("aut", "cre"), 
