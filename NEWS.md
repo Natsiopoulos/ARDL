@@ -16,7 +16,7 @@ an ardl.
 
 ### Bug fix
 
-* `multipliers()` does not devide the short-run multipliers by the adjustment 
+* `multipliers()` does not divide the short-run multipliers by the adjustment 
 factor anymore (correction).
 
 ---
