@@ -108,8 +108,8 @@ coint_eq.default <- function(object, case) {
     order <- object$order
     data <- object$data
     lr_multipliers <- multipliers(object = object, type = "lr")
-    lr_mult_names <- as.character(lr_multipliers$term)
-    lr_multipliers <- lr_multipliers$estimate
+    lr_mult_names <- as.character(lr_multipliers$Term)
+    lr_multipliers <- lr_multipliers$Estimate
 
     if (case == 1) {
         lr_multipliers <- c(0, 0, lr_multipliers)

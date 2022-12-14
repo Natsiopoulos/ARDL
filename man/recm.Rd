@@ -23,7 +23,7 @@ Creates the Restricted Error Correction Model (RECM). This is the conditional
 RECM, which is the RECM of the underlying ARDL.
 }
 \details{
-Note that the statistical significance of 'L(ect, 1)' in a RECM should not be
+Note that the statistical significance of 'ect' in a RECM should not be
 tested using the corresponding t-statistic (or the p-value) because it
 doesn't follow a standard t-distribution. Instead, the
 \code{\link{bounds_t_test}} should be used.

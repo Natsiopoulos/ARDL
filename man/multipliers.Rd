@@ -17,7 +17,7 @@ multipliers(object, type = "lr", vcov_matrix = NULL)
 
 \item{type}{A character string describing the type of multipliers. Use "lr"
 for long-run (total) multipliers (default), "sr" or 0 for short-run (impact)
-multipliers or an integer between 1 and 100 for interim multipliers.}
+multipliers or an integer between 1 and 200 for delay and interim multipliers.}
 
 \item{vcov_matrix}{The estimated covariance matrix of the random variable
 that the transformation function uses to estimate the standard errors (and
@@ -28,15 +28,18 @@ also be used (e.g., using \code{\link[sandwich]{vcovHC}} or
 \code{\link[sandwich]{vcovHAC}}).}
 }
 \value{
-\code{multipliers} returns a data.frame containing the independent
-  variables (including possibly existing intercept or trend and excluding the
-  fixed variables) and their corresponding standard errors, t-statistics and
-  p-values.
+\code{multipliers} returns (for long and short run multipliers) a
+  data.frame containing the independent variables (including possibly
+  existing intercept or trend and excluding the fixed variables) and their
+  corresponding standard errors, t-statistics and p-values. For delay and
+  interim multipliers it returns a list with a data.frame for each variable,
+  containing the delay and interim multipliers for each period.
 }
 \description{
 \code{multipliers} is a generic function used to estimate short-run (impact),
-interim and long-run (total) multipliers, along with their corresponding
-standard errors, t-statistics and p-values.
+delay, interim and long-run (total) multipliers. Long and short run
+multipliers are accompanied by their corresponding standard errors,
+t-statistics and p-values.
 }
 \details{
 The function invokes two different \code{\link[utils]{methods}}, one for
@@ -45,17 +48,60 @@ objects of \code{\link[base]{class}} 'ardl' and one for objects of
 transformation functions that are used for each class/model ('ardl' and
 'uecm') to estimate the multipliers.
 
-Note that \code{type = 0} is equivalent to \code{type = "sr"}. Also,
-\code{type = s} will produce the same estimates as \code{type = "lr"} for
-those particular variable for which s >= from their ARDL order.
+\code{type = 0} is equivalent to \code{type = "sr"}.
+
+Note that the interim multipliers are the cumulative sum of the delays, and
+that the sum of the interim multipliers (for long enough periods) and thus
+a distant enough interim multiplier match the long-run multipliers.
+
+The delay (interim) multiplier can be interpreted as the effect in period
+t+s, of an instant (sustained) shock in period t.
 
 The delta method is used for approximating the standard errors (and thus the
-t-statistics and p-values) of the estimated multipliers.
+t-statistics and p-values) of the estimated long-run multipliers.
 }
 \section{Mathematical Formula}{
- \strong{Constant and Linear Trend:}
+
+
+\strong{Short-Run Multipliers:}
 \describe{
   \item{As derived from an ARDL:}{}
+}
+\deqn{\frac{\partial y_{t}}{\partial x_{j,t}} = b_{j,0} \;\;\;\;\; j \in \{1,\dots,k\}}
+
+\describe{
+  \item{As derived from an Unrestricted ECM:}{}
+}
+\deqn{\frac{\partial y_{t}}{\partial x_{j,t}} = \omega_{j} \;\;\;\;\; j \in \{1,\dots,k\}}
+
+\describe{
+  \item{Constant and Linear Trend:}{}
+}
+\deqn{c_{0}}
+\deqn{c_{1}}
+
+\strong{Delay & Interim Multipliers:}
+\describe{
+  \item{As derived from an ARDL:}{}
+}
+\deqn{Delay_{x_{j},s} = \frac{\partial y_{t+s}}{\partial x_{j,t}} = b_{j,s} + \sum_{i=1}^{min\{p,s\}} b_{y,i} \frac{\partial y_{t+(s-i)}}{\partial x_{j,t}} \;\;\;\;\; b_{j,s} = 0 \;\; \forall \;\; s > q}
+\deqn{Interim_{x_{j},s} = \sum_{i=0}^{s} Delay_{x_{j},s}}
+
+\describe{
+  \item{Constant and Linear Trend:}{}
+}
+\deqn{Delay_{intercept,s} = c_{0} + \sum_{i=1}^{min\{p,s\}} b_{y,i} Delay_{intercept,s-i} \;\;\;\;\; c_{0} = 0 \;\; \forall \;\; s \neq 0}
+\deqn{Interim_{intercept,s} = \sum_{i=0}^{s} Delay_{intercept,s}}
+\deqn{Delay_{trend,s} = c_{1} + \sum_{i=1}^{min\{p,s\}} b_{y,i} Delay_{trend,s-i} \;\;\;\;\; c_{1} = 0 \;\; \forall \;\; s \neq 0}
+\deqn{Interim_{trend,s} = \sum_{i=0}^{s} Delay_{trend,s}}
+
+\strong{Long-Run Multipliers:}
+\describe{
+  \item{As derived from an ARDL:}{}
+}
+\deqn{\frac{\partial y_{t+\infty}}{\partial x_{j,t}} = \theta_{j} = \frac{\sum_{l=0}^{q_{j}}b_{j,l}}{1-\sum_{i=1}^{p}b_{y,i}} \;\;\;\;\; j \in \{1,\dots,k\}}
+\describe{
+  \item{Constant and Linear Trend:}{}
 }
 \deqn{\mu = \frac{c_{0}}{1-\sum_{i=1}^{p}b_{y,i}}}
 \deqn{\delta = \frac{c_{1}}{1-\sum_{i=1}^{p}b_{y,i}}}
@@ -63,41 +109,12 @@ t-statistics and p-values) of the estimated multipliers.
 \describe{
   \item{As derived from an Unrestricted ECM:}{}
 }
+\deqn{\frac{\partial y_{t+\infty}}{\partial x_{j,t}} = \theta_{j} = \frac{\pi_{j}}{-\pi_{y}} \;\;\;\;\; j \in \{1,\dots,k\}}
+\describe{
+  \item{Constant and Linear Trend:}{}
+}
 \deqn{\mu = \frac{c_{0}}{-\pi_{y}}}
 \deqn{\delta = \frac{c_{1}}{-\pi_{y}}}
-
-\strong{Short-Run Multipliers:}
-\describe{
-  \item{As derived from an ARDL:}{}
-}
-\deqn{\frac{\partial y_{t}}{\partial x_{j,t}} = \frac{b_{j,0}}{1-\sum_{i=1}^{p}b_{y,i}} \;\;\;\;\; \forall j=1,\dots,k}
-
-\describe{
-  \item{As derived from an Unrestricted ECM:}{}
-}
-\deqn{\frac{\partial y_{t}}{\partial x_{j,t}} = \frac{\omega_{j}}{-\pi_{y}} \;\;\;\;\; \forall j=1,\dots,k}
-
-\strong{Interim Multipliers:}
-\describe{
-  \item{As derived from an ARDL:}{}
-}
-\deqn{\frac{\partial y_{t+s}}{\partial x_{j,t}} = \frac{\sum_{l=1}^{s}b_{j,l}}{1-\sum_{i=1}^{p}b_{y,i}} \;\;\;\;\; \forall j=1,\dots,k \;\;\;\;\; s \in \{0,\dots,q_{j}\}}
-
-\describe{
-  \item{As derived from an Unrestricted ECM:}{}
-}
-\deqn{\frac{\partial y_{t+s}}{\partial x_{j,t}} = \frac{\pi_{j} + \psi_{j,s}}{-\pi_{y}} \;\;\;\;\; \forall j=1,\dots,k \;\;\;\;\; s \in \{1,\dots,q_{j}-1\}}
-
-\strong{Long-Run Multipliers:}
-\describe{
-  \item{As derived from an ARDL:}{}
-}
-\deqn{\frac{\partial y_{t+\infty}}{\partial x_{j,t}} = \theta_{j} = \frac{\sum_{l=0}^{q_{j}}b_{j,l}}{1-\sum_{i=1}^{p}b_{y,i}} \;\;\;\;\; \forall j=1,\dots,k}
-
-\describe{
-  \item{As derived from an Unrestricted ECM:}{}
-}
-\deqn{\frac{\partial y_{t+\infty}}{\partial x_{j,t}} = \theta_{j} = \frac{\pi_{j}}{-\pi_{y}} \;\;\;\;\; \forall j=1,\dots,k}
 }
 
 \examples{
@@ -125,18 +142,22 @@ mult_0 <- multipliers(uecm_3132, type = 0)
 all.equal(mult_sr, mult_0)
 
 
-## Estimate the interim multipliers of an ARDL(3,1,3,2) model ----------
+## Estimate the delay & interim multipliers of an ARDL(3,1,3,2) model --
 
-# Note that the estimated interim multipliers match the long-run multipliers
-# for those variables that their ARDL order equals or exceeds the interim step
 mult_lr <- multipliers(uecm_3132, type = "lr")
-mult_1 <- multipliers(uecm_3132, type = 1)
-mult_2 <- multipliers(uecm_3132, type = 2)
+mult_inter80 <- multipliers(uecm_3132, type = 80)
 
-uecm_3132$order
 mult_lr
-mult_1
-mult_2
+sum(mult_inter80$`(Intercept)`$Delay)
+mult_inter80$`(Intercept)`$Interim[nrow(mult_inter80$`(Intercept)`)]
+sum(mult_inter80$LRY$Delay)
+mult_inter80$LRY$Interim[nrow(mult_inter80$LRY)]
+sum(mult_inter80$IBO$Delay)
+mult_inter80$IBO$Interim[nrow(mult_inter80$IBO)]
+sum(mult_inter80$IDE$Delay)
+mult_inter80$IDE$Interim[nrow(mult_inter80$IDE)]
+plot(mult_inter80$LRY$Delay, type='l')
+plot(mult_inter80$LRY$Interim, type='l')
 }
 \seealso{
 \code{\link{ardl}}, \code{\link{uecm}}
