@@ -41,3 +41,21 @@ test_that("correct results using ardl or uecm inputs", {
     expect_equal(recm(ardl_model_ct, case=4)$coefficients["ect"], ect_uecm)
     expect_equal(recm(ardl_model_ct, case=5)$coefficients["ect"], ect_uecm)
 })
+
+test_that("correct results when order includes 0", {
+    ardl_model <- ardl(w ~ Prod + UR + Wedge + Union -1 | D7475 + D7579,
+                       data = PSS2001, start = c(1972, 01),
+                       order=c(6,0,5,4,5))
+    uecm_model_c <- uecm(w ~ Prod + UR + Wedge + Union | D7475 + D7579,
+                         data = PSS2001, start = c(1972, 01),
+                         order=c(6,0,5,4,5))
+    ardl_model_ct <- ardl(w ~ Prod + UR + Wedge + Union + trend(w) | D7475 + D7579,
+                          data = PSS2001, start = c(1972, 01),
+                          order=c(6,0,5,4,5))
+    uecm_model_ct <- uecm(ardl_model_ct)
+
+    expect_equal(recm(ardl_model, case=1)$coefficients["ect"], uecm(ardl_model)$coeff["L(w, 1)"], ignore_attr = TRUE)
+    expect_equal(recm(uecm_model_c, case=2)$coefficients["ect"], uecm_model_c$coeff["L(w, 1)"], ignore_attr = TRUE)
+    expect_equal(recm(ardl_model_ct, case=4)$coefficients["ect"], uecm(ardl_model_ct)$coeff["L(w, 1)"], ignore_attr = TRUE)
+    expect_equal(names(recm(uecm_model_ct, case=5)$coefficients)[-24], names(uecm_model_ct$coefficients)[-c(3:7)])
+})

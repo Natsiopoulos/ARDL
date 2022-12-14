@@ -3,7 +3,7 @@
 #' Creates the Restricted Error Correction Model (RECM). This is the conditional
 #' RECM, which is the RECM of the underlying ARDL.
 #'
-#' Note that the statistical significance of 'L(ect, 1)' in a RECM should not be
+#' Note that the statistical significance of 'ect' in a RECM should not be
 #' tested using the corresponding t-statistic (or the p-value) because it
 #' doesn't follow a standard t-distribution. Instead, the
 #' \code{\link{bounds_t_test}} should be used.
@@ -110,10 +110,6 @@ recm <- function(object, case) {
     # no visible binding for global variable NOTE solution
     y <- NULL; rm(y)
 
-    if (0 %in% object$order) {
-        stop("RECMs that their underlying ARDL order contains at least one 0, are currently not supported. This will be fixed in future updates.",
-            call. = FALSE)
-    }
     class(object)[4] <- "recm_indicator"
     coint_eq_list <- coint_eq(object = object, case = case)
     design_matrix <- coint_eq_list$design_matrix
@@ -123,14 +119,23 @@ recm <- function(object, case) {
     case <- coint_eq_list$case
     order <- coint_eq_list$order
     recm_formula <- build_recm_formula(parsed_formula = parsed_formula, order = order, case = case)
-    # error term, u
-    u <- design_matrix %>%
-        dplyr::mutate(u = y - coint_eq) %>%
-        dplyr::select(u) %>%
-        unlist() %>%
-        stats::ts(., start = stats::start(data), frequency = stats::frequency(data))
-    # create a new data table with the lagged error term u, naming the error correction term (ect)
-    data_full <- zoo::cbind.zoo(data, stats::lag(u, -1))
+    if (0 %in% order) {
+        design_matrix <- stats::ts(design_matrix, start = stats::start(data), frequency = stats::frequency(data))
+        x_0_order <- colnames(design_matrix)[-c(1:3)][order[-1] == 0]
+        x_q_order <- colnames(design_matrix)[-1][!(colnames(design_matrix)[-1] %in% x_0_order)]
+        coint_eq <- rowSums(zoo::cbind.zoo(stats::lag(design_matrix[,x_q_order], -1),  design_matrix[,x_0_order]))
+        coint_eq <- stats::ts(coint_eq, start = stats::start(data), frequency = stats::frequency(data))
+        data_full <- zoo::cbind.zoo(data, stats::lag(design_matrix[,"y"], -1) - coint_eq)
+    } else {
+        # error term, u
+        u <- design_matrix %>%
+            dplyr::mutate(u = y - coint_eq) %>%
+            dplyr::select(u) %>%
+            unlist() %>%
+            stats::ts(., start = stats::start(data), frequency = stats::frequency(data))
+        # create a new data table with the lagged error term u, naming the error correction term (ect)
+        data_full <- zoo::cbind.zoo(data, stats::lag(u, -1))
+    }
     colnames(data_full) <- c(colnames(data), "ect")
     data <- data_full; rm(data_full)
     full_formula <- stats::formula(recm_formula$full)

@@ -12,6 +12,8 @@ raised to 200.
 model as it used to. The other method takes an uecm model and converts it into
 an ardl.
 
+* `recm()` can now estimate models which include 0 lags in the order of a variable.
+
 ### Bug fix
 
 * `multipliers()` does not devide the short-run multipliers by the adjustment 

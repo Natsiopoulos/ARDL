@@ -22,7 +22,7 @@ It parses the 'case' and checks the integrity of the 'case' input and the
 compatibility with the formula.
 }
 \details{
-Note that the statistical significance of 'L(ect, 1)' in a RECM should not be
+Note that the statistical significance of 'ect' in a RECM should not be
 tested using the corresponding t-statistic (or the p-value) because it
 doesn't follow a standard t-distribution. Instead, the
 \code{\link{bounds_t_test}} should be used.
