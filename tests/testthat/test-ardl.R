@@ -28,7 +28,7 @@ test_that("ardl model coefficients", {
 test_that("ardl order", {
     ardl61545 <- ardl(w ~ Prod + UR + Wedge + Union | D7475 + D7579,
                       order = c(6,1,5,4,5), data = PSS2001, start = c(1972, 01))
-    expect_equal(ardl61545$order, c(6,1,5,4,5))
+    expect_equal(ardl61545$order, c(6,1,5,4,5), ignore_attr = TRUE)
 })
 
 test_that("ardl parsed_formula", {
