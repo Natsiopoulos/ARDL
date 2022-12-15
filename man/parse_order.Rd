@@ -4,7 +4,7 @@
 \alias{parse_order}
 \title{Order parser}
 \usage{
-parse_order(orders, order_name, kz, restriction = FALSE)
+parse_order(orders, order_name, var_names, kz, restriction = FALSE)
 }
 \arguments{
 \item{orders}{A numeric vector of the same length as the total number of
@@ -17,6 +17,8 @@ provided if all variables are of the same order (or all '-1' in the case of
 
 \item{order_name}{The name of the function argument that is passed into
 \code{order}.}
+
+\item{var_names}{The names of the variables corresponding to the orders.}
 
 \item{kz}{An integer. The number of dependent and independent variables.}
 

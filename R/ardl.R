@@ -151,7 +151,8 @@ ardl.default <- function(formula, data, order, start = NULL, end = NULL, ...) {
     }
 
     parsed_formula <- parse_formula(formula = formula, colnames_data = colnames(data))
-    order <- parse_order(orders = order, order_name = "order", kz = parsed_formula$kz)
+    order <- parse_order(orders = order, order_name = "order",
+                         var_names = parsed_formula$z_part$var, kz = parsed_formula$kz)
     ardl_formula <- build_ardl_formula(parsed_formula = parsed_formula, order = order)
 
     full_formula <- formula(ardl_formula$full)

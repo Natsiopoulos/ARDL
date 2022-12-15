@@ -99,7 +99,8 @@ uecm.default <- function(formula, data, order, start = NULL, end = NULL, ...) {
         data <- stats::ts(data, start = 1, end = nrow(data), frequency = 1)
     }
     parsed_formula <- parse_formula(formula = formula, colnames_data = colnames(data))
-    order <- parse_order(orders = order, order_name = "order", kz = parsed_formula$kz)
+    order <- parse_order(orders = order, order_name = "order",
+                         var_names = parsed_formula$z_part$var, kz = parsed_formula$kz)
 
     uecm_formula <- build_uecm_formula(parsed_formula = parsed_formula, order = order)
     full_formula <- stats::formula(uecm_formula$full)
