@@ -12,12 +12,27 @@ raised to 200.
 model as it used to. The other method takes an uecm model and converts it into
 an ardl.
 
-* `recm()` can now estimate models which include 0 lags in the order of a variable.
+* `recm()` can now estimate models which include 0 lags in the order of a 
+variable.
+
+### Documentation update
+
+* Updated the formulas for the uecm and recm equations making them more precise.
+
+### New data
+
+* Added a new dataset, the UK earnings equation data from Natsiopoulos and 
+Tzeremes (2022). These are the data used to extend the study of Pesaran et al. 
+(2001).
 
 ### Bug fix
 
 * `multipliers()` does not divide the short-run multipliers by the adjustment 
 factor anymore (correction).
+
+### Minor changes
+
+* Added corresponding variable names to ARDL orders.
 
 ---
 

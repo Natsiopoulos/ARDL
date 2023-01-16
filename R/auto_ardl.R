@@ -408,6 +408,7 @@ auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order
 
     # choose best order
     best_order <- top_orders[1, 1:(ncol(top_orders) - 1)] %>% as.numeric()
+    names(best_order) <- parsed_formula$z_part$var
     # choose best model
     best_model <- ardl(formula = formula, data = data, order = best_order, start = start_sample, end = end_sample, ...)
 

@@ -37,7 +37,8 @@ test_that("Combination of max_order, fixed_order, starting_order and selection",
                                max_order = 6, fixed_order = c(-1,1,-1,-1,-1), starting_order = 5,
                                selection = "AIC_pss", selection_minmax = "max")
 
-    expect_equal(ardl_model_df$best_order, c(6,1,5,4,5))
+    expect_equal(ardl_model_df$best_order, c(6,1,5,4,5), ignore_attr = TRUE)
+
 
     expect_equal(ardl_model_df$best_model, ardl(w ~ Prod + UR + Wedge + Union | D7475 + D7579,
                                                 data = data.frame(PSS2001), start = 9,

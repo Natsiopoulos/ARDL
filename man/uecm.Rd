@@ -71,7 +71,8 @@ introduces instrumental variables.
   \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} +
   \sum_{j=1}^{k}\sum_{l=1}^{q_{j}-1} \psi_{j,l}\Delta x_{j,t-l} +
   \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t} \;\;\;\;\;
-  \psi_{j,l} = 0 \;\; \forall \;\; q_{j} \leq 1}
+  \psi_{j,l} = 0 \;\; \forall \;\; q_{j} \leq 1, \;\;\;\;\; \psi_{y,i} = 0
+  \;\; if \;\; p = 1}
   {In addition,} \eqn{x_{j,t-1}} {and} \eqn{\Delta x_{j,t}} {cancel out
   becoming} \eqn{x_{t} \;\;\;\;\; \forall \;\; q_{j} = 0}
 }
