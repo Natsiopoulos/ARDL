@@ -64,11 +64,11 @@ test_that("exact = FALSE & kx <= 10 & alpha %in% c(0.1, 0.05, 0.025, 0.01)", {
                        order=c(6,1,5,4,5))
     bounds_test <- bounds_f_test(ardl_model, case = 3, alpha = 0.05)
     expected_tab <- data.frame(statistic=5.5500885,
-                               lower.bound = 2.8942417, upper.bound = 4.0273194,
+                               "Lower-bound I(0)" = 2.8942417, "Upper-bound I(1)" = 4.0273194,
                                alpha = 0.05, p.value=0.0044907254)
     row.names(expected_tab) <- "F"
 
-    expect_equal(bounds_test$tab, expected_tab)
+    expect_equal(bounds_test$tab, expected_tab, ignore_attr = TRUE)
     expect_equal(bounds_test$null.value, c(k=4, T=1000))
 
     # & PSS2001 critical values
@@ -78,11 +78,11 @@ test_that("exact = FALSE & kx <= 10 & alpha %in% c(0.1, 0.05, 0.025, 0.01)", {
     # bounds_t_test
     bounds_test <- bounds_t_test(ardl_model, case = 3, alpha = 0.05)
     expected_tab <- data.frame(statistic=-3.9142734,
-                               lower.bound = -2.8649811, upper.bound = -4.0002457,
+                               "Lower-bound I(0)" = -2.8649811, "Upper-bound I(1)" = -4.0002457,
                                alpha = 0.05, p.value=0.060869085)
     row.names(expected_tab) <- "t"
 
-    expect_equal(bounds_test$tab, expected_tab)
+    expect_equal(bounds_test$tab, expected_tab, ignore_attr = TRUE)
     expect_equal(bounds_test$null.value, c(k=4, T=1000))
 
     # & PSS2001 critical values
@@ -93,11 +93,11 @@ test_that("exact = FALSE & kx <= 10 & alpha %in% c(0.1, 0.05, 0.025, 0.01)", {
     bounds_test <- bounds_f_test(ardl_model, case = 3, alpha = 0.1, test = "Chisq")
 
     expected_tab <- data.frame(statistic=27.750442,
-                               lower.bound = 12.310873, upper.bound = 17.6785096,
+                               "Lower-bound I(0)" = 12.310873, "Upper-bound I(1)" = 17.6785096,
                                alpha = 0.1, p.value=0.0044907254)
     row.names(expected_tab) <- "Chisq"
 
-    expect_equal(bounds_test$tab, expected_tab)
+    expect_equal(bounds_test$tab, expected_tab, ignore_attr = TRUE)
     expect_equal(bounds_test$null.value, c(k=4, T=1000))
 
     # & PSS2001 critical values
@@ -108,11 +108,11 @@ test_that("exact = FALSE & kx <= 10 & alpha %in% c(0.1, 0.05, 0.025, 0.01)", {
     bounds_test <- bounds_f_test(ardl_model, case = 2, alpha = 0.01, test = "Chisq")
 
     expected_tab <- data.frame(statistic=66.391527,
-                               lower.bound = 20.0125226, upper.bound = 26.16848,
+                               "Lower-bound I(0)" = 20.0125226, "Upper-bound I(1)" = 26.16848,
                                alpha = 0.01, p.value=1e-06)
     row.names(expected_tab) <- "Chisq"
 
-    expect_equal(bounds_test$tab, expected_tab)
+    expect_equal(bounds_test$tab, expected_tab, ignore_attr = TRUE)
     expect_equal(bounds_test$null.value, c(k=4, T=1000))
 
     # & PSS2001 critical values
@@ -126,31 +126,31 @@ test_that("exact = FALSE & kx <= 10 & alpha %in% c(0.005 0.075 0.150 0.200) & te
                        order=c(6,1,5,4,5))
     bounds_test <- bounds_f_test(ardl_model, case = 5, alpha = 0.15, test="Chisq")
     expected_tab <- data.frame(statistic=19.567343,
-                               lower.bound = 13.83472, upper.bound = 18.6088492,
+                               "Lower-bound I(0)" = 13.83472, "Upper-bound I(1)" = 18.6088492,
                                alpha = 0.15, p.value=0.118128143)
     row.names(expected_tab) <- "Chisq"
 
-    expect_equal(bounds_test$tab, expected_tab)
+    expect_equal(bounds_test$tab, expected_tab, ignore_attr = TRUE)
     expect_equal(bounds_test$null.value, c(k=4, T=1000))
 
     # bounds_t_test (not test = Chisq, only t-test)
     bounds_test <- bounds_t_test(ardl_model, case = 5, alpha = 0.15)
     expected_tab <- data.frame(statistic=-2.63792694,
-                               lower.bound = -2.9359784, upper.bound = -3.816559,
+                               "Lower-bound I(0)" = -2.9359784, "Upper-bound I(1)" = -3.816559,
                                alpha = 0.15, p.value=0.61754341)
     row.names(expected_tab) <- "t"
 
-    expect_equal(bounds_test$tab, expected_tab)
+    expect_equal(bounds_test$tab, expected_tab, ignore_attr = TRUE)
     expect_equal(bounds_test$null.value, c(k=4, T=1000))
 
     # case %in% c(2, 4)
     bounds_test <- bounds_f_test(ardl_model, case = 4, alpha = 0.15, test="Chisq")
     expected_tab <- data.frame(statistic=28.151927,
-                               lower.bound = 14.7611036, upper.bound = 19.5069829,
+                               "Lower-bound I(0)" = 14.7611036, "Upper-bound I(1)" = 19.5069829,
                                alpha = 0.15, p.value=0.0140678391)
     row.names(expected_tab) <- "Chisq"
 
-    expect_equal(bounds_test$tab, expected_tab)
+    expect_equal(bounds_test$tab, expected_tab, ignore_attr = TRUE)
     expect_equal(bounds_test$null.value, c(k=4, T=1000))
 })
 
@@ -161,22 +161,22 @@ test_that("NOT exact = FALSE & kx <= 10 & alpha %in% c(0.005, 0.01, 0.025, 0.05,
     set.seed(2022)
     bounds_test <- bounds_f_test(ardl_model, case = 3, alpha = 0.06, exact = TRUE, R= 10000)
     expected_tab <- data.frame(statistic=5.5500885,
-                               lower.bound = 2.8971731, upper.bound = 4.0672186,
+                               "Lower-bound I(0)" = 2.8971731, "Upper-bound I(1)" = 4.0672186,
                                alpha = 0.06, p.value=0.007782627)
     row.names(expected_tab) <- "F"
 
-    expect_equal(bounds_test$tab, expected_tab)
+    expect_equal(bounds_test$tab, expected_tab, ignore_attr = TRUE)
     expect_equal(bounds_test$null.value, c(k=4, T=104))
 
     # bounds_t_test
     set.seed(2022)
     bounds_test <- bounds_t_test(ardl_model, case = 3, alpha = 0.06, exact = TRUE, R= 10000)
     expected_tab <- data.frame(statistic=-3.9142734,
-                               lower.bound = -2.8126763, upper.bound = -3.9143047,
+                               "Lower-bound I(0)" = -2.8126763, "Upper-bound I(1)" = -3.9143047,
                                alpha = 0.06, p.value=0.060005925)
     row.names(expected_tab) <- "t"
 
-    expect_equal(bounds_test$tab, expected_tab)
+    expect_equal(bounds_test$tab, expected_tab, ignore_attr = TRUE)
     expect_equal(bounds_test$null.value, c(k=4, T=104))
 
     # test = Chisq
@@ -184,22 +184,22 @@ test_that("NOT exact = FALSE & kx <= 10 & alpha %in% c(0.005, 0.01, 0.025, 0.05,
     bounds_test <- bounds_f_test(ardl_model, case = 3, alpha = 0.06, exact = TRUE,
                                  R= 10000, test = "Chisq")
     expected_tab <- data.frame(statistic=27.750442,
-                               lower.bound = 14.4858655, upper.bound = 20.336093,
+                               "Lower-bound I(0)" = 14.4858655, "Upper-bound I(1)" = 20.336093,
                                alpha = 0.06, p.value=0.007782627)
     row.names(expected_tab) <- "Chisq"
 
-    expect_equal(bounds_test$tab, expected_tab)
+    expect_equal(bounds_test$tab, expected_tab, ignore_attr = TRUE)
     expect_equal(bounds_test$null.value, c(k=4, T=104))
 
     # Clearly rejects H0 (p.value=1e-06)
     set.seed(2022)
     bounds_test <- bounds_f_test(ardl_model, case = 2, alpha = 0.06, exact = TRUE, R= 10000)
     expected_tab <- data.frame(statistic=11.0652544,
-                               lower.bound = 2.59362986, upper.bound = 3.57422109,
+                               "Lower-bound I(0)" = 2.59362986, "Upper-bound I(1)" = 3.57422109,
                                alpha = 0.06, p.value=1e-06)
     row.names(expected_tab) <- "F"
 
-    expect_equal(bounds_test$tab, expected_tab)
+    expect_equal(bounds_test$tab, expected_tab, ignore_attr = TRUE)
     expect_equal(bounds_test$null.value, c(k=4, T=104))
 })
 
