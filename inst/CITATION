@@ -22,7 +22,7 @@ bibentry(bibtype = "article",
 
 bibentry(bibtype = "Manual",
     title   = "{ARDL}: ARDL, ECM and Bounds-Test for Cointegration",
-    author  = personList(as.person("Kleanthis Natsiopoulos"),
+    author  = c(as.person("Kleanthis Natsiopoulos"),
                 as.person("Nickolaos Tzeremes")),
     year    = "2023",
     note    = note,
