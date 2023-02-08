@@ -44,7 +44,7 @@
 #'   \item{\code{p.value}}{the p-value of the test.}
 #'   \item{\code{PSS2001parameters}}{numeric vector containing the critical
 #'      value bounds as presented by \cite{Pesaran et al. (2001)}. See section
-#'      alpha, bounds and p-value' below for details.}
+#'      'alpha, bounds and p-value' below for details.}
 #'   \item{\code{tab}}{data.frame containing the statistic, the critical value
 #'      bounds, the alpha level of significance and the p-value.}
 #'
@@ -357,10 +357,10 @@ bounds_f_test <- function(object, case, alpha = NULL, pvalue = TRUE, exact = FAL
     if (!is.null(alpha)) {
         parameters <- c(bounds$I0, bounds$I1)
         names(parameters) <- c("Lower-bound I(0)", "Upper-bound I(1)")
-        tab <- cbind(tab, lower.bound = parameters[1], upper.bound = parameters[2],
+        tab <- cbind(tab, "Lower-bound I(0)" = parameters[1], "Upper-bound I(1)" = parameters[2],
                                   alpha = alpha)
         rval$parameters <- parameters
-        if (alpha %in% c(0.1, 0.05, 0.025, 0.01)) {
+        if ((alpha %in% c(0.1, 0.05, 0.025, 0.01)) & exact == FALSE) {
             PSS2001parameters <- c(bounds_pss2001$I0, bounds_pss2001$I1)
             names(PSS2001parameters) <- c("Lower-bound I(0)", "Upper-bound I(1)")
             rval$PSS2001parameters <- PSS2001parameters
@@ -603,10 +603,10 @@ bounds_t_test <- function(object, case, alpha = NULL, pvalue = TRUE,
     if (!is.null(alpha)) {
         parameters <- c(bounds$I0, bounds$I1)
         names(parameters) <- c("Lower-bound I(0)", "Upper-bound I(1)")
-        tab <- cbind(tab, lower.bound = parameters[1], upper.bound = parameters[2],
+        tab <- cbind(tab, "Lower-bound I(0)" = parameters[1], "Upper-bound I(1)" = parameters[2],
                                   alpha = alpha)
         rval$parameters <- parameters
-        if (alpha %in% c(0.1, 0.05, 0.025, 0.01)) {
+        if ((alpha %in% c(0.1, 0.05, 0.025, 0.01)) & exact == FALSE) {
             PSS2001parameters <- c(bounds_pss2001$I0, bounds_pss2001$I1)
             names(PSS2001parameters) <- c("Lower-bound I(0)", "Upper-bound I(1)")
             rval$PSS2001parameters <- PSS2001parameters

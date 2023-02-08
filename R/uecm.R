@@ -18,7 +18,11 @@
 #'   y_{t} = c_{0} + c_{1}t + \pi_{y}y_{t-1} + \sum_{j=1}^{k}\pi_{j}x_{j,t-1} +
 #'   \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} +
 #'   \sum_{j=1}^{k}\sum_{l=1}^{q_{j}-1} \psi_{j,l}\Delta x_{j,t-l} +
-#'   \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t}}
+#'   \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t} \;\;\;\;\;
+#'   \psi_{j,l} = 0 \;\; \forall \;\; q_{j} \leq 1, \;\;\;\;\; \psi_{y,i} = 0
+#'   \;\; if \;\; p = 1}
+#'   {In addition,} \eqn{x_{j,t-1}} {and} \eqn{\Delta x_{j,t}} {cancel out
+#'   becoming} \eqn{x_{j,t} \;\; \forall \;\; q_{j} = 0}
 #'
 #' @seealso \code{\link{ardl}} \code{\link{recm}}
 #' @author Kleanthis Natsiopoulos, \email{klnatsio@@gmail.com}
@@ -96,7 +100,8 @@ uecm.default <- function(formula, data, order, start = NULL, end = NULL, ...) {
         data <- stats::ts(data, start = 1, end = nrow(data), frequency = 1)
     }
     parsed_formula <- parse_formula(formula = formula, colnames_data = colnames(data))
-    order <- parse_order(orders = order, order_name = "order", kz = parsed_formula$kz)
+    order <- parse_order(orders = order, order_name = "order",
+                         var_names = parsed_formula$z_part$var, kz = parsed_formula$kz)
 
     uecm_formula <- build_uecm_formula(parsed_formula = parsed_formula, order = order)
     full_formula <- stats::formula(uecm_formula$full)

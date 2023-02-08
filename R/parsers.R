@@ -173,6 +173,7 @@ parse_formula <- function(formula, colnames_data) {
 #'   \code{fixed_order}).
 #' @param order_name The name of the function argument that is passed into
 #'   \code{order}.
+#' @param var_names The names of the variables corresponding to the orders.
 #' @param kz An integer. The number of dependent and independent variables.
 #' @param restriction When the input in \code{orders} is either \code{order} or
 #'   \code{max_order} it should be \code{FALSE} (default). When the input is
@@ -188,7 +189,7 @@ parse_formula <- function(formula, colnames_data) {
 #' @keywords internal
 #'
 
-parse_order <- function(orders, order_name, kz, restriction = FALSE) {
+parse_order <- function(orders, order_name, var_names, kz, restriction = FALSE) {
     if (restriction == FALSE) {
         restriction = 0
     }
@@ -213,6 +214,7 @@ parse_order <- function(orders, order_name, kz, restriction = FALSE) {
     if (length(orders) == 1) {
         orders <- rep(orders[1], kz)
     }
+    names(orders) <- var_names
 
     return(orders)
 }

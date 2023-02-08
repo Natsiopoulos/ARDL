@@ -63,7 +63,7 @@ A list with class "htest" containing the following components:
   \item{\code{p.value}}{the p-value of the test.}
   \item{\code{PSS2001parameters}}{numeric vector containing the critical
      value bounds as presented by \cite{Pesaran et al. (2001)}. See section
-     alpha, bounds and p-value' below for details.}
+     'alpha, bounds and p-value' below for details.}
   \item{\code{tab}}{data.frame containing the statistic, the critical value
      bounds, the alpha level of significance and the p-value.}
 }

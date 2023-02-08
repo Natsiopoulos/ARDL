@@ -212,13 +212,15 @@ auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order
     search_type <- match.arg(search_type)
     selection_minmax <- match.arg(selection_minmax)
     parsed_formula <- parse_formula(formula = formula, colnames_data = colnames(data))
-    max_order <- parse_order(orders = max_order, order_name = "max_order", kz = parsed_formula$kz)
+    max_order <- parse_order(orders = max_order, order_name = "max_order",
+                             var_names = parsed_formula$z_part$var, kz = parsed_formula$kz)
     fixed_order <- parse_order(orders = fixed_order, order_name = "fixed_order",
-                               kz = parsed_formula$kz, restriction = -1)
+                               var_names = parsed_formula$z_part$var, kz = parsed_formula$kz, restriction = -1)
     if (!missing(starting_order)) {
         starting_order_null <- FALSE
         if (starting_order[1] < 1) { stop("In 'starting_order', the starting order of p (first argument) can't be less than 1.", call. = FALSE)}
-        starting_order <- parse_order(orders = starting_order, order_name = "starting_order", kz = parsed_formula$kz)
+        starting_order <- parse_order(orders = starting_order, order_name = "starting_order",
+                                      var_names = parsed_formula$z_part$var, kz = parsed_formula$kz)
         if (any(starting_order > max_order)) {stop("'starting_order' can't be greater than 'max_order'.", call. = FALSE)}
     } else {
         starting_order_null <- TRUE
@@ -406,6 +408,7 @@ auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order
 
     # choose best order
     best_order <- top_orders[1, 1:(ncol(top_orders) - 1)] %>% as.numeric()
+    names(best_order) <- parsed_formula$z_part$var
     # choose best model
     best_model <- ardl(formula = formula, data = data, order = best_order, start = start_sample, end = end_sample, ...)
 
