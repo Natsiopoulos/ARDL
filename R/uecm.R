@@ -18,9 +18,9 @@
 #'   y_{t} = c_{0} + c_{1}t + \pi_{y}y_{t-1} + \sum_{j=1}^{k}\pi_{j}x_{j,t-1} +
 #'   \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} +
 #'   \sum_{j=1}^{k}\sum_{l=1}^{q_{j}-1} \psi_{j,l}\Delta x_{j,t-l} +
-#'   \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t} \;\;\;\;\;
-#'   \psi_{j,l} = 0 \;\; \forall \;\; q_{j} \leq 1, \;\;\;\;\; \psi_{y,i} = 0
-#'   \;\; if \;\; p = 1}
+#'   \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t}}
+#'   \deqn{\psi_{j,l} = 0 \;\; \forall \;\; q_{j} \leq 1, \;\;\;\;\; \psi_{y,i}
+#'   = 0 \;\; if \;\; p = 1}
 #'   {In addition,} \eqn{x_{j,t-1}} {and} \eqn{\Delta x_{j,t}} {cancel out
 #'   becoming} \eqn{x_{j,t} \;\; \forall \;\; q_{j} = 0}
 #'

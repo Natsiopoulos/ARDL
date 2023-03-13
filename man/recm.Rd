@@ -33,9 +33,9 @@ doesn't follow a standard t-distribution. Instead, the
   an \eqn{ARDL(p,q_{1},\dots,q_{k})}{ARDL(p,q1,...,qk)} is: \deqn{\Delta
   y_{t} = c_{0} + c_{1}t + \sum_{i=1}^{p-1}\psi_{y,i}\Delta y_{t-i} +
   \sum_{j=1}^{k}\sum_{l=1}^{q_{j}-1} \psi_{j,l}\Delta x_{j,t-l} +
-  \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \pi_{y}ECT_{t} + \epsilon_{t}
-  \;\;\;\;\; \psi_{j,l} = 0 \;\; \forall \;\; q_{j} = 1, \;\;\;\;\;
-  \psi_{j,l} = \omega_{j} = 0 \;\; \forall \;\; q_{j} = 0}
+  \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \pi_{y}ECT_{t} + \epsilon_{t}}
+  \deqn{\psi_{j,l} = 0 \;\; \forall \;\; q_{j} = 1, \psi_{j,l} = \omega_{j} =
+   0 \;\; \forall \;\; q_{j} = 0}
 \describe{
   \item{Under Case 1:}{\itemize{
      \item \eqn{c_{0}=c_{1}=0}

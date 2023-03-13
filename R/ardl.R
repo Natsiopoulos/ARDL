@@ -69,7 +69,7 @@
 #' summary(ardl_3132_d)
 #' compare <- data.frame(AIC = c(AIC(ardl_3132), AIC(ardl_3132_d)),
 #'                       BIC = c(BIC(ardl_3132), BIC(ardl_3132_d)))
-#' rownames(compare) <- c("no ummy", "with dummy")
+#' rownames(compare) <- c("no dummy", "with dummy")
 #' compare
 #'
 #' ## Estimate an ARDL(3,1,3,2) model with a linear trend -----------------
