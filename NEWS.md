@@ -1,3 +1,13 @@
+# ARDL 0.2.3
+
+### New features
+
+* Add new function `to_lm()` which converts `ardl`, `uecm`, and `recm` models, 
+as well as `dynlm` models in `lm` models. Among other things, this helps using 
+the model with other functions (e.g. with `predict()` to forecast).
+
+---
+
 # ARDL 0.2.2
 
 ### New features

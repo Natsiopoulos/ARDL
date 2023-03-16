@@ -135,6 +135,21 @@ den <- xts(den)
 plot(den, legend.loc = "right")
 ```
 
+Forecasting and using an `ardl`, `uecm`, or `recm` model in other functions are easy as they can be converted in regular `lm` models.
+
+```{r Convert-to-lm-and-forecast}
+ardl_3132_lm <- to_lm(ardl_3132)
+
+# Forecast using the in-sample data
+insample_data <- ardl_3132$model
+predicted_values <- predict(ardl_3132_lm, newdata = insample_data)
+
+# Convert to ts class for the plot
+predicted_values <- ts(predicted_values, start = c(1974,4), frequency=4)
+plot(denmark$LRM, lwd=2) #The input dependent variable
+lines(predicted_values, col="red", lwd=2) #The predicted values
+```
+
 ## Ease of use
 
 Let's see what it takes to build the above ARDL(3,1,3,2) model.
