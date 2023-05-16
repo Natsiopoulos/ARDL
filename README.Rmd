@@ -30,7 +30,7 @@ knitr::opts_chunk$set(
 
 - Estimate complex ARDL models just providing the ARDL order
 - Estimate the conditional ECM just providing the underlying ARDL model or the order
-- Estimate the long-run multipliers
+- Estimate the long-run, short-run, delay, and interim multipliers
 - Apply the bound test for no cointegration (*Pesaran et al., 2001*)
 	- Both the *F-test* and the *t-test* are available
 	- The *p-value* is also available along with the *critical value bounds* for specific level of statistical significance
@@ -112,27 +112,22 @@ multipliers(ardl_3132, type = "sr")
 multipliers(ardl_3132)
 ```
 
+We can also estimate and visualize the delay multipliers along with their standard errors.
+
+```{r}
+mult15 <- multipliers(ardl_3132, type = 15, se = TRUE)
+plot_delay(mult15, interval = 0.95)
+```
+
+
 Now let's graphically check the estimated long-run relationship (cointegrating equation) against the dependent variable `LRM`.
 
 ```{r ce}
 ce <- coint_eq(ardl_3132, case = 2)
 ```
 
-```{r include=FALSE}
-library(zoo)
-library(xts)
-```
-
 ```{r lr-plot}
-library(zoo) # for cbind.zoo
-library(xts) # for xts
-
-den <- cbind.zoo(LRM = denmark[,"LRM"], ce)
-den <- xts(den)
-
-# make the plot
-den <- xts(den)
-plot(den, legend.loc = "right")
+plot_lr(ardl_3132, coint_eq = ce, show.legend = TRUE)
 ```
 
 Forecasting and using an `ardl`, `uecm`, or `recm` model in other functions are easy as they can be converted in regular `lm` models.

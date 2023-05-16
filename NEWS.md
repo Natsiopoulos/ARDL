@@ -6,6 +6,17 @@
 as well as `dynlm` models in `lm` models. Among other things, this helps using 
 the model with other functions (e.g. with `predict()` to forecast).
 
+* `multipliers()` now has a new argument (`se`) which allows the estimation of
+standard errors for the delay multipliers, using the delta method.
+
+* Add new function `plot_delay()` which creates plots (`ggplot`) for the delay 
+multipliers and their uncertainty intervals (standard errors or confidence 
+intervals).
+
+* Add new function `plot_lr()` which creates a plot (`ggplot`) for the long-run 
+relationship in comparison with the dependent variable, and the fitted values of
+the model.
+
 ---
 
 # ARDL 0.2.2

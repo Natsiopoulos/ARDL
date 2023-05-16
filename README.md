@@ -31,7 +31,7 @@ Tzeremes
 - Estimate complex ARDL models just providing the ARDL order
 - Estimate the conditional ECM just providing the underlying ARDL model
   or the order
-- Estimate the long-run multipliers
+- Estimate the long-run, short-run, delay, and interim multipliers
 - Apply the bound test for no cointegration (*Pesaran et al., 2001*)
   - Both the *F-test* and the *t-test* are available
   - The *p-value* is also available along with the *critical value
@@ -271,6 +271,16 @@ multipliers(ardl_3132)
 #> 4         IDE  2.8915201  0.9950853  2.905801 6.009239e-03
 ```
 
+We can also estimate and visualize the delay multipliers along with
+their standard errors.
+
+``` r
+mult15 <- multipliers(ardl_3132, type = 15, se = TRUE)
+plot_delay(mult15, interval = 0.95)
+```
+
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+
 Now let’s graphically check the estimated long-run relationship
 (cointegrating equation) against the dependent variable `LRM`.
 
@@ -279,15 +289,7 @@ ce <- coint_eq(ardl_3132, case = 2)
 ```
 
 ``` r
-library(zoo) # for cbind.zoo
-library(xts) # for xts
-
-den <- cbind.zoo(LRM = denmark[,"LRM"], ce)
-den <- xts(den)
-
-# make the plot
-den <- xts(den)
-plot(den, legend.loc = "right")
+plot_lr(ardl_3132, coint_eq = ce, show.legend = TRUE)
 ```
 
 <img src="man/figures/README-lr-plot-1.png" width="100%" />
@@ -326,6 +328,12 @@ transformation to behave like time-series)*
 
 ``` r
 library(dynlm)
+#> Loading required package: zoo
+#> 
+#> Attaching package: 'zoo'
+#> The following objects are masked from 'package:base':
+#> 
+#>     as.Date, as.Date.numeric
 
 dynlm_ardl_model <- dynlm(LRM ~ L(LRM, 1) + L(LRM, 2) + L(LRM, 3) + LRY + L(LRY, 1) +
                            IBO + L(IBO, 1) + L(IBO, 2) + L(IBO, 3) +
