@@ -27,12 +27,13 @@ Depends:
 Suggests: 
     qpcR,
     sandwich,
-    testthat (>= 3.0.0),
-    xts
+    testthat (>= 3.0.0)
 Imports: 
     aod,
     dplyr,
     dynlm,
+    gridExtra,
+    ggplot2,
     lmtest,
     msm,
     stringr,

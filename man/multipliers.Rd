@@ -6,11 +6,11 @@
 \alias{multipliers.uecm}
 \title{Multipliers estimation}
 \usage{
-multipliers(object, type = "lr", vcov_matrix = NULL)
+multipliers(object, type = "lr", vcov_matrix = NULL, se = FALSE)
 
-\method{multipliers}{ardl}(object, type = "lr", vcov_matrix = NULL)
+\method{multipliers}{ardl}(object, type = "lr", vcov_matrix = NULL, se = FALSE)
 
-\method{multipliers}{uecm}(object, type = "lr", vcov_matrix = NULL)
+\method{multipliers}{uecm}(object, type = "lr", vcov_matrix = NULL, se = FALSE)
 }
 \arguments{
 \item{object}{An object of \code{\link[base]{class}} 'ardl' or 'uecm'.}
@@ -26,6 +26,14 @@ so the t-statistics and p-values) of the multipliers. The default is
 of the covariance matrix of the regression's estimated coefficients can
 also be used (e.g., using \code{\link[sandwich]{vcovHC}} or
 \code{\link[sandwich]{vcovHAC}}).}
+
+\item{se}{A logical indicating whether you want standard errors for delay
+multipliers to be provided. The default is FALSE. Note that this parameter
+does not refer to the standard errors for the long-run multipliers, which are
+always calculated. IMPORTANT: Calculating standard errors for long periods of
+delays may cause your computer to run out of memory and terminate your R
+session, losing important unsaved work. As a rule of thumb, try not to exceed
+\code{type = 19} when \code{se = TRUE}.}
 }
 \value{
 \code{multipliers} returns (for long and short run multipliers) a
@@ -37,9 +45,8 @@ also be used (e.g., using \code{\link[sandwich]{vcovHC}} or
 }
 \description{
 \code{multipliers} is a generic function used to estimate short-run (impact),
-delay, interim and long-run (total) multipliers. Long and short run
-multipliers are accompanied by their corresponding standard errors,
-t-statistics and p-values.
+delay, interim and long-run (total) multipliers, accompanied by their
+corresponding standard errors, t-statistics and p-values.
 }
 \details{
 The function invokes two different \code{\link[utils]{methods}}, one for
@@ -58,7 +65,7 @@ The delay (interim) multiplier can be interpreted as the effect in period
 t+s, of an instant (sustained) shock in period t.
 
 The delta method is used for approximating the standard errors (and thus the
-t-statistics and p-values) of the estimated long-run multipliers.
+t-statistics and p-values) of the estimated long-run and delay multipliers.
 }
 \section{Mathematical Formula}{
 
@@ -158,9 +165,12 @@ sum(mult_inter80$IDE$Delay)
 mult_inter80$IDE$Interim[nrow(mult_inter80$IDE)]
 plot(mult_inter80$LRY$Delay, type='l')
 plot(mult_inter80$LRY$Interim, type='l')
+
+mult_inter12 <- multipliers(uecm_3132, type = 12, se = TRUE)
+plot_delay(mult_inter12, interval = 0.95)
 }
 \seealso{
-\code{\link{ardl}}, \code{\link{uecm}}
+\code{\link{ardl}}, \code{\link{uecm}}, \code{\link{plot_delay}}
 }
 \author{
 Kleanthis Natsiopoulos, \email{klnatsio@gmail.com}

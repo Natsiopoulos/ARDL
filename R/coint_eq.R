@@ -17,7 +17,7 @@
 #'
 #' @inheritSection recm Cases
 #' @inheritSection recm References
-#' @seealso \code{\link{ardl}} \code{\link{uecm}} \code{\link{recm}}
+#' @seealso \code{\link{plot_lr}} \code{\link{ardl}} \code{\link{uecm}} \code{\link{recm}}
 #'   \code{\link{bounds_f_test}} \code{\link{bounds_t_test}}
 #' @author Kleanthis Natsiopoulos, \email{klnatsio@@gmail.com}
 #' @keywords ts
@@ -57,23 +57,11 @@
 #' # But when the constant enters the long-run equation (case 3)
 #' # this becomes a degenerate relationship.
 #' ce3_ardl <- coint_eq(ardl_3132, case = 3)
-#' den <- cbind.zoo(LRM = denmark[,"LRM"], ce2_ardl, ce3_ardl)
 #'
-#' if (requireNamespace("xts", quietly = TRUE)) {
+#' plot_lr(ardl_3132, coint_eq = ce2_ardl, show.legend = TRUE)
 #'
-#' library(xts)
-#' den <- xts(den)
-#' plot(den, legend.loc = "right")
-#' plot(den[,-3], legend.loc = "right")
-#'
-#' } else {
-#'
-#' plot(den, col = c(1,2,3), screens = 1)
-#' legend("right", lty = 1, legend = colnames(den), col = c(1:3))
-#' plot(den[,-3], col = c(1,2), screens = 1)
-#' legend("top", lty = 1, legend = colnames(den[,-3]), col = c(1:2))
-#'
-#' }
+#' plot_lr(ardl_3132, coint_eq = ce3_ardl, show.legend = TRUE)
+#' plot_lr(ardl_3132, coint_eq = ce3_ardl, facets = TRUE, show.legend = TRUE)
 
 coint_eq <- function(object, case) {
     UseMethod("coint_eq")

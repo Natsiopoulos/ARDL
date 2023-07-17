@@ -1,9 +1,8 @@
 #' Multipliers estimation
 #'
 #' \code{multipliers} is a generic function used to estimate short-run (impact),
-#' delay, interim and long-run (total) multipliers. Long and short run
-#' multipliers are accompanied by their corresponding standard errors,
-#' t-statistics and p-values.
+#' delay, interim and long-run (total) multipliers, accompanied by their
+#' corresponding standard errors, t-statistics and p-values.
 #'
 #' The function invokes two different \code{\link[utils]{methods}}, one for
 #' objects of \code{\link[base]{class}} 'ardl' and one for objects of
@@ -21,7 +20,7 @@
 #' t+s, of an instant (sustained) shock in period t.
 #'
 #' The delta method is used for approximating the standard errors (and thus the
-#' t-statistics and p-values) of the estimated long-run multipliers.
+#' t-statistics and p-values) of the estimated long-run and delay multipliers.
 #'
 #' @param object An object of \code{\link[base]{class}} 'ardl' or 'uecm'.
 #' @param type A character string describing the type of multipliers. Use "lr"
@@ -34,6 +33,13 @@
 #'   of the covariance matrix of the regression's estimated coefficients can
 #'   also be used (e.g., using \code{\link[sandwich]{vcovHC}} or
 #'   \code{\link[sandwich]{vcovHAC}}).
+#' @param se A logical indicating whether you want standard errors for delay
+#' multipliers to be provided. The default is FALSE. Note that this parameter
+#' does not refer to the standard errors for the long-run multipliers, which are
+#' always calculated. IMPORTANT: Calculating standard errors for long periods of
+#' delays may cause your computer to run out of memory and terminate your R
+#' session, losing important unsaved work. As a rule of thumb, try not to exceed
+#' \code{type = 19} when \code{se = TRUE}.
 #'
 #' @return \code{multipliers} returns (for long and short run multipliers) a
 #'   data.frame containing the independent variables (including possibly
@@ -97,7 +103,7 @@
 #' \deqn{\mu = \frac{c_{0}}{-\pi_{y}}}
 #' \deqn{\delta = \frac{c_{1}}{-\pi_{y}}}
 #'
-#' @seealso \code{\link{ardl}}, \code{\link{uecm}}
+#' @seealso \code{\link{ardl}}, \code{\link{uecm}}, \code{\link{plot_delay}}
 #' @author Kleanthis Natsiopoulos, \email{klnatsio@@gmail.com}
 #' @keywords math
 #' @export
@@ -142,8 +148,11 @@
 #' mult_inter80$IDE$Interim[nrow(mult_inter80$IDE)]
 #' plot(mult_inter80$LRY$Delay, type='l')
 #' plot(mult_inter80$LRY$Interim, type='l')
+#'
+#' mult_inter12 <- multipliers(uecm_3132, type = 12, se = TRUE)
+#' plot_delay(mult_inter12, interval = 0.95)
 
-multipliers <- function(object, type = "lr", vcov_matrix = NULL) {
+multipliers <- function(object, type = "lr", vcov_matrix = NULL, se = FALSE) {
     UseMethod("multipliers")
 }
 
@@ -151,7 +160,7 @@ multipliers <- function(object, type = "lr", vcov_matrix = NULL) {
 #' @export
 #'
 
-multipliers.ardl <- function(object, type = "lr", vcov_matrix = NULL) {
+multipliers.ardl <- function(object, type = "lr", vcov_matrix = NULL, se = FALSE) {
 
     # no visible binding for global variable NOTE solution
     group_id <- coeff <- sums <- NULL; rm(group_id, coeff, sums)
@@ -226,6 +235,7 @@ multipliers.ardl <- function(object, type = "lr", vcov_matrix = NULL) {
             }
             delay <- list()
             int_mult <- list()
+            if (se) xpressions <- list()
             orders_wx <- c(rep(0, kw), orders_x)
             if (kw != 0) {
                 delay_names <- c(rownames(delays_table)[1:kw], object$parsed_formula$x_part$var)
@@ -238,20 +248,48 @@ multipliers.ardl <- function(object, type = "lr", vcov_matrix = NULL) {
                 names(delay)[k] <- delay_names[k]
                 int_mult[[k]] <- data.frame()
                 names(int_mult)[[k]] <- delay_names[k]
+                if (se) {
+                    xpressions[[k]] <- data.frame()
+                    names(xpressions)[[k]] <- delay_names[k]
+                }
                 for (ss in 0:interim) {
                     weights_n <- min(object$order[1], ss)
                     direct <- ifelse(ss <= orders_wx[k], delay[[k]][ss+1], 0)
+                    if (se) {
+                        skip_w_y <- ifelse((kw != 0) & k %in% 1:kw, 0 + k-1, kw + object$order[1])
+                        if (direct == 0) {
+                            direct_xpression <- NULL
+                        } else {
+                            direct_xpression <- paste0("x", skip_w_y + ifelse(!k %in% 1:kw, sum(orders_wx[kw:(k-1)]) + k-kw-1, 0) + (ss + 1))
+                        }
+                    }
                     if (ss == 0) {
                         int_mult[[k]] <- data.frame(Period = ss, Delay = direct)
+                        if (se) xpressions[[k]] <- data.frame(Period = ss, xpression = direct_xpression)
                     } else {
                         int_mult[[k]] <- rbind(int_mult[[k]],
                                                data.frame(Period = ss,
                                                           Delay = direct +
                                                               sum(y_table[1:weights_n,] *
                                                                       rev(int_mult[[k]][(ss-(weights_n-1)):ss,"Delay"]))))
+                        if (se) {
+                            xpressions[[k]] <- rbind(xpressions[[k]],
+                                                     data.frame(Period = ss,
+                                                                xpression = paste0(c(direct_xpression,
+                                                                                     paste0("x", (1:weights_n)+kw, "*(",
+                                                                                            rev(xpressions[[k]][(ss-(weights_n-1)):ss,"xpression"]),
+                                                                                            ")")), collapse = "+"
+                                                                )))
+                        }
                     }
                 }
                 delays_table <- delays_table %>% dplyr::slice(-(1:(orders_wx[k] + 1)))
+            }
+            if (se) xpressions <- lapply(xpressions, FUN = function(x) {data.frame(Period = x$Period, xpression = paste0("~ ", x$xpression))})
+            if (se) xpressions <- lapply(xpressions, FUN = function(x) {msm::deltamethod(lapply(x$xpression, stats::formula), stats::coef(object), vcov_matrix)})
+            for (i in 1:length(int_mult)) {
+                if (se) int_mult[[i]] <- cbind(int_mult[[i]], "Std. Error Delay" = xpressions[[i]])
+                rownames(int_mult[[i]]) <- NULL
             }
             int_mult <- lapply(int_mult, FUN = function(x) {cbind(x, Interim = cumsum(x$Delay))})
             return(int_mult)
@@ -265,7 +303,7 @@ multipliers.ardl <- function(object, type = "lr", vcov_matrix = NULL) {
 #' @export
 #'
 
-multipliers.uecm <- function(object, type = "lr", vcov_matrix = NULL) {
+multipliers.uecm <- function(object, type = "lr", vcov_matrix = NULL, se = FALSE) {
 
     if (!(type %in% c("lr", "sr", 0:200))) {
         stop("'type' should be one of 'lr', 'sr' or a number between 0 and 200", call. = FALSE)
@@ -274,7 +312,7 @@ multipliers.uecm <- function(object, type = "lr", vcov_matrix = NULL) {
     if (is.null(vcov_matrix)) vcov_matrix <- stats::vcov(object)
 
     if (type %in% 1:200) {
-        return(multipliers(object = ardl(object), type = type, vcov_matrix = vcov_matrix))
+        return(multipliers(object = ardl(object), type = type, vcov_matrix = vcov_matrix, se = se))
     }
 
     kw <- object$parsed_formula$kw

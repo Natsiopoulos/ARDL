@@ -58,6 +58,53 @@ test_that("equivalence long-run and sum of interim", {
     expect_equal(round(mult_lr$Estimate[mult_lr$Term=='Union'],4), round(mult_inter200$'Union'$Interim[201],4))
 })
 
+test_that("correct s.e. for delay multipliers", {
+    ardl_model <- ardl(w ~ Prod + UR + Wedge + Union | D7475 + D7579,
+                       data = PSS2001, start = c(1972, 01),
+                       order=c(6,1,5,4,5))
+    mult <- multipliers(ardl_model, type = 3, se = TRUE)
+    expected_se_c <- c(0.1554, 0.0686, 0.0658, 0.0654)
+    expected_se_ur <- c(0.0083, 0.0108, 0.0126, 0.0136)
+
+    expect_equal(round(mult$`(Intercept)`[,"Std. Error Delay"], 4), expected_se_c)
+    expect_equal(round(mult$UR[,"Std. Error Delay"], 4), expected_se_ur)
+
+    # no intercept
+    ardl_model <- ardl(w ~ Prod + UR + Wedge + Union -1| D7475 + D7579,
+                       data = PSS2001, start = c(1972, 01),
+                       order=c(6,1,5,4,5))
+    mult <- multipliers(ardl_model, type = 3, se = TRUE)
+    expected_se_prod <- c(0.1021, 0.0602, 0.0337, 0.0392)
+    expected_se_ur <- c(0.0091, 0.0111, 0.0131, 0.0137)
+
+    expect_equal(round(mult$Prod[,"Std. Error Delay"], 4), expected_se_prod)
+    expect_equal(round(mult$UR[,"Std. Error Delay"], 4), expected_se_ur)
+
+    # intercept and trend
+    ardl_model <- ardl(w ~ Prod + UR + Wedge + Union + trend(w)| D7475 + D7579,
+                       data = PSS2001, start = c(1972, 01),
+                       order=c(6,1,5,4,5))
+    mult <- multipliers(ardl_model, type = 3, se = TRUE)
+    expected_se_c <- c(0.2006, 0.0774, 0.0638, 0.0581)
+    expected_se_trend <- c(0.0014, 0.0005, 0.0003, 0.0001)
+    expected_se_ur <- c(0.0083, 0.0109, 0.0127, 0.0137)
+
+    expect_equal(round(mult$`(Intercept)`[,"Std. Error Delay"], 4), expected_se_c)
+    expect_equal(round(mult$`trend(w)`[,"Std. Error Delay"], 4), expected_se_trend)
+    expect_equal(round(mult$UR[,"Std. Error Delay"], 4), expected_se_ur)
+
+    # include 0 order
+    ardl_model <- ardl(w ~ Prod + UR + Wedge + Union | D7475 + D7579,
+                       data = PSS2001, start = c(1972, 01),
+                       order=c(6,0,5,4,5))
+    mult <- multipliers(ardl_model, type = 3, se = TRUE)
+    expected_se_c <- c(0.1426, 0.0700, 0.0677, 0.0652)
+    expected_se_ur <- c(0.0083, 0.0107, 0.0125, 0.0128)
+
+    expect_equal(round(mult$`(Intercept)`[,"Std. Error Delay"], 4), expected_se_c)
+    expect_equal(round(mult$UR[,"Std. Error Delay"], 4), expected_se_ur)
+})
+
 test_that("type='sr' equals type=0", {
     ardl_model <- ardl(w ~ Prod + UR + Wedge + Union -1 | D7475 + D7579,
                        data = PSS2001, start = c(1972, 01),
