@@ -1,3 +1,17 @@
+# ARDL 0.2.4
+
+### New features
+
+* Added new parameters to the `to_lm()` function. These are `fix_names` which 
+removes special functions such as `d()` and `L()` from the variable names, and
+`data_class` which converts the data class to `ts`.
+
+### Documentation update
+
+* Added example of how to apply post-estimation tests, combining other packages.
+
+---
+
 # ARDL 0.2.3
 
 ### New features

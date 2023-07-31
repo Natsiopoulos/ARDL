@@ -16,8 +16,9 @@
 #' that the sum of the interim multipliers (for long enough periods) and thus
 #' a distant enough interim multiplier match the long-run multipliers.
 #'
-#' The delay (interim) multiplier can be interpreted as the effect in period
-#' t+s, of an instant (sustained) shock in period t.
+#' The delay (interim) multiplier can be interpreted as the effect on the
+#' dependent variable in period t+s, resulting from an instant (sustained) shock
+#' to an independent variable in period t.
 #'
 #' The delta method is used for approximating the standard errors (and thus the
 #' t-statistics and p-values) of the estimated long-run and delay multipliers.
@@ -35,11 +36,11 @@
 #'   \code{\link[sandwich]{vcovHAC}}).
 #' @param se A logical indicating whether you want standard errors for delay
 #' multipliers to be provided. The default is FALSE. Note that this parameter
-#' does not refer to the standard errors for the long-run multipliers, which are
-#' always calculated. IMPORTANT: Calculating standard errors for long periods of
-#' delays may cause your computer to run out of memory and terminate your R
-#' session, losing important unsaved work. As a rule of thumb, try not to exceed
-#' \code{type = 19} when \code{se = TRUE}.
+#' does not refer to the standard errors for the long-run and short-run
+#' multipliers, for which are always calculated. IMPORTANT: Calculating standard
+#' errors for long periods of delays may cause your computer to run out of
+#' memory and terminate your R session, losing important unsaved work. As a rule
+#' of thumb, try not to exceed \code{type = 19} when \code{se = TRUE}.
 #'
 #' @return \code{multipliers} returns (for long and short run multipliers) a
 #'   data.frame containing the independent variables (including possibly

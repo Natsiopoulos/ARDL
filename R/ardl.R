@@ -106,6 +106,11 @@
 #' ardl_3132$full_formula
 #' m2 <- dynlm(ardl_3132$full_formula, data = ardl_3132$data)
 #' identical(m$coefficients, m2$coefficients)
+#'
+#' ## Post-estimation testing ---------------------------------------------
+#'
+#' # See examples in the help file of the uecm() function
+#'
 
 ardl <- function(...) {
     UseMethod("ardl")

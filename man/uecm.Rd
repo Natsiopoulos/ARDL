@@ -90,6 +90,46 @@ uecm_3132 <- uecm(ardl_3132)
 uecm_3132_ <- uecm(LRM ~ LRY + IBO + IDE, data = denmark, order = c(3,1,3,2))
 identical(uecm_3132, uecm_3132_)
 summary(uecm_3132)
+
+## Post-estimation testing ---------------------------------------------
+
+library(lmtest) # for bgtest(), bptest(), and resettest()
+library(tseries) # for jarque.bera.test()
+library(strucchange) # for efp(), and sctest()
+
+# Breusch-Godfrey test for higher-order serial correlation
+bgtest(uecm_3132, order = 4)
+
+# Breusch-Pagan test against heteroskedasticity
+bptest(uecm_3132)
+
+# Ramsey's RESET test for functional form
+\dontrun{
+    # This produces an error.
+    # resettest() cannot use data of class 'zoo' such as the 'denmark' data
+    # used to build the original model
+    resettest(uecm_3132, type = c("regressor"))
+}
+
+uecm_3132_lm <- to_lm(uecm_3132, data_class = "ts")
+resettest(uecm_3132_lm, power = 2)
+
+# Jarque-Bera test for normality
+jarque.bera.test(residuals(uecm_3132))
+
+# CUSUM test for structural change detection
+\dontrun{
+    # This produces an error.
+    # efp() does not understand special functions such as "d()" and "L()"
+    efp(uecm_3132$full_formula, data = uecm_3132$model)
+}
+
+uecm_3132_lm_names <- to_lm(uecm_3132, fix_names = TRUE)
+fluctuation <- efp(uecm_3132_lm_names$full_formula,
+                   data = uecm_3132_lm_names$model)
+sctest(fluctuation)
+plot(fluctuation)
+
 }
 \seealso{
 \code{\link{ardl}} \code{\link{recm}}
