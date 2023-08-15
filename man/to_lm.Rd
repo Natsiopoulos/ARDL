@@ -4,7 +4,7 @@
 \alias{to_lm}
 \title{Convert dynlm model (ardl, uecm, recm) to lm model}
 \usage{
-to_lm(object, fix_names = FALSE, data_class = c(NULL, "ts"), ...)
+to_lm(object, fix_names = FALSE, data_class = NULL, ...)
 }
 \arguments{
 \item{object}{An object of \code{\link[base]{class}} 'ardl', 'uecm' or 'recm'.}
@@ -12,11 +12,14 @@ to_lm(object, fix_names = FALSE, data_class = c(NULL, "ts"), ...)
 \item{fix_names}{A logical, indicating whether the variable names should be
 rewritten without special functions and character in the names such as "d()"
 or "L()". When \code{fix_names = TRUE}, the characters "(", and "," are
-replaces with ".", and ")" and spaces are deleted. Default is FALSE.}
+replaces with ".", and ")" and spaces are deleted. The name of the dependent
+variable is always transformed, regardless of the value of this parameter.
+Default is FALSE.}
 
-\item{data_class}{Converts the data class to \code{\link[stats]{ts}} (see
-examples for its usage). The default is \code{\link[base]{NULL}}, which uses
-the same data provided in the original object.}
+\item{data_class}{If "ts", it converts the data class to
+\code{\link[stats]{ts}} (see examples for its usage). The default is
+\code{\link[base]{NULL}}, which uses the same data provided in the original
+object.}
 
 \item{...}{Currently unused argument.}
 }

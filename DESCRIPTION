@@ -25,6 +25,8 @@ LazyData: true
 Depends: 
     R (>= 3.5.0)
 Suggests: 
+    strucchange,
+    tseries,
     qpcR,
     sandwich,
     testthat (>= 3.0.0)

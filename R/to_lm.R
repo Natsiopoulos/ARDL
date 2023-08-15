@@ -10,10 +10,13 @@
 #' @param fix_names A logical, indicating whether the variable names should be
 #' rewritten without special functions and character in the names such as "d()"
 #' or "L()". When \code{fix_names = TRUE}, the characters "(", and "," are
-#' replaces with ".", and ")" and spaces are deleted. Default is FALSE.
-#' @param data_class Converts the data class to \code{\link[stats]{ts}} (see
-#' examples for its usage). The default is \code{\link[base]{NULL}}, which uses
-#' the same data provided in the original object.
+#' replaces with ".", and ")" and spaces are deleted. The name of the dependent
+#' variable is always transformed, regardless of the value of this parameter.
+#' Default is FALSE.
+#' @param data_class If "ts", it converts the data class to
+#' \code{\link[stats]{ts}} (see examples for its usage). The default is
+#' \code{\link[base]{NULL}}, which uses the same data provided in the original
+#' object.
 #' @param ... Currently unused argument.
 #'
 #' @return \code{to_lm} returns an object of \code{\link[base]{class}}
@@ -92,10 +95,12 @@
 #' plot(fluctuation)
 #'
 
-to_lm <- function(object, fix_names = FALSE, data_class = c(NULL, "ts"), ...) {
+to_lm <- function(object, fix_names = FALSE, data_class = NULL, ...) {
     objmodel <- object$model
-    if (data_class == "ts") {
-        objmodel <- ts(objmodel, start = start(objmodel[,1]), frequency = frequency(objmodel[,1]))
+    if (!is.null(data_class)) {
+        if (data_class == "ts") {
+            objmodel <- stats::ts(objmodel, start = stats::start(objmodel[,1]), frequency = stats::frequency(objmodel[,1]))
+        }
     }
     dep_var <- colnames(objmodel)[1]
     fix_names_fun <- function(text) {
