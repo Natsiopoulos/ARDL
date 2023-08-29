@@ -4,16 +4,28 @@
 \alias{to_lm}
 \title{Convert dynlm model (ardl, uecm, recm) to lm model}
 \usage{
-to_lm(object, ...)
+to_lm(object, fix_names = FALSE, data_class = NULL, ...)
 }
 \arguments{
 \item{object}{An object of \code{\link[base]{class}} 'ardl', 'uecm' or 'recm'.}
+
+\item{fix_names}{A logical, indicating whether the variable names should be
+rewritten without special functions and character in the names such as "d()"
+or "L()". When \code{fix_names = TRUE}, the characters "(", and "," are
+replaces with ".", and ")" and spaces are deleted. The name of the dependent
+variable is always transformed, regardless of the value of this parameter.
+Default is FALSE.}
+
+\item{data_class}{If "ts", it converts the data class to
+\code{\link[stats]{ts}} (see examples for its usage). The default is
+\code{\link[base]{NULL}}, which uses the same data provided in the original
+object.}
 
 \item{...}{Currently unused argument.}
 }
 \value{
 \code{to_lm} returns an object of \code{\link[base]{class}}
-  \code{"lm"}.
+\code{"lm"}.
 }
 \description{
 Takes a \code{\link[dynlm]{dynlm}} model of \code{\link[base]{class}} 'ardl',
@@ -60,6 +72,36 @@ predicted_values <- ts(predicted_values, start = c(1974,4), frequency=4)
 plot(denmark$LRM, lwd=4) #The input dependent variable
 lines(ardl_3132$fitted.values, lwd=4, col="blue") #The fitted values
 lines(predicted_values, lty=2, lwd=2, col="red") #The predicted values
+
+## Convert to lm for post-estimation testing ---------------------------
+
+# Ramsey's RESET test for functional form
+library(lmtest) # for resettest()
+library(strucchange) # for efp(), and sctest()
+
+\dontrun{
+    # This produces an error.
+    # resettest() cannot use data of class 'zoo' such as the 'denmark' data
+    # used to build the original model
+    resettest(uecm_3132, type = c("regressor"))
+}
+
+uecm_3132_lm <- to_lm(uecm_3132, data_class = "ts")
+resettest(uecm_3132_lm, power = 2)
+
+# CUSUM test for structural change detection
+\dontrun{
+    # This produces an error.
+    # efp() does not understand special functions such as "d()" and "L()"
+    efp(uecm_3132$full_formula, data = uecm_3132$model)
+}
+
+uecm_3132_lm_names <- to_lm(uecm_3132, fix_names = TRUE)
+fluctuation <- efp(uecm_3132_lm_names$full_formula,
+                   data = uecm_3132_lm_names$model)
+sctest(fluctuation)
+plot(fluctuation)
+
 }
 \seealso{
 \code{\link{ardl}}, \code{\link{uecm}}, \code{\link{recm}}

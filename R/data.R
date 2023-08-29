@@ -14,7 +14,7 @@
 #'   \item{IBO}{bond rate}
 #'   \item{IDE}{bank deposit rate}
 #' }
-#' @source \url{http://web.math.ku.dk/~sjo/data/danish_data.html}
+#' @source \url{https://onlinelibrary.wiley.com/doi/10.1111/j.1468-0084.1990.mp52002003.x}
 #' @references Johansen, S. and Juselius, K. (1990), Maximum Likelihood
 #' Estimation and Inference on Cointegration -- with Applications to the Demand
 #' for Money, \emph{Oxford Bulletin of Economics and Statistics}, \bold{52, 2},

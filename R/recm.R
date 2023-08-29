@@ -108,6 +108,11 @@
 #' # through the coefficient of the term L(y, 1) (where y is the dependent variable).
 #' tail(recm_3132$coefficients, 1)
 #' uecm_3132$coefficients[2]
+#'
+#' ## Post-estimation testing ---------------------------------------------
+#'
+#' # See examples in the help file of the uecm() function
+#'
 
 recm <- function(object, case) {
     # no visible binding for global variable NOTE solution

@@ -7,10 +7,20 @@
 #' as the \code{\link[stats]{predict}} function to forecast.
 #'
 #' @param object An object of \code{\link[base]{class}} 'ardl', 'uecm' or 'recm'.
+#' @param fix_names A logical, indicating whether the variable names should be
+#' rewritten without special functions and character in the names such as "d()"
+#' or "L()". When \code{fix_names = TRUE}, the characters "(", and "," are
+#' replaces with ".", and ")" and spaces are deleted. The name of the dependent
+#' variable is always transformed, regardless of the value of this parameter.
+#' Default is FALSE.
+#' @param data_class If "ts", it converts the data class to
+#' \code{\link[stats]{ts}} (see examples for its usage). The default is
+#' \code{\link[base]{NULL}}, which uses the same data provided in the original
+#' object.
 #' @param ... Currently unused argument.
 #'
 #' @return \code{to_lm} returns an object of \code{\link[base]{class}}
-#'   \code{"lm"}.
+#' \code{"lm"}.
 #'
 #' @seealso \code{\link{ardl}}, \code{\link{uecm}}, \code{\link{recm}}
 #' @author Kleanthis Natsiopoulos, \email{klnatsio@@gmail.com}
@@ -54,35 +64,75 @@
 #' plot(denmark$LRM, lwd=4) #The input dependent variable
 #' lines(ardl_3132$fitted.values, lwd=4, col="blue") #The fitted values
 #' lines(predicted_values, lty=2, lwd=2, col="red") #The predicted values
+#'
+#' ## Convert to lm for post-estimation testing ---------------------------
+#'
+#' # Ramsey's RESET test for functional form
+#' library(lmtest) # for resettest()
+#' library(strucchange) # for efp(), and sctest()
+#'
+#' \dontrun{
+#'     # This produces an error.
+#'     # resettest() cannot use data of class 'zoo' such as the 'denmark' data
+#'     # used to build the original model
+#'     resettest(uecm_3132, type = c("regressor"))
+#' }
+#'
+#' uecm_3132_lm <- to_lm(uecm_3132, data_class = "ts")
+#' resettest(uecm_3132_lm, power = 2)
+#'
+#' # CUSUM test for structural change detection
+#' \dontrun{
+#'     # This produces an error.
+#'     # efp() does not understand special functions such as "d()" and "L()"
+#'     efp(uecm_3132$full_formula, data = uecm_3132$model)
+#' }
+#'
+#' uecm_3132_lm_names <- to_lm(uecm_3132, fix_names = TRUE)
+#' fluctuation <- efp(uecm_3132_lm_names$full_formula,
+#'                    data = uecm_3132_lm_names$model)
+#' sctest(fluctuation)
+#' plot(fluctuation)
+#'
 
-to_lm <- function(object, ...) {
+to_lm <- function(object, fix_names = FALSE, data_class = NULL, ...) {
     objmodel <- object$model
-    dep_var <- names(object$model)[1]
-    diff_var <- grepl("d(", dep_var, fixed=TRUE)
-    lag_var <- grepl("L(", dep_var, fixed=TRUE)
-    if (lag_var | diff_var) {
-        if (lag_var) {
-            y <- gsub(" ", "", dep_var) %>%
-                sub("(", ".", ., fixed=TRUE) %>%
-                sub(")", "", ., fixed=TRUE) %>%
-                sub(",", ".", ., fixed=TRUE)
-        } else if (diff_var) {
-            y <- gsub(" ", "", dep_var) %>%
-                sub("(", ".", ., fixed=TRUE) %>%
-                sub(")", "", ., fixed=TRUE)
+    if (!is.null(data_class)) {
+        if (data_class == "ts") {
+            objmodel <- stats::ts(objmodel, start = stats::start(objmodel[,1]), frequency = stats::frequency(objmodel[,1]))
         }
-        names(objmodel)[1] <- y
+    }
+    dep_var <- colnames(objmodel)[1]
+    fix_names_fun <- function(text) {
+        text <- gsub(" ", "", text) %>%
+            gsub("(", ".", ., fixed = TRUE) %>%
+            gsub(")", "", ., fixed = TRUE) %>%
+            gsub(",", ".", ., fixed = TRUE)
+        return(text)
+    }
+    y <- fix_names_fun(dep_var)
+
+    if (fix_names) {
+        colnames(objmodel) <- sapply(colnames(objmodel), fix_names_fun)
         if (attr(object$terms,"intercept") == 0) {
             formula <- formula(paste0(y, " ~ . -1"))
         } else {
             formula <- formula(paste0(y, " ~ ."))
         }
+
+        full_formula <- as.character(object$full_formula)
+        lm_model <- stats::lm(formula, data = objmodel)
+        lm_model$full_formula <- stats::formula(paste0(y, "~", fix_names_fun(full_formula[3])))
+
+        return(lm_model)
     } else {
+        colnames(objmodel)[1] <- y
         if (attr(object$terms,"intercept") == 0) {
-            formula <- formula(paste0(dep_var, " ~ . -1"))
+            formula <- formula(paste0(y, " ~ . -1"))
         } else {
-            formula <- formula(paste0(dep_var, " ~ ."))
+            formula <- formula(paste0(y, " ~ ."))
         }
+
+        return(stats::lm(formula, data = objmodel))
     }
-    return(stats::lm(formula, data = objmodel))
 }

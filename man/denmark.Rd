@@ -16,7 +16,7 @@ until 1987:Q3.
 }
 }
 \source{
-\url{http://web.math.ku.dk/~sjo/data/danish_data.html}
+\url{https://onlinelibrary.wiley.com/doi/10.1111/j.1468-0084.1990.mp52002003.x}
 }
 \usage{
 denmark

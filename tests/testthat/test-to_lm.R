@@ -13,6 +13,10 @@ test_that("From ardl to lm", {
     expect_equal(ardl_3132$df.residual, ardl_3132_lm$df.residual)
     expect_equal(ardl_3132$xlevels, ardl_3132_lm$xlevels)
     expect_equal(ardl_3132$model, ardl_3132_lm$model, ignore_attr= TRUE)
+
+    # Check data_class = "ts"
+    ardl_3132_lm_ts <- to_lm(ardl_3132, data_class = "ts")
+    expect_equal(ardl_3132_lm$coefficients, ardl_3132_lm_ts$coefficients)
 })
 
 test_that("From uecm to lm", {
@@ -30,6 +34,17 @@ test_that("From uecm to lm", {
     expect_equal(uecm_3132$df.residual, uecm_3132_lm$df.residual)
     expect_equal(uecm_3132$xlevels, uecm_3132_lm$xlevels)
     expect_equal(uecm_3132$model, uecm_3132_lm$model, ignore_attr= TRUE)
+
+    # fix_names = TRUE
+    uecm_3132_lm_names <- to_lm(uecm_3132, fix_names = TRUE)
+    names_FALSE <- c("d.LRM", "L(LRM, 1)", "L(LRY, 1)", "L(IBO, 1)", "L(IDE, 1)",
+                     "d(L(LRM, 1))", "d(L(LRM, 2))", "d(LRY)", "d(IBO)",
+                     "d(L(IBO, 1))", "d(L(IBO, 2))", "d(IDE)", "d(L(IDE, 1))")
+    names_TRUE <- c("d.LRM", "L.LRM.1", "L.LRY.1", "L.IBO.1", "L.IDE.1",
+                    "d.L.LRM.1", "d.L.LRM.2", "d.LRY", "d.IBO", "d.L.IBO.1",
+                    "d.L.IBO.2", "d.IDE", "d.L.IDE.1")
+    expect_equal(names(uecm_3132_lm$model), names_FALSE)
+    expect_equal(names(uecm_3132_lm_names$model), names_TRUE)
 })
 
 test_that("Exclude intercept when -1", {

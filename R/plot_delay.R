@@ -12,7 +12,7 @@
 #' @param interval If FALSE (default), no uncertainty intervals are drawn. If a
 #' positive integer, the intervals are this number times the standard error. If
 #' a number between 0 and 1 (e.g. 0.95), the equivalent confidence interval is
-#' drawn (e.g. 95% CI). In case of the confidence intervals, they are based on
+#' drawn (e.g. 95\% CI). In case of the confidence intervals, they are based on
 #' the Gaussian distribution.
 #' @param interval_color The color of the uncertainty intervals. Default is
 #' "blue".
