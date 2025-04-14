@@ -39,6 +39,7 @@ Imports:
     lmtest,
     msm,
     stringr,
-    zoo
-RoxygenNote: 7.2.3
+    zoo,
+    stats
+RoxygenNote: 7.3.2
 Config/testthat/edition: 3
