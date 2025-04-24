@@ -4,44 +4,82 @@
 \alias{predict.ardl}
 \title{ARDL prediction}
 \usage{
-\method{predict}{ardl}(object, newdata, se.fit = FALSE, ...)
+\method{predict}{ardl}(object, newdata, ...)
 }
 \arguments{
-\item{object}{A fitted 'ardl' model of \code{\link[base]{class}} 'ardl',
-created using \code{ardl}.}
+\item{object}{A fitted model of \code{\link[base]{class}} \code{ardl}.}
 
-\item{newdata}{A time series object (e.g., "ts", "zoo" or "zooreg") or a 
-data frame containing the new values of \eqn{x} required to make 
-predictions.}
-
-\item{se.fit}{A switch indicating if standard errors are required.}
+\item{newdata}{A time series object (\code{\link[stats]{ts}},
+\code{\link[zoo]{zoo}} or \code{\link[zoo]{zooreg}}) or a 
+\code{\link[base]{data.frame}} containing the new values of \eqn{x} required
+to make predictions.}
 }
 \value{
-\code{predict} returns predictions of \eqn{y}.
+\code{predict.ardl} returns values for \eqn{\hat{y_t}} equal in length
+to the number of rows in \code{newdata}, as a \code{\link[base]{vector}}.
 }
 \description{
 Makes predictions based on fitted ARDL models, extending the 
-\code{\link[stats]{predict}} generic function for the 
-\code{\link[ARDL-package]}. It is designed to take advantage of lags of the 
-dependent variable from the fitted model and new values of the independent
+generic function \code{\link[stats]{predict}} for use with 
+\code{\link{ardl}}. It is designed to take advantage of lags of the 
+dependent variable from the fitted model and new values of the independent 
 variable(s) to calculate predictions.
 }
+\details{
+\code{predict.ardl} works recursively to calculate predictions based on \eqn{y_{t-p}} values
+contained within a fitted model, and new values of \eqn{x} supplied through the
+\code{newdata} argument. It supports the 5 different deterministic cases,
+involving different restrictions on the intercept and/or trend
+(see \code{\link{recm}}), as well as fixed regressors (e.g. dummies). It is 
+important to note that for a given prediction \eqn{\hat{y_t}}, the 
+independent variables provided through \code{newdata}, are expected to follow 
+consecutively, i.e. \eqn{x_t}, \eqn{x_{t+1}}, \eqn{x_{t+2}}, with no gaps.
+If a time series object is passed to the method, and the underlying 
+\code{ardl} model contains a trend (Case 4 & 5 under PSS), the timestamps 
+defined in \code{newdata} will be ignored. The trend will be constructed from
+the existing \code{ardl} model.
+}
 \section{Calculation}{
-
-Details of the calculation, Kleanthis' matrices detail
+NA
 }
 
 \examples{
-## Prediction example -----
+data(denmark)
+## Estimate an ARDL(2,1,2,1,1) model, using a subset of the denmark data
+ardl_21211 <- ardl(LRM ~ LRY + LPY + IBO + IDE, data = denmark,
+                  order = c(2,1,2,1,1),
+                  start = "1974 Q1", end = "1986 Q2")
+## Make predictions based on the remainder of the denmark data not used in 
+## training the model
+predict_data <- window(denmark, start = "1986 Q3", end = "1987 Q3")
+## Drop the dependent variable, since we're predicting it
+predict_data <- predict_data[, c("LRY", "LPY", "IBO", "IDE")]
+predictions <- predict.ardl(ardl_21211, predict_data)
 
-# Indirectly from an ARDL
-ardl_3132 <- ardl(LRM ~ LRY + IBO + IDE, data = denmark, order = c(3,1,3,2))
-recm_3132 <- recm(ardl_3132, case = 2)
+## Estimate a ARDL(4,4,4,4) model with a linear trend and dummies
+## Create dummies
+d_74Q1_75Q3_ <- ifelse(time(denmark) >= "1974 Q1" & time(denmark) <= "1975 Q3", 1, 0)
+# Add them to the data
+denmark <- cbind(denmark, d_74Q1_75Q3)
+## Estimate the model
+ardl_4444 <- ardl(LRM ~ LRY + LPY + IBO + trend(LRM) | d_74Q1_75Q3,
+                 data = denmark, 
+                 order = c(4,4,4,4),
+                 start = "1974 Q1", end = "1986 Q2")
+## Take the remaining data not used in training the model
+predict_data <- window(denmark, start = "1986 Q3", end = "1987 Q3")
+## Drop the dependent variable
+predict_data <- predict_data[, c("LRY", "LPY", "IBO", "d_74Q1_75Q3")]
+## Compute the predictions
+predictions <- predict.ardl(ardl_4444, predict_data)
+
 }
 \seealso{
 \code{\link{ardl}}
 }
 \author{
+?
+
 Kleanthis Natsiopoulos, \email{klnatsio@gmail.com}
 
 Daniel Finnan, \email{dan@custom-made.org.uk}
