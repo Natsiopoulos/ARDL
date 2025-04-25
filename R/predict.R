@@ -14,23 +14,61 @@
 #' 
 #' @details
 #' \code{predict.ardl} works recursively to calculate predictions based on \eqn{y_{t-p}} values
-#' contained within a fitted model, and new values of \eqn{x} supplied through the
+#' contained within a fitted model, and new values of \eqn{x_{t+1}} supplied through the
 #' \code{newdata} argument. It supports the 5 different deterministic cases,
 #' involving different restrictions on the intercept and/or trend
 #' (see \code{\link{recm}}), as well as fixed regressors (e.g. dummies). It is 
-#' important to note that for a given prediction \eqn{\hat{y_t}}, the 
+#' important to note that for a given prediction \eqn{\hat{y}_{t+1}}, the 
 #' independent variables provided through \code{newdata}, are expected to follow 
-#' consecutively, i.e. \eqn{x_t}, \eqn{x_{t+1}}, \eqn{x_{t+2}}, with no gaps.
+#' consecutively from the last observation \eqn{x_{t}} used to create the model,
+#' i.e. \eqn{x_{t+1}}, \eqn{x_{t+2}}, \eqn{x_{t+3}}, with no gaps.
 #' If a time series object is passed to the function, and the underlying 
 #' \code{ardl} model contains a trend (Case 4 & 5 under PSS), the timestamps 
-#' defined in \code{newdata} will be ignored. The trend will be constructed from
+#' defined in \code{newdata} will be ignored, instead constructed from
 #' the existing \code{ardl} model.
 #' 
-#' @section Calculation
+#' @section Calculation example:
+#' 
+#' We want to predict \eqn{\hat{y}_{T+1}} given an \eqn{ARDL(2,2)} model:
+#' 
+#' \deqn{
+#'      \hat{\boldsymbol{y}}_{T+1} = Z \boldsymbol{\beta}
+#' }
+#' where \eqn{Z} is our design matrix and \eqn{\beta} is a vector of our model 
+#' coefficients. We need 2 lags for our dependent and independent variables:
+#' \eqn{y_T}, \eqn{y_{T-1}} and \eqn{X_T}, \eqn{X_{T-1}}.
+#' Plus, \eqn{X_{T+1}} (from \code{newdata}), which in our design matrix is 
+#' equivalent to time \eqn{t} in our original model:
+#' \deqn{
+#' Z =
+#'     \left[
+#'         \begin{array}{c|cccccc}
+#'         & \mathbf{c} & \mathbf{y_{t-1}} & \mathbf{y_{t-2}} & \mathbf{x_t} &
+#'         \mathbf{x_{t-1}} & \mathbf{x_{t-2}} \\
+#'         \hline
+#'         T\!+\!1 & 1 & y_{t} & y_{t-1} & x_{t+1} & x_{t} & x_{t-1}
+#'         \end{array}
+#'         \right]
+#' }
+#' We proceed to the next iteration, predicting \eqn{\hat{y}_{T+2}}, using the
+#' previously calculated value of \eqn{\hat{y}_{T+1}}:
+#' \deqn{
+#' Z =
+#' \left[
+#'     \begin{array}{c|cccccc}
+#'     & \mathbf{c} & \mathbf{y_{t-1}} & \mathbf{y_{t-2}} & \mathbf{x_t} & \mathbf{x_{t-1}} & \mathbf{x_{t-2}} \\
+#'     \hline
+#'     T\!+\!2 & 1 & y_{t+1} & y_{t} & x_{t+2} & x_{t+1} & x_{t}
+#'     \end{array}
+#'     \right]
+#' }
+#' 
+#' Iteration continues until we've calculated the necessary values of
+#' \eqn{\hat{y}_{T+n}} for \code{newdata}.
 #'  
-#'  
-#' @return \code{predict.ardl} returns values for \eqn{\hat{y_t}} equal in length
-#' to the number of rows in \code{newdata}, as a \code{\link[base]{vector}}.
+#' @return \code{predict.ardl} returns values for \eqn{\hat{y}_{t+n}} equal in 
+#' length to the number of rows in \code{newdata}, 
+#' as a \code{\link[base]{vector}}.
 #' 
 #' @seealso \code{\link{ardl}}
 #' @author Kleanthis Natsiopoulos, \email{klnatsio@@gmail.com}
@@ -51,7 +89,7 @@
 #'
 #' ## Estimate a ARDL(4,4,4,4) model with a linear trend and dummies
 #' ## Create dummies
-#' d_74Q1_75Q3_ <- ifelse(time(denmark) >= "1974 Q1" & time(denmark) <= "1975 Q3", 1, 0)
+#' d_74Q1_75Q3 <- ifelse(time(denmark) >= "1974 Q1" & time(denmark) <= "1975 Q3", 1, 0)
 #' # Add them to the data
 #' denmark <- cbind(denmark, d_74Q1_75Q3)
 #' ## Estimate the model

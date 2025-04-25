@@ -28,6 +28,7 @@ test_that("verify prediction results all cases", {
 })
 
 test_that("verify equivalence of different newdata types", {
+    library(zoo)
     model <- ardl(w ~ Prod + UR + Wedge + Union | D7475 + D7579, order =c(3,0,1,4,3), data = PSS2001)
     # dataframe
     newdata_df <- data.frame(
@@ -83,11 +84,6 @@ test_that("check integrity of newdata", {
                  setNames(c(-7.40819925882942, -24.8395014334613, -29.1887358923117), seq(1, 3)))
 })
 
-# Questions
-# 
-# Note: we could just convert uecm/recm to ardl, but I wonder if this confuses things, they're not making predictions based on ardl, although we could state this in help
-# 
-# I put my name in the author, not in it for the glory! 
 
 
 
