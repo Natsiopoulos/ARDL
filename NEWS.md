@@ -1,3 +1,17 @@
+# ARDL 0.2.5
+
+### Bug fix
+
+* `multipliers()` was messing the order of the short-run multipliers when the
+input was a `uecm` model and at least one of the orders was 0.
+(issue #23, @nipnipj).
+
+### Documentation update
+
+* Minor correction on interim and delay multipliers
+
+---
+
 # ARDL 0.2.4
 
 ### New features
