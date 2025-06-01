@@ -58,7 +58,7 @@ transformation functions that are used for each class/model ('ardl' and
 \code{type = 0} is equivalent to \code{type = "sr"}.
 
 Note that the interim multipliers are the cumulative sum of the delays, and
-that the sum of the interim multipliers (for long enough periods) and thus
+that the sum of the delay multipliers (for long enough periods) and thus
 a distant enough interim multiplier match the long-run multipliers.
 
 The delay (interim) multiplier can be interpreted as the effect on the
