@@ -13,7 +13,7 @@
 #' \code{type = 0} is equivalent to \code{type = "sr"}.
 #'
 #' Note that the interim multipliers are the cumulative sum of the delays, and
-#' that the sum of the interim multipliers (for long enough periods) and thus
+#' that the sum of the delay multipliers (for long enough periods) and thus
 #' a distant enough interim multiplier match the long-run multipliers.
 #'
 #' The delay (interim) multiplier can be interpreted as the effect on the
@@ -349,10 +349,13 @@ multipliers.uecm <- function(object, type = "lr", vcov_matrix = NULL, se = FALSE
         }
     }
 
+    pure_names <- gsub("d\\(|\\)", "", rownames(multipliers)[(kw+1):nrow(multipliers)])
+    row_indices <- match(objxvars, pure_names)
     if (kw != 0) {
-        multipliers <- data.frame(c(names(objcoef)[1:kw], objxvars), multipliers)
+        multipliers <- data.frame(c(names(objcoef)[1:kw], objxvars),
+                                  rbind(multipliers[1:kw, ], multipliers[row_indices+kw, ]))
     } else {
-        multipliers <- data.frame(objxvars, multipliers)
+        multipliers <- data.frame(objxvars,  multipliers[row_indices, ])
     }
     names(multipliers) <- c("Term", "Estimate", "Std. Error", "t value", "Pr(>|t|)")
     rownames(multipliers) <- 1:nrow(multipliers)
