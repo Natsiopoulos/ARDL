@@ -204,7 +204,8 @@ predict.ardl <- function(object, newdata, ...) {
     # Return data.frame if newdata isn't a time series object, otherwise return
     # time series object with timestamps
     if (!any(c("ts", "zoo", "zooreg") %in% newdata_class)) {
-        return(data.frame(predictions = predictor))
+        # Return as a named num like predict.lm
+        return(setNames(predictor, seq(1, n_ahead)))
     } else {
         return(cbind(newdata, predictor) %>% .[,dim(.)[2]])
     }

@@ -135,7 +135,7 @@ Forecasting using an `ardl` model is simple, using the `predict.ardl()` function
 ```{r Predict-ardl}
 # Create new observations
 new_values <- zoo(data.frame(
-        LRY=c(6.073861, 6.069912, 6.075906, 6.081180, 6.938292),
+        LRY=c(6.073861, 6.069912, 6.075906, 6.081180, 6.098292),
         IBO=c(0.1182830, 0.1098737, 0.1098398, 0.1193263, 0.1127251),
         IDE=c(0.07293421, 0.06980752, 0.07280321, 0.07112329, 0.07202889)
     ), as.yearqtr(c("1987 4", "1988 1", "1988 2", "1988 3", "1988 4"), format = "%Y %q"))
