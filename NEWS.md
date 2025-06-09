@@ -1,5 +1,10 @@
 # ARDL 0.2.5
 
+### New features
+
+* Created new `predict.ardl()` function for calculating predictions from an 
+`ardl` model.
+
 ### Bug fix
 
 * `multipliers()` was messing the order of the short-run multipliers when the

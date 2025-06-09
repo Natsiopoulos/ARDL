@@ -2,7 +2,6 @@
 % Please edit documentation in R/ardl-package.R
 \docType{package}
 \name{ARDL-package}
-\alias{ARDL}
 \alias{ARDL-package}
 \title{ARDL: ARDL, ECM and Bounds-Test for Cointegration}
 \description{
