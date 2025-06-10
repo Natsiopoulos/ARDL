@@ -39,7 +39,7 @@ model.}
 }
 \value{
 \code{ardl} returns an object of \code{\link[base]{class}}
-  \code{c("dynlm", "lm", "ardl")}. In addition, attributes 'order', 'data',
+  \code{c("ardl", "dynlm", "lm")}. In addition, attributes 'order', 'data',
   'parsed_formula' and 'full_formula' are provided.
 }
 \description{

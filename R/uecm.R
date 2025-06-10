@@ -10,7 +10,7 @@
 #' @inherit ardl details
 #'
 #' @return \code{uecm} returns an object of \code{\link[base]{class}}
-#'   \code{c("dynlm", "lm", "uecm")}. In addition, attributes 'order', 'data',
+#'   \code{c("uecm", "dynlm", "lm")}. In addition, attributes 'order', 'data',
 #'   'parsed_formula' and 'full_formula' are provided.
 #'
 #' @section Mathematical Formula: The formula of an Unrestricted ECM conditional
@@ -116,7 +116,11 @@ uecm.ardl <- function(object, ...) {
     uecm_model$parsed_formula <- parsed_formula
     uecm_model$full_formula <- full_formula
 
-    attr(uecm_model, "class") <- c(class(uecm_model), "uecm")
+    uecm_model <- structure(
+        uecm_model,
+        class = c("uecm", class(uecm_model))
+    )
+
 
     return(uecm_model)
 }
@@ -157,7 +161,10 @@ uecm.default <- function(formula, data, order, start = NULL, end = NULL, ...) {
     uecm_model$parsed_formula <- parsed_formula
     uecm_model$full_formula <- full_formula
 
-    attr(uecm_model, "class") <- c(class(uecm_model), "uecm")
+    uecm_model <- structure(
+        uecm_model,
+        class = c("uecm", class(uecm_model))
+    )
 
     return(uecm_model)
 }

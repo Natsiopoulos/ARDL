@@ -15,7 +15,7 @@ long-run relationship (cointegrating equation) (see section 'Cases' below).}
 }
 \value{
 \code{recm} returns an object of \code{\link[base]{class}}
-  \code{c("dynlm", "lm", "recm")}. In addition, attributes 'order', 'data',
+  \code{c("recm", "dynlm", "lm")}. In addition, attributes 'order', 'data',
   'parsed_formula' and 'full_formula' are provided.
 }
 \description{

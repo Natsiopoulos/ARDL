@@ -41,7 +41,7 @@ model.}
 }
 \value{
 \code{uecm} returns an object of \code{\link[base]{class}}
-  \code{c("dynlm", "lm", "uecm")}. In addition, attributes 'order', 'data',
+  \code{c("uecm", "dynlm", "lm")}. In addition, attributes 'order', 'data',
   'parsed_formula' and 'full_formula' are provided.
 }
 \description{

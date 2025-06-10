@@ -194,7 +194,7 @@ bounds_f_test <- function(object, case, alpha = NULL, pvalue = TRUE, exact = FAL
     # no visible binding for global variable NOTE solution
     k <- I0 <- fI0 <- fI1 <- NULL; rm(k, I0, fI0, fI1)
 
-    if (isTRUE(all.equal(c("dynlm", "lm", "ardl"), class(object)))) {
+    if (isTRUE(all.equal(c("ardl", "dynlm", "lm"), class(object)))) {
         object <- uecm(object)
         vcov_matrix <- stats::vcov(object)
     }
@@ -371,7 +371,7 @@ bounds_f_test <- function(object, case, alpha = NULL, pvalue = TRUE, exact = FAL
         rval$p.value <- p_value
     }
     rval$tab <- tab
-    class(rval) <- "htest"
+    rval <- structure(rval, class = c("htest", class(rval)))
     return(rval)
 }
 
@@ -481,7 +481,7 @@ bounds_t_test <- function(object, case, alpha = NULL, pvalue = TRUE,
     # no visible binding for global variable NOTE solution
     k <- I0 <- tI0 <- tI1 <- NULL; rm(k, I0, tI0, tI1)
 
-    if (isTRUE(all.equal(c("dynlm", "lm", "ardl"), class(object)))) {
+    if (isTRUE(all.equal(c("ardl", "dynlm", "lm"), class(object)))) {
         object <- uecm(object)
         vcov_matrix <- stats::vcov(object)
     }
@@ -617,6 +617,6 @@ bounds_t_test <- function(object, case, alpha = NULL, pvalue = TRUE,
         rval$p.value <- p_value
     }
     rval$tab <- tab
-    class(rval) <- "htest"
+    rval <- structure(rval, class = c("htest", class(rval)))
     return(rval)
 }

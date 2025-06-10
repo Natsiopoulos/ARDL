@@ -36,7 +36,7 @@
 #'   fitting functions.
 #'
 #' @return \code{ardl} returns an object of \code{\link[base]{class}}
-#'   \code{c("dynlm", "lm", "ardl")}. In addition, attributes 'order', 'data',
+#'   \code{c("ardl", "dynlm", "lm")}. In addition, attributes 'order', 'data',
 #'   'parsed_formula' and 'full_formula' are provided.
 #'
 #' @section Mathematical Formula:
@@ -172,7 +172,10 @@ ardl.default <- function(formula, data, order, start = NULL, end = NULL, ...) {
     ardl_model$parsed_formula <- parsed_formula
     ardl_model$full_formula <- full_formula
 
-    attr(ardl_model, "class") <- c(class(ardl_model), "ardl")
+    ardl_model <- structure(
+        ardl_model,
+        class = c("ardl", class(ardl_model))
+    )
 
     return(ardl_model)
 }

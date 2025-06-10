@@ -14,7 +14,7 @@
 #'   long-run relationship (cointegrating equation) (see section 'Cases' below).
 #'
 #' @return \code{recm} returns an object of \code{\link[base]{class}}
-#'   \code{c("dynlm", "lm", "recm")}. In addition, attributes 'order', 'data',
+#'   \code{c("recm", "dynlm", "lm")}. In addition, attributes 'order', 'data',
 #'   'parsed_formula' and 'full_formula' are provided.
 #'
 #' @section Mathematical Formula: The formula of a Restricted ECM conditional to
@@ -155,7 +155,7 @@ recm <- function(object, case) {
     attr(recm_model$terms, ".Environment") <- .GlobalEnv
     attr(attr(recm_model$model, "terms"), ".Environment") <- .GlobalEnv
     attr(full_formula, ".Environment") <- .GlobalEnv
-    attr(recm_model, "class") <- c(class(recm_model), "recm")
+    recm_model <- structure(recm_model, class = c("recm", class(recm_model)))
     recm_model$order <- order
     recm_model$data <- data
     recm_model$parsed_formula <- parsed_formula

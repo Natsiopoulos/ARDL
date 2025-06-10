@@ -2,8 +2,10 @@
 
 ### New features
 
-* Created new `predict.ardl()` function for calculating predictions from an 
-`ardl` model.
+* Created a new `predict()` function for calculating predictions from an `ardl`
+model, which dispatches to `predict.ardl()` for models of class `ardl`.
+(issue #5, @melville1808, @crossxwill, @nipnipj, @halfgua)
+(issue #24, @AZFARHAD24511, @IanMarsberg)
 
 ### Bug fix
 
@@ -11,9 +13,20 @@
 input was a `uecm` model and at least one of the orders was 0.
 (issue #23, @nipnipj).
 
+* `plot_lr()` was plotting the first variable in the dataset instead of the
+dependent variable.
+
+### Minor changes
+
+* Created internal function `BIC_pss`, similar to `AIC_pss`.
+
+* Changed the order of the class for `ardl`, `uecm` and `recm` models. i.e. from
+"dynlm" "lm" "ardl" to "ardl" "dynlm" "lm". This allows the new function
+`predict` to properly dispatch to `predict.ardl()`.
+
 ### Documentation update
 
-* Minor correction on interim and delay multipliers
+* Minor correction on interim and delay multipliers.
 
 ---
 

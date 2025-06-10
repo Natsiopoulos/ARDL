@@ -86,9 +86,9 @@ coint_eq.default <- function(object, case) {
     } else {
         recm_indicator <- FALSE
     }
-    if (isTRUE(all.equal(c("dynlm", "lm", "ardl"), class(object)))) {
+    if (isTRUE(all.equal(c("ardl", "dynlm", "lm"), class(object)))) {
         object <- uecm(object)
-    } else if (!(isTRUE(all.equal(c("dynlm", "lm", "uecm"), class(object))))) {
+    } else if (!(isTRUE(all.equal(c("uecm", "dynlm", "lm"), class(object))))) {
         stop(paste0("no applicable for an object of class \"", paste0(class(object), collapse = '" "'), "\""),  call. = FALSE)
     }
     parsed_formula <- object$parsed_formula

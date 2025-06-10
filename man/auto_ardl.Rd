@@ -99,7 +99,7 @@ fitting functions.}
 }
 \value{
 \code{auto_ardl} returns a list which contains:
-  \item{\code{best_model}}{An object of class \code{c("dynlm", "lm", "ardl")}}
+  \item{\code{best_model}}{An object of class \code{c("ardl", "dynlm", "lm")}}
   \item{\code{best_order}}{A numeric vector with the order of the best model selected}
   \item{\code{top_orders}}{A data.frame with the orders of the top 20 models}
 }

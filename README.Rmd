@@ -130,9 +130,12 @@ ce <- coint_eq(ardl_3132, case = 2)
 plot_lr(ardl_3132, coint_eq = ce, show.legend = TRUE)
 ```
 
-Forecasting using an `ardl` model is simple, using the `predict.ardl()` function.
+Forecasting using an `ardl` model is simple with the `predict()` function, which dispatches to `predict.ardl()`, a method created specifically for these models in this package.
+
 
 ```{r Predict-ardl}
+#load zoo to create the zoo dataset
+library(zoo)
 # Create new observations
 new_values <- zoo(data.frame(
         LRY=c(6.073861, 6.069912, 6.075906, 6.081180, 6.098292),
@@ -140,7 +143,10 @@ new_values <- zoo(data.frame(
         IDE=c(0.07293421, 0.06980752, 0.07280321, 0.07112329, 0.07202889)
     ), as.yearqtr(c("1987 4", "1988 1", "1988 2", "1988 3", "1988 4"), format = "%Y %q"))
 # Forecast using the new data
-predicted_values <- predict.ardl(ardl_3132, new_values)
+predicted_values <- predict(ardl_3132, new_values)
+
+plot(denmark$LRM, xlim = c(start(denmark), end(predicted_values)))
+lines(predicted_values, col = "red")
 ```
 
 ## Ease of use
