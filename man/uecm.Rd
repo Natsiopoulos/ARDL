@@ -73,8 +73,8 @@ introduces instrumental variables.
   \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t}}
   \deqn{\psi_{j,l} = 0 \;\; \forall \;\; q_{j} \leq 1, \;\;\;\;\; \psi_{y,i}
   = 0 \;\; if \;\; p = 1}
-  {In addition,} \eqn{x_{j,t-1}} {and} \eqn{\Delta x_{j,t}} {cancel out
-  becoming} \eqn{x_{j,t} \;\; \forall \;\; q_{j} = 0}
+  In addition, \eqn{x_{j,t-1}} and \eqn{\Delta x_{j,t}}
+  cancel out becoming \eqn{x_{j,t} \;\; \forall \;\; q_{j} = 0}
 }
 
 \examples{

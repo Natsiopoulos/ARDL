@@ -40,7 +40,7 @@
 #'   \item{Under Case 5:}{\itemize{
 #'      \item \eqn{ECT = y_{t-1} - (\sum_{j=1}^{k} \theta_{j} x_{j,t-1})}}}
 #' }
-#' {In all cases,} \eqn{x_{j,t-1}} {in} \eqn{ECT} {is replaced by} \eqn{x_{j,t} \;\;\;\;\; \forall \;\; q_{j} = 0}
+#' In all cases, \eqn{x_{j,t-1}} in \eqn{ECT} is replaced by \eqn{x_{j,t} \;\;\;\;\; \forall \;\; q_{j} = 0}
 #'
 #' @section Cases: According to \cite{Pesaran et al. (2001)}, we distinguish the
 #' long-run relationship (cointegrating equation) (and thus the bounds-test and
@@ -155,7 +155,8 @@ recm <- function(object, case) {
     attr(recm_model$terms, ".Environment") <- .GlobalEnv
     attr(attr(recm_model$model, "terms"), ".Environment") <- .GlobalEnv
     attr(full_formula, ".Environment") <- .GlobalEnv
-    recm_model <- structure(recm_model, class = c("recm", class(recm_model)))
+    attr(recm_model, "class") <- c(class(recm_model), "recm")
+    #recm_model <- structure(recm_model, class = c("recm", class(recm_model)))
     recm_model$order <- order
     recm_model$data <- data
     recm_model$parsed_formula <- parsed_formula

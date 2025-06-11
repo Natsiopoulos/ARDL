@@ -349,7 +349,7 @@ multipliers.uecm <- function(object, type = "lr", vcov_matrix = NULL, se = FALSE
         }
     }
 
-    pure_names <- gsub("d\\(|\\)", "", rownames(multipliers)[(kw+1):nrow(multipliers)])
+    pure_names <- gsub(".*\\(([^),]+).*", "\\1", rownames(multipliers)[(kw+1):nrow(multipliers)])
     row_indices <- match(objxvars, pure_names)
     if (kw != 0) {
         multipliers <- data.frame(c(names(objcoef)[1:kw], objxvars),

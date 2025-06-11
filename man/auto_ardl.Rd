@@ -175,13 +175,13 @@ model1_adjr2 <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
 model1_adjr2$top_orders
 
 # Using functions from other packages as selection criteria
-if (requireNamespace("qpcR", quietly = TRUE)) {
+if (requireNamespace("AICcmodavg", quietly = TRUE)) {
 
-library(qpcR)
+library(AICcmodavg)
 model1_aicc <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
                           max_order = c(5,4,4,4), selection = "AICc")
 model1_aicc$top_orders
-adjr2 <- function(x){ Rsq.ad(x) }
+adjr2 <- function(x){ summary(x)$adj.r.squared }
 model1_adjr2 <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
                            max_order = c(5,4,4,4), selection = "adjr2",
                            selection_minmax = "max")

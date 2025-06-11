@@ -11,6 +11,6 @@ BIC_pss <- function(model){
     # number of freely estimated coefficients
     sp <- length(model$coefficients)
     # number of observations
-    TT <- ln(nobs(model))
+    TT <- log(stats::nobs(model))
     c(LLp - (sp/2)*TT)
 }

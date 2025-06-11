@@ -52,7 +52,7 @@ doesn't follow a standard t-distribution. Instead, the
   \item{Under Case 5:}{\itemize{
      \item \eqn{ECT = y_{t-1} - (\sum_{j=1}^{k} \theta_{j} x_{j,t-1})}}}
 }
-{In all cases,} \eqn{x_{j,t-1}} {in} \eqn{ECT} {is replaced by} \eqn{x_{j,t} \;\;\;\;\; \forall \;\; q_{j} = 0}
+In all cases, \eqn{x_{j,t-1}} in \eqn{ECT} is replaced by \eqn{x_{j,t} \;\;\;\;\; \forall \;\; q_{j} = 0}
 }
 
 \section{Cases}{

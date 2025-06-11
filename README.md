@@ -294,23 +294,32 @@ plot_lr(ardl_3132, coint_eq = ce, show.legend = TRUE)
 
 <img src="man/figures/README-lr-plot-1.png" width="100%" />
 
-Forecasting and using an `ardl`, `uecm`, or `recm` model in other
-functions are easy as they can be converted in regular `lm` models.
+Forecasting using an `ardl` model is simple with the `predict()`
+function, which dispatches to `predict.ardl()`, a method created
+specifically for these models in this package.
 
 ``` r
-ardl_3132_lm <- to_lm(ardl_3132)
+#load zoo to create the zoo dataset
+library(zoo)
+#> 
+#> Attaching package: 'zoo'
+#> The following objects are masked from 'package:base':
+#> 
+#>     as.Date, as.Date.numeric
+# Create new observations
+new_values <- zoo(data.frame(
+        LRY=c(6.073861, 6.069912, 6.075906, 6.081180, 6.098292),
+        IBO=c(0.1182830, 0.1098737, 0.1098398, 0.1193263, 0.1127251),
+        IDE=c(0.07293421, 0.06980752, 0.07280321, 0.07112329, 0.07202889)
+    ), as.yearqtr(c("1987 4", "1988 1", "1988 2", "1988 3", "1988 4"), format = "%Y %q"))
+# Forecast using the new data
+predicted_values <- predict(ardl_3132, new_values)
 
-# Forecast using the in-sample data
-insample_data <- ardl_3132$model
-predicted_values <- predict(ardl_3132_lm, newdata = insample_data)
-
-# Convert to ts class for the plot
-predicted_values <- ts(predicted_values, start = c(1974,4), frequency=4)
-plot(denmark$LRM, lwd=2) #The input dependent variable
-lines(predicted_values, col="red", lwd=2) #The predicted values
+plot(denmark$LRM, xlim = c(start(denmark), end(predicted_values)))
+lines(predicted_values, col = "red")
 ```
 
-<img src="man/figures/README-Convert-to-lm-and-forecast-1.png" width="100%" />
+<img src="man/figures/README-Predict-ardl-1.png" width="100%" />
 
 ## Ease of use
 
@@ -328,12 +337,6 @@ transformation to behave like time-series)*
 
 ``` r
 library(dynlm)
-#> Loading required package: zoo
-#> 
-#> Attaching package: 'zoo'
-#> The following objects are masked from 'package:base':
-#> 
-#>     as.Date, as.Date.numeric
 
 dynlm_ardl_model <- dynlm(LRM ~ L(LRM, 1) + L(LRM, 2) + L(LRM, 3) + LRY + L(LRY, 1) +
                            IBO + L(IBO, 1) + L(IBO, 2) + L(IBO, 3) +

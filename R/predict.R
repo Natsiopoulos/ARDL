@@ -119,17 +119,17 @@ predict.ardl <- function(object, newdata, ...) {
     if (any(is.na(newdata))) {
         stop("'newdata' contains some NA values.", call. = FALSE)
     }
-    if ((any(c("ts", "zoo", "zooreg") %in% newdata_class) && (frequency(object$data) != frequency(newdata)))) {
+    if ((any(c("ts", "zoo", "zooreg") %in% newdata_class) && (stats::frequency(object$data) != stats::frequency(newdata)))) {
         stop("'newdata' needs to have the same frequency as the original data.", call. = FALSE)
     }
     # Consecutive series zoo/zooreg
     # Note: we need to subset data in ardl model, since it stores complete dataset, despite start/end parameter
     useddata <- object$data[zoo::index(object),]
-    if (any(c("zoo", "zooreg") %in% newdata_class) && !((end(useddata) + deltat(useddata)) == start(newdata))) {
+    if (any(c("zoo", "zooreg") %in% newdata_class) && !((stats::end(useddata) + stats::deltat(useddata)) == stats::start(newdata))) {
         stop("Observations in 'newdata' need to follow original data consecutively.", call. = FALSE)
     }
     # Consecutive series ts. Note: ts can't use delta date function, for simplisicity we coerce to zoo
-    if ( is.ts(newdata) && !((end(zoo::as.zoo(useddata)) + deltat(zoo::as.zoo(useddata))) == start(zoo::as.zoo(newdata))) ) {
+    if (stats::is.ts(newdata) && !((stats::end(zoo::as.zoo(useddata)) + stats::deltat(zoo::as.zoo(useddata))) == stats::start(zoo::as.zoo(newdata))) ) {
         stop("Observations in 'newdata' need to follow original data consecutively.", call. = FALSE)
     }
     # Check all necessary columns are in new data
@@ -165,8 +165,8 @@ predict.ardl <- function(object, newdata, ...) {
         newdata_w <- cumsum(c(olddata_w[length(olddata_w)],
                               rep(diff(olddata_w, 1)[1], n_ahead)))[-1]
         olddata_w <- object$model[,2]
-        newdata_w <- ts(newdata_w, start = end(olddata_w) + 1/frequency(olddata_w),
-                        frequency = frequency(olddata_w))
+        newdata_w <- stats::ts(newdata_w, start = stats::end(olddata_w) + 1/stats::frequency(olddata_w),
+                        frequency = stats::frequency(olddata_w))
     }
     predictor <- c()
     model_matrix_y <- model_matrix[,1]
@@ -206,7 +206,7 @@ predict.ardl <- function(object, newdata, ...) {
     # time series object with timestamps
     if (!any(c("ts", "zoo", "zooreg") %in% newdata_class)) {
         # Return as a named num like predict.lm
-        return(setNames(predictor, seq(1, n_ahead)))
+        return(stats::setNames(predictor, seq(1, n_ahead)))
     } else {
         return(cbind(newdata, predictor) %>% .[,dim(.)[2]])
     }
