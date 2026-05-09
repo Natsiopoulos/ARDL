@@ -41,5 +41,5 @@ Imports:
     stringr,
     zoo,
     stats
-RoxygenNote: 7.3.2
+RoxygenNote: 8.0.0
 Config/testthat/edition: 3
