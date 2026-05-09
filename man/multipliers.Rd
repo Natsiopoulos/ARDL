@@ -19,8 +19,8 @@ multipliers(object, type = "lr", vcov_matrix = NULL, se = FALSE)
 for long-run (total) multipliers (default), "sr" or 0 for short-run (impact)
 multipliers or an integer between 1 and 200 for delay and interim multipliers.}
 
-\item{vcov_matrix}{The estimated covariance matrix of the random variable
-that the transformation function uses to estimate the standard errors (and
+\item{vcov_matrix}{The estimated covariance matrix of the parameter estimates.
+Used by the transformation function to estimate the standard errors (and
 so the t-statistics and p-values) of the multipliers. The default is
 \code{vcov(object)} (when \code{vcov_matrix = NULL}), but other estimations
 of the covariance matrix of the regression's estimated coefficients can

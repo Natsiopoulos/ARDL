@@ -18,7 +18,7 @@ until 1997:Q4.
 }
 }
 \source{
-\url{http://qed.econ.queensu.ca/jae/datasets/pesaran001/}
+\url{http://qed.econ.queensu.ca/jae/datasets/pesaran001/}\cr
 \url{http://qed.econ.queensu.ca/jae/datasets/natsiopoulos001/}
 }
 \usage{

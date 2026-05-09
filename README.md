@@ -279,7 +279,7 @@ mult15 <- multipliers(ardl_3132, type = 15, se = TRUE)
 plot_delay(mult15, interval = 0.95)
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+<img src="man/figures/README-delay-multipliers-1.png" width="100%" />
 
 Now let’s graphically check the estimated long-run relationship
 (cointegrating equation) against the dependent variable `LRM`.
@@ -301,6 +301,7 @@ specifically for these models in this package.
 ``` r
 #load zoo to create the zoo dataset
 library(zoo)
+#> Warning: package 'zoo' was built under R version 4.4.3
 #> 
 #> Attaching package: 'zoo'
 #> The following objects are masked from 'package:base':
@@ -337,6 +338,7 @@ transformation to behave like time-series)*
 
 ``` r
 library(dynlm)
+#> Warning: package 'dynlm' was built under R version 4.4.3
 
 dynlm_ardl_model <- dynlm(LRM ~ L(LRM, 1) + L(LRM, 2) + L(LRM, 3) + LRY + L(LRY, 1) +
                            IBO + L(IBO, 1) + L(IBO, 2) + L(IBO, 3) +

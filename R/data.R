@@ -40,7 +40,7 @@
 #'   \item{D7475}{income policies 1974:Q1-1975:Q4}
 #'   \item{D7579}{income policies 1975:Q1-1979:Q4}
 #' }
-#' @source \url{http://qed.econ.queensu.ca/jae/datasets/pesaran001/}
+#' @source \url{http://qed.econ.queensu.ca/jae/datasets/pesaran001/}\cr
 #' \url{http://qed.econ.queensu.ca/jae/datasets/natsiopoulos001/}
 #' @references M. Hashem Pesaran, Richard J. Smith, and Yongcheol Shin, (2001), "Bounds Testing
 #' Approaches to the Analysis of Level Relationships", \emph{Journal of Applied

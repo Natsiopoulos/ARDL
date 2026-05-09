@@ -4,14 +4,14 @@
 
 * Created a new `predict()` function for calculating predictions from an `ardl`
 model, which dispatches to `predict.ardl()` for models of class `ardl`.
-(issue #5, @melville1808, @crossxwill, @nipnipj, @halfgua)
-(issue #24, @AZFARHAD24511, @IanMarsberg)
+(issue #5)
+(issue #24)
 
 ### Bug fix
 
 * `multipliers()` was messing the order of the short-run multipliers when the
 input was a `uecm` model and at least one of the orders was 0.
-(issue #23, @nipnipj).
+(issue #23).
 
 * `plot_lr()` was plotting the first variable in the dataset instead of the
 dependent variable.
@@ -23,6 +23,10 @@ dependent variable.
 * Changed the order of the class for `ardl`, `uecm` and `recm` models. i.e. from
 "dynlm" "lm" "ardl" to "ardl" "dynlm" "lm". This allows the new function
 `predict` to properly dispatch to `predict.ardl()`.
+
+* Although in the documentation for `bounds_f_test()` and `bounds_t_test()` it
+was mentioned that the argument `vcov_matrix` is only applicable for uecm input 
+objects, there was no mechanism to prevent this.
 
 ### Documentation update
 

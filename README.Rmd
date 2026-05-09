@@ -114,7 +114,7 @@ multipliers(ardl_3132)
 
 We can also estimate and visualize the delay multipliers along with their standard errors.
 
-```{r}
+```{r delay-multipliers}
 mult15 <- multipliers(ardl_3132, type = 15, se = TRUE)
 plot_delay(mult15, interval = 0.95)
 ```
