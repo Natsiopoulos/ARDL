@@ -5,6 +5,6 @@ There were no ERRORs, WARNINGs or NOTEs.
 I have also run R CMD check successfully on the downstream dependency package bootCT.
 
 ## Test environments
-* local Linux Mint 20.1 (Ubuntu based), R 4.3.1
+* local Linux Ubuntu 24, 4.6.0
 * win-builder (devel, release, old)
-* R-hub builder macOS, R 4.3.0
+* R-hub builder macOS, R 4.6.0
