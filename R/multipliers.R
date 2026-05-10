@@ -13,7 +13,7 @@
 #' \code{type = 0} is equivalent to \code{type = "sr"}.
 #'
 #' Note that the interim multipliers are the cumulative sum of the delays, and
-#' that the sum of the interim multipliers (for long enough periods) and thus
+#' that the sum of the delay multipliers (for long enough periods) and thus
 #' a distant enough interim multiplier match the long-run multipliers.
 #'
 #' The delay (interim) multiplier can be interpreted as the effect on the
@@ -27,8 +27,8 @@
 #' @param type A character string describing the type of multipliers. Use "lr"
 #' for long-run (total) multipliers (default), "sr" or 0 for short-run (impact)
 #' multipliers or an integer between 1 and 200 for delay and interim multipliers.
-#' @param vcov_matrix The estimated covariance matrix of the random variable
-#'   that the transformation function uses to estimate the standard errors (and
+#' @param vcov_matrix The estimated covariance matrix of the parameter estimates.
+#'   Used by the transformation function to estimate the standard errors (and
 #'   so the t-statistics and p-values) of the multipliers. The default is
 #'   \code{vcov(object)} (when \code{vcov_matrix = NULL}), but other estimations
 #'   of the covariance matrix of the regression's estimated coefficients can
@@ -349,10 +349,13 @@ multipliers.uecm <- function(object, type = "lr", vcov_matrix = NULL, se = FALSE
         }
     }
 
+    pure_names <- gsub(".*\\(([^),]+).*", "\\1", rownames(multipliers)[(kw+1):nrow(multipliers)])
+    row_indices <- match(objxvars, pure_names)
     if (kw != 0) {
-        multipliers <- data.frame(c(names(objcoef)[1:kw], objxvars), multipliers)
+        multipliers <- data.frame(c(names(objcoef)[1:kw], objxvars),
+                                  rbind(multipliers[1:kw, ], multipliers[row_indices+kw, ]))
     } else {
-        multipliers <- data.frame(objxvars, multipliers)
+        multipliers <- data.frame(objxvars,  multipliers[row_indices, ])
     }
     names(multipliers) <- c("Term", "Estimate", "Std. Error", "t value", "Pr(>|t|)")
     rownames(multipliers) <- 1:nrow(multipliers)

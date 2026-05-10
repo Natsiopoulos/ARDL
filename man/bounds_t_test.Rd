@@ -39,11 +39,11 @@ for details.}
 \item{R}{An integer indicating how many iterations will be used if
 \code{exact = TRUE}. Default is 40000.}
 
-\item{vcov_matrix}{The estimated covariance matrix of the random variable
-that the test uses to estimate the test statistic. The default is
+\item{vcov_matrix}{The estimated covariance matrix of the parameter estimates
+of the uecm model. Used to estimate the test statistic. The default is 
 \code{vcov(object)} (when \code{vcov_matrix = NULL}), but other estimations
-of the covariance matrix of the regression's estimated coefficients can
-also be used (e.g., using \code{\link[sandwich]{vcovHC}} or
+of the covariance matrix of the regression's estimated coefficients can 
+also be used (e.g., using \code{\link[sandwich]{vcovHC}} or 
 \code{\link[sandwich]{vcovHAC}}). Only applicable if the input object is of
 class "uecm".}
 }
@@ -96,8 +96,9 @@ A list with class "htest" containing the following components:
          being one of the 0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.15 or 0.2,
          everything else has to be computed.
      \item If \code{alpha} is one of the 0.1, 0.05, 0.025 or 0.01 (and
-         \code{exact = FALSE} and k <= 10), \code{PSS2001parameters} shows
-         the critical value bounds presented in \cite{Pesaran et al. (2001)}
+         \code{exact = FALSE} and k <= 10),\cr
+         \code{PSS2001parameters} shows the critical value bounds presented
+         in \cite{Pesaran et al. (2001)}
          (less precise).
   }
 }
@@ -211,7 +212,8 @@ bounds_t_test(ardl_3132_c, case = 3, alpha = 0.005)
 # 'R' can be increased for more accurate resutls
 
 # t-statistic is smaller than the I(1) bound (for a=0.01) as expected (p-value > 0.01)
-# Note that the exact sample p-value (0.009874) is very different than the asymptotic (0.005538)
+# Note that the exact sample p-value (0.009874) is very different than the
+# asymptotic (0.005538)
 # It can take more than 90 seconds
 \dontrun{
 set.seed(2020)

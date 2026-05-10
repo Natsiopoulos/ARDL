@@ -37,16 +37,17 @@
 
 plot_lr <- function(object, coint_eq, facets = FALSE, show_fitted = FALSE,
                     show.legend = FALSE, xlab = "Time", ...) {
-    plot_data <- zoo::cbind.zoo(object$data[,1], coint_eq, object$fitted.values)
+    y_var <- object$parsed_formula$y_part$var
+    plot_data <- zoo::cbind.zoo(object$data[,y_var], coint_eq, object$fitted.values)
     lr_name <- "long-run"
     fit_name <- "fitted"
-    names(plot_data) <- c(object$parsed_formula$y_part$var, lr_name, fit_name)
+    names(plot_data) <- c(y_var, lr_name, fit_name)
 
     plot_function <- function(object, coint_eq, facets, show_fitted, show.legend, xlab, .data) {
         facet1 <- ggplot2::ggplot(plot_data, ggplot2::aes(x = zoo::index(plot_data))) +
-            ggplot2::geom_line(ggplot2::aes(y = .data[[object$parsed_formula$y_part$var]],
-                                            color = object$parsed_formula$y_part$var), show.legend = show.legend) +
-            ggplot2::labs(x = xlab, y = object$parsed_formula$y_part$var, color = "") +
+            ggplot2::geom_line(ggplot2::aes(y = .data[[y_var]],
+                                            color = y_var), show.legend = show.legend) +
+            ggplot2::labs(x = xlab, y = y_var, color = "") +
             ggplot2::theme_minimal() +
             ggplot2::theme(legend.position = "bottom")
 
@@ -59,14 +60,14 @@ plot_lr <- function(object, coint_eq, facets = FALSE, show_fitted = FALSE,
                               na.rm = TRUE, show.legend = show.legend) +
                     ggplot2::scale_color_manual(guide = "legend",
                                        values = c("black", "red", "blue"),
-                                       breaks = c(object$parsed_formula$y_part$var, lr_name, fit_name),
-                                       labels = c(object$parsed_formula$y_part$var, lr_name, fit_name))
+                                       breaks = c(y_var, lr_name, fit_name),
+                                       labels = c(y_var, lr_name, fit_name))
             } else {
                 facet1 <- facet1 +
                     ggplot2::scale_color_manual(guide = "legend",
                                        values = c("black", "red"),
-                                       breaks = c(object$parsed_formula$y_part$var, lr_name),
-                                       labels = c(object$parsed_formula$y_part$var, lr_name))
+                                       breaks = c(y_var, lr_name),
+                                       labels = c(y_var, lr_name))
             }
         } else {
             if (show_fitted) {
@@ -74,22 +75,22 @@ plot_lr <- function(object, coint_eq, facets = FALSE, show_fitted = FALSE,
                     ggplot2::geom_line(ggplot2::aes(y = .data[[fit_name]], color = fit_name),
                               na.rm = TRUE, show.legend = show.legend) +
                     ggplot2::scale_color_manual(guide = "legend",
-                                       labels = c(object$parsed_formula$y_part$var, fit_name),
-                                       breaks = c(object$parsed_formula$y_part$var, fit_name),
+                                       labels = c(y_var, fit_name),
+                                       breaks = c(y_var, fit_name),
                                        values = c("black", "blue"))
             } else {
                 facet1 <- facet1 +
                     ggplot2::scale_color_manual(guide = "legend",
                                        values = "black",
-                                       breaks = object$parsed_formula$y_part$var,
-                                       labels = object$parsed_formula$y_part$var)
+                                       breaks = y_var,
+                                       labels = y_var)
             }
         }
 
         if (facets) {
             facet2 <- ggplot2::ggplot(plot_data, ggplot2::aes(x = zoo::index(plot_data))) +
                 ggplot2::geom_line(ggplot2::aes(y = .data[[lr_name]], color = lr_name), show.legend = show.legend) +
-                ggplot2::labs(x = xlab, y = object$parsed_formula$y_part$var, color = "") +
+                ggplot2::labs(x = xlab, y = y_var, color = "") +
                 ggplot2::scale_color_manual(values = "red", labels = lr_name) +
                 ggplot2::theme_minimal() +
                 ggplot2::theme(legend.position = "bottom")

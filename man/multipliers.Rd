@@ -19,8 +19,8 @@ multipliers(object, type = "lr", vcov_matrix = NULL, se = FALSE)
 for long-run (total) multipliers (default), "sr" or 0 for short-run (impact)
 multipliers or an integer between 1 and 200 for delay and interim multipliers.}
 
-\item{vcov_matrix}{The estimated covariance matrix of the random variable
-that the transformation function uses to estimate the standard errors (and
+\item{vcov_matrix}{The estimated covariance matrix of the parameter estimates.
+Used by the transformation function to estimate the standard errors (and
 so the t-statistics and p-values) of the multipliers. The default is
 \code{vcov(object)} (when \code{vcov_matrix = NULL}), but other estimations
 of the covariance matrix of the regression's estimated coefficients can
@@ -58,7 +58,7 @@ transformation functions that are used for each class/model ('ardl' and
 \code{type = 0} is equivalent to \code{type = "sr"}.
 
 Note that the interim multipliers are the cumulative sum of the delays, and
-that the sum of the interim multipliers (for long enough periods) and thus
+that the sum of the delay multipliers (for long enough periods) and thus
 a distant enough interim multiplier match the long-run multipliers.
 
 The delay (interim) multiplier can be interpreted as the effect on the

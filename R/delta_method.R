@@ -25,7 +25,7 @@ delta_method <- function(object, vcov_matrix = NULL) {
 }
 
 #' @rdname delta_method
-#'
+#' @export
 
 delta_method.ardl <- function(object, vcov_matrix = NULL) {
 
@@ -74,7 +74,7 @@ delta_method.ardl <- function(object, vcov_matrix = NULL) {
 }
 
 #' @rdname delta_method
-#'
+#' @export
 
 delta_method.uecm <- function(object, vcov_matrix = NULL) {
     if (is.null(vcov_matrix)) vcov_matrix <- stats::vcov(object)

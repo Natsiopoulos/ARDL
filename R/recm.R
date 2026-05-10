@@ -14,7 +14,7 @@
 #'   long-run relationship (cointegrating equation) (see section 'Cases' below).
 #'
 #' @return \code{recm} returns an object of \code{\link[base]{class}}
-#'   \code{c("dynlm", "lm", "recm")}. In addition, attributes 'order', 'data',
+#'   \code{c("recm", "dynlm", "lm")}. In addition, attributes 'order', 'data',
 #'   'parsed_formula' and 'full_formula' are provided.
 #'
 #' @section Mathematical Formula: The formula of a Restricted ECM conditional to
@@ -40,7 +40,7 @@
 #'   \item{Under Case 5:}{\itemize{
 #'      \item \eqn{ECT = y_{t-1} - (\sum_{j=1}^{k} \theta_{j} x_{j,t-1})}}}
 #' }
-#' {In all cases,} \eqn{x_{j,t-1}} {in} \eqn{ECT} {is replaced by} \eqn{x_{j,t} \;\;\;\;\; \forall \;\; q_{j} = 0}
+#' In all cases, \eqn{x_{j,t-1}} in \eqn{ECT} is replaced by \eqn{x_{j,t} \;\;\;\;\; \forall \;\; q_{j} = 0}
 #'
 #' @section Cases: According to \cite{Pesaran et al. (2001)}, we distinguish the
 #' long-run relationship (cointegrating equation) (and thus the bounds-test and
@@ -156,6 +156,7 @@ recm <- function(object, case) {
     attr(attr(recm_model$model, "terms"), ".Environment") <- .GlobalEnv
     attr(full_formula, ".Environment") <- .GlobalEnv
     attr(recm_model, "class") <- c(class(recm_model), "recm")
+    #recm_model <- structure(recm_model, class = c("recm", class(recm_model)))
     recm_model$order <- order
     recm_model$data <- data
     recm_model$parsed_formula <- parsed_formula

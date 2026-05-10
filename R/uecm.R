@@ -10,7 +10,7 @@
 #' @inherit ardl details
 #'
 #' @return \code{uecm} returns an object of \code{\link[base]{class}}
-#'   \code{c("dynlm", "lm", "uecm")}. In addition, attributes 'order', 'data',
+#'   \code{c("uecm", "dynlm", "lm")}. In addition, attributes 'order', 'data',
 #'   'parsed_formula' and 'full_formula' are provided.
 #'
 #' @section Mathematical Formula: The formula of an Unrestricted ECM conditional
@@ -21,8 +21,8 @@
 #'   \sum_{j=1}^{k}\omega_{j}\Delta x_{j,t} + \epsilon_{t}}
 #'   \deqn{\psi_{j,l} = 0 \;\; \forall \;\; q_{j} \leq 1, \;\;\;\;\; \psi_{y,i}
 #'   = 0 \;\; if \;\; p = 1}
-#'   {In addition,} \eqn{x_{j,t-1}} {and} \eqn{\Delta x_{j,t}} {cancel out
-#'   becoming} \eqn{x_{j,t} \;\; \forall \;\; q_{j} = 0}
+#'   In addition, \eqn{x_{j,t-1}} and \eqn{\Delta x_{j,t}}
+#'   cancel out becoming \eqn{x_{j,t} \;\; \forall \;\; q_{j} = 0}
 #'
 #' @seealso \code{\link{ardl}} \code{\link{recm}}
 #' @author Kleanthis Natsiopoulos, \email{klnatsio@@gmail.com}
@@ -116,7 +116,11 @@ uecm.ardl <- function(object, ...) {
     uecm_model$parsed_formula <- parsed_formula
     uecm_model$full_formula <- full_formula
 
-    attr(uecm_model, "class") <- c(class(uecm_model), "uecm")
+    uecm_model <- structure(
+        uecm_model,
+        class = c("uecm", class(uecm_model))
+    )
+
 
     return(uecm_model)
 }
@@ -157,7 +161,10 @@ uecm.default <- function(formula, data, order, start = NULL, end = NULL, ...) {
     uecm_model$parsed_formula <- parsed_formula
     uecm_model$full_formula <- full_formula
 
-    attr(uecm_model, "class") <- c(class(uecm_model), "uecm")
+    uecm_model <- structure(
+        uecm_model,
+        class = c("uecm", class(uecm_model))
+    )
 
     return(uecm_model)
 }

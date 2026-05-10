@@ -2,7 +2,6 @@
 % Please edit documentation in R/ardl-package.R
 \docType{package}
 \name{ARDL-package}
-\alias{ARDL}
 \alias{ARDL-package}
 \title{ARDL: ARDL, ECM and Bounds-Test for Cointegration}
 \description{
@@ -23,6 +22,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Kleanthis Natsiopoulos \email{klnatsio@gmail.com} (\href{https://orcid.org/0000-0003-1180-2984}{ORCID})
   \item Nickolaos Tzeremes \email{bus9nt@econ.uth.gr} (\href{https://orcid.org/0000-0002-6938-3404}{ORCID})
 }
 

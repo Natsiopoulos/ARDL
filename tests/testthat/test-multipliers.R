@@ -137,6 +137,16 @@ test_that("equal results with ardl or uecm input", {
     expect_equal(multipliers(ardl_model_ct, type = 2), multipliers(uecm(ardl_model_ct), type = 2))
 })
 
+test_that("correct results when input is uecm, type=0 and there is a 0 order", {
+#Ensure that the results are correct when the input is uecm and the order includes a 0
+uecm_model_0 <- uecm(w ~ Prod + UR + Wedge + Union + trend(w) | D7475 + D7579,
+                     data = PSS2001, start = c(1972, 01),
+                     order=c(6,1,0,4,0))
+ardl_model_0 <- ardl(uecm_model_0)
+
+expect_equal(multipliers(uecm_model_0, type = "sr"), multipliers(ardl_model_0, type = "sr"))
+})
+
 test_that("wrong type causes expected error", {
     ardl_model <- ardl(w ~ Prod + UR + Wedge + Union | D7475 + D7579,
                        data = PSS2001, start = c(1972, 01),

@@ -15,8 +15,8 @@ delta_method(object, vcov_matrix = NULL)
 \arguments{
 \item{object}{An object of \code{\link[base]{class}} 'ardl' or 'uecm'.}
 
-\item{vcov_matrix}{The estimated covariance matrix of the random variable
-that the transformation function uses to estimate the standard errors (and
+\item{vcov_matrix}{The estimated covariance matrix of the parameter estimates.
+Used by the transformation function to estimate the standard errors (and
 so the t-statistics and p-values) of the multipliers. The default is
 \code{vcov(object)} (when \code{vcov_matrix = NULL}), but other estimations
 of the covariance matrix of the regression's estimated coefficients can
