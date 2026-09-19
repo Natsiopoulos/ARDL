@@ -1,3 +1,13 @@
+# ARDL 0.2.6
+
+### Bug fix
+
+* When `uecm` was used as an input in `multipliers()`, the SEs of the delay 
+multipliers were calculated based on the `ardl` structure but using the uecm's
+vcov.
+
+---
+
 # ARDL 0.2.5
 
 ### New features

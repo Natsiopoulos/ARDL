@@ -310,11 +310,14 @@ multipliers.uecm <- function(object, type = "lr", vcov_matrix = NULL, se = FALSE
         stop("'type' should be one of 'lr', 'sr' or a number between 0 and 200", call. = FALSE)
     }
 
-    if (is.null(vcov_matrix)) vcov_matrix <- stats::vcov(object)
-
     if (type %in% 1:200) {
-        return(multipliers(object = ardl(object), type = type, vcov_matrix = vcov_matrix, se = se))
+        if (!is.null(vcov_matrix)) {
+            stop("When 'vcov_matrix' is provided and 'type' is a number between 0 and 200, use an ardl class model and it's robust vcov matrix as inputs, instead of a uecm model and it's robust vcov matrix. \n As the two models are equivalent, the results will be the same, that's only for internal consistency reasons.", call. = FALSE)
+        }
+        return(multipliers(object = ardl(object), type = type, vcov_matrix = NULL, se = se))
     }
+
+    if (is.null(vcov_matrix)) vcov_matrix <- stats::vcov(object)
 
     kw <- object$parsed_formula$kw
     objcoef <- object$coefficients
