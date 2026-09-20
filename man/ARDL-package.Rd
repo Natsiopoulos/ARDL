@@ -23,7 +23,12 @@ Useful links:
 Authors:
 \itemize{
   \item Kleanthis Natsiopoulos \email{klnatsio@gmail.com} (\href{https://orcid.org/0000-0003-1180-2984}{ORCID})
-  \item Nickolaos Tzeremes \email{bus9nt@econ.uth.gr} (\href{https://orcid.org/0000-0002-6938-3404}{ORCID})
+  \item Daniel Finnan \email{dan@custom-made.org.uk} (\href{https://orcid.org/0009-0009-7468-5288}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Nickolaos Tzeremes \email{bus9nt@econ.uth.gr} (\href{https://orcid.org/0000-0002-6938-3404}{ORCID}) [thesis advisor]
 }
 
 }

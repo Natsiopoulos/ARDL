@@ -6,6 +6,11 @@
 multipliers were calculated based on the `ardl` structure but using the uecm's
 vcov.
 
+* Reading a `zooreg` object saved as .rds and using it in `bounds_f_test()` in a
+fresh R session, was producing an error when no other related function had ran
+in this session. Running it a second time was working.
+(issue #29)
+
 ---
 
 # ARDL 0.2.5

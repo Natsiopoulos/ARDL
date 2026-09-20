@@ -99,6 +99,7 @@ uecm.ardl <- function(object, ...) {
     order <- object$order
     data <- object$data
 
+    loadNamespace("dynlm") #Read dates correctly in a corner case. See issue #29
     start <- start(object)
     end <- end(object)
 

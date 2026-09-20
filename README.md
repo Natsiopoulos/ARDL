@@ -279,7 +279,7 @@ mult15 <- multipliers(ardl_3132, type = 15, se = TRUE)
 plot_delay(mult15, interval = 0.95)
 ```
 
-<img src="man/figures/README-delay-multipliers-1.png" width="100%" />
+<img src="man/figures/README-delay-multipliers-1.png" alt="" width="100%" />
 
 Now let’s graphically check the estimated long-run relationship
 (cointegrating equation) against the dependent variable `LRM`.
@@ -292,7 +292,7 @@ ce <- coint_eq(ardl_3132, case = 2)
 plot_lr(ardl_3132, coint_eq = ce, show.legend = TRUE)
 ```
 
-<img src="man/figures/README-lr-plot-1.png" width="100%" />
+<img src="man/figures/README-lr-plot-1.png" alt="" width="100%" />
 
 Forecasting using an `ardl` model is simple with the `predict()`
 function, which dispatches to `predict.ardl()`, a method created
@@ -301,7 +301,6 @@ specifically for these models in this package.
 ``` r
 #load zoo to create the zoo dataset
 library(zoo)
-#> Warning: package 'zoo' was built under R version 4.4.3
 #> 
 #> Attaching package: 'zoo'
 #> The following objects are masked from 'package:base':
@@ -320,7 +319,7 @@ plot(denmark$LRM, xlim = c(start(denmark), end(predicted_values)))
 lines(predicted_values, col = "red")
 ```
 
-<img src="man/figures/README-Predict-ardl-1.png" width="100%" />
+<img src="man/figures/README-Predict-ardl-1.png" alt="" width="100%" />
 
 ## Ease of use
 
@@ -338,7 +337,6 @@ transformation to behave like time-series)*
 
 ``` r
 library(dynlm)
-#> Warning: package 'dynlm' was built under R version 4.4.3
 
 dynlm_ardl_model <- dynlm(LRM ~ L(LRM, 1) + L(LRM, 2) + L(LRM, 3) + LRY + L(LRY, 1) +
                            IBO + L(IBO, 1) + L(IBO, 2) + L(IBO, 3) +
