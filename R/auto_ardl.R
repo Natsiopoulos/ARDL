@@ -201,7 +201,7 @@
 
 auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order = NULL,
                       selection = "AIC", selection_minmax = c("min", "max"),
-                      grid = FALSE, search_type = c("horizontal", "vertical"),
+                      grid = FALSE, parallel = 0, search_type = c("horizontal", "vertical"),
                       start = NULL, end = NULL, ...) {
 
     if (!any(c("ts", "zoo", "zooreg") %in% class(data))) {
@@ -216,7 +216,7 @@ auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order
                              var_names = parsed_formula$z_part$var, kz = parsed_formula$kz)
     fixed_order <- parse_order(orders = fixed_order, order_name = "fixed_order",
                                var_names = parsed_formula$z_part$var, kz = parsed_formula$kz, restriction = -1)
-    if (!missing(starting_order)) {
+    if (!is.null(starting_order)) {
         starting_order_null <- FALSE
         if (starting_order[1] < 1) { stop("In 'starting_order', the starting order of p (first argument) can't be less than 1.", call. = FALSE)}
         starting_order <- parse_order(orders = starting_order, order_name = "starting_order",
@@ -228,6 +228,69 @@ auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order
     if (any(fixed_order > max_order)) {stop("'fixed_order' can't be greater than 'max_order'.", call. = FALSE)}
     start_sample <- start
     end_sample <- end
+
+    # parallel processing
+    if (parallel != 0 && grid == TRUE) {
+        parallel_position <- which.max(replace(max_order, fixed_order != -1, -Inf))
+        kz_list <- parse_formula(formula = formula, colnames_data = colnames(data))$kz
+        if (length(fixed_order) == 1 && fixed_order == -1) {
+            new_fixed_order_list <- as.list(rep(-1, kz_list))
+        } else {
+            new_fixed_order_list <- as.list(fixed_order)
+        }
+        new_fixed_order_list[[parallel_position]] <- quote(parallel_order)
+
+        n_parallel <- max_order[parallel_position]
+        avail_cores <- parallel::detectCores()
+        selected_cores <- min(parallel, avail_cores, n_parallel)
+        if (FALSE){ #(.Platform$OS.type == "windows") {
+            parallel_auto_ardl <- function(parallel_order, new_fixed_order_list, parallel_position,
+                                           formula, data, max_order, fixed_order, starting_order, selection, selection_minmax,
+                                           grid, parallel, search_type, start, end) {
+                current_list <- new_fixed_order_list
+                current_list[[parallel_position]] <- parallel_order
+                new_fixed_order <- unlist(current_list)
+                auto_ardl(formula = formula, data = data, max_order = max_order, fixed_order = new_fixed_order,
+                          starting_order = starting_order, selection = selection, selection_minmax = selection_minmax,
+                          grid = grid, parallel = 0, search_type = search_type, start = start, end = end) #, ...
+            }
+            cl <- parallel::makeCluster(selected_cores)
+            parallel::clusterEvalQ(cl, library(ARDL))
+            auto_list <- parallel::parLapply(cl, 1:n_parallel, function(parallel_order) {
+                parallel_auto_ardl(parallel_order, new_fixed_order_list = new_fixed_order_list, parallel_position = parallel_position,
+                                   formula = formula, data = data, max_order = max_order, fixed_order = fixed_order, starting_order = starting_order,
+                                   selection = selection, selection_minmax = selection_minmax, grid = grid, parallel = parallel,
+                                   search_type = search_type, start = start, end = end)
+            })
+            parallel::stopCluster(cl)
+        } else if (.Platform$OS.type == "unix") {
+            parallel_auto_ardl <- function(parallel_order, new_fixed_order_list, parallel_position) {
+                current_list <- new_fixed_order_list
+                current_list[[parallel_position]] <- parallel_order
+                new_fixed_order <- unlist(current_list)
+                auto_ardl(formula = formula, data = data, max_order = max_order, fixed_order = new_fixed_order,
+                          starting_order = starting_order, selection = selection, selection_minmax = selection_minmax,
+                          grid = grid, parallel = 0, search_type = search_type, start = start, end = end, ...)
+            }
+            auto_list <- parallel::mclapply(1:n_parallel, function(parallel_order) {
+                parallel_auto_ardl(parallel_order, new_fixed_order_list = new_fixed_order_list, parallel_position = parallel_position)
+            }, mc.cores = selected_cores)
+        }
+
+        top_orders_all <- data.frame()
+        for (parallel_order in 1:n_parallel) {
+            top_orders_all <- rbind(top_orders_all, auto_list[[parallel_order]]$top_orders)
+        }
+        full_order <- order(top_orders_all[,ncol(top_orders_all)], decreasing = ifelse(selection_minmax == "min", FALSE, TRUE))
+        which_set <- ceiling(full_order[1]/nrow(auto_list[[1]]$top_orders))
+        top_orders_all <- top_orders_all[full_order, ]
+        rownames(top_orders_all) <- NULL
+        return_list <- list(best_model = auto_list[[which_set]]$best_model,
+                            best_order = auto_list[[which_set]]$best_order,
+                            top_orders = top_orders_all[1:20,])
+
+        return(return_list)
+    }
 
     # acceptable orders for each p and q
     order_list <- lapply(seq_len(length(max_order)), function(i) {
