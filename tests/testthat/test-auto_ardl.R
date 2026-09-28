@@ -137,3 +137,22 @@ test_that("fixed_order > max_order causes expected error", {
                            starting_order = 5),
                  "'fixed_order' can't be greater than 'max_order'.")
 })
+
+test_that("parallel grid matches sequential grid (q split includes order 0)", {
+    f <- LRM ~ LRY + IBO + IDE
+    mo <- c(2, 3, 1, 1)
+    seq_res <- auto_ardl(f, data = denmark, max_order = mo, grid = TRUE, parallel = 0)
+    par_res <- auto_ardl(f, data = denmark, max_order = mo, grid = TRUE, parallel = 2)
+    expect_equal(par_res$best_order, seq_res$best_order)
+})
+
+test_that("parallel grid matches sequential grid with starting_order on p", {
+    f <- LRM ~ LRY + IBO + IDE
+    mo <- c(2, 3, 1, 1)
+    so <- c(2, 0, 0, 0)
+    seq_res <- auto_ardl(f, data = denmark, max_order = mo, starting_order = so,
+                         grid = TRUE, parallel = 0)
+    par_res <- auto_ardl(f, data = denmark, max_order = mo, starting_order = so,
+                         grid = TRUE, parallel = 2)
+    expect_equal(par_res$best_order, seq_res$best_order)
+})

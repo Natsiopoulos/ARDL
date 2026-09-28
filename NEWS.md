@@ -1,5 +1,14 @@
 # ARDL 0.2.6
 
+### New features
+
+* `auto_ardl()` has a new argument `parallel` for running the global grid search
+(`grid = TRUE`) on multiple processors. It is an integer (default `0`, i.e. no
+parallel processing); positive values request the number of cores to use, up to
+the number of parallel tasks and the cores detected on the machine. On Unix
+(Linux and macOS) workers use forking; on Windows, separate R sessions are used
+via sockets.
+
 ### Bug fix
 
 * When `uecm` was used as an input in `multipliers()`, the SEs of the delay 

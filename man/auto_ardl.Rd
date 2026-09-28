@@ -13,6 +13,7 @@ auto_ardl(
   selection = "AIC",
   selection_minmax = c("min", "max"),
   grid = FALSE,
+  parallel = 0,
   search_type = c("horizontal", "vertical"),
   start = NULL,
   end = NULL,
@@ -77,7 +78,17 @@ corresponding to different ARDL orders. If \code{TRUE}, the whole set of
 all possible ARDL models (accounting for constraints) will be evaluated.
 Note that this method can be very time-consuming in case that
 \code{max_order} is big and there are many independent variables that
-create a very big number of possible combinations.}
+create a very big number of possible combinations. For parallel evaluation
+of the grid, see \code{parallel} and 'Parallel grid search' below.}
+
+\item{parallel}{An integer for parallel processing during a global grid
+search. Default is 0 (sequential evaluation). A positive integer runs the
+grid in parallel on several processors; higher values usually reduce run
+time up to a limit (see 'Parallel grid search' below). Only allowed when
+\code{grid = TRUE}. Using every core on the machine can make the system
+unresponsive and, in extreme cases, destabilize R; leaving one or two
+cores free is advised (check with \code{parallel::detectCores()} or
+\code{parallelly::availableCores()}).}
 
 \item{search_type}{A character string describing the search type. If
 "horizontal" (default), the searching algorithm increases or decreases by 1
@@ -134,6 +145,30 @@ criterion, taking into account the constraints provided.
   }
 }
 
+\section{Parallel grid search}{
+ With \code{parallel > 0} and \code{grid = TRUE},
+  the same models are evaluated as with a sequential grid search; only the
+  work is distributed across workers and the top 20 lists are merged and
+  re-ranked by the selection criterion.
+
+  The search is split along one lag dimension. Among variables not fixed in
+  \code{fixed_order}, the dimension with the most grid values is chosen (the
+  first in case of a tie): \eqn{p} uses \code{max_order[1]} values from 1 to
+  the maximum, or from \code{starting_order[1]} to the maximum when
+  \code{starting_order} is set; each \eqn{q} uses \code{max_order + 1}
+  values from 0 to the maximum. For each of those values, a full grid search
+  is run with that order held fixed. For example, if
+  \code{max_order = c(5,4,4,4)} and no orders are fixed, there are five
+  parallel tasks corresponding to \eqn{p = 1, \ldots, 5}.
+
+  Effective cores: the minimum of the requested \code{parallel} value, the
+  number of detected cores, and the number of parallel tasks on the split
+  dimension.
+
+  On Unix (Linux and macOS) workers use forking; on Windows, separate R
+  sessions communicate via sockets.
+}
+
 \examples{
 data(denmark)
 
@@ -159,6 +194,13 @@ model1_h$top_orders
 # It may take more than 10 seconds
 model_grid <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
                         max_order = c(5,4,4,4), grid = TRUE)
+
+## Parallel grid search ------------------------------------------------
+
+# Same global search using 2 cores (Unix: fork; Windows: cluster)
+model_grid_par <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
+                            max_order = c(5,4,4,4), grid = TRUE, parallel = 2)
+model_grid_par$top_orders
 
 ## Different selection criteria ----------------------------------------
 

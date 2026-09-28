@@ -48,7 +48,16 @@
 #'   all possible ARDL models (accounting for constraints) will be evaluated.
 #'   Note that this method can be very time-consuming in case that
 #'   \code{max_order} is big and there are many independent variables that
-#'   create a very big number of possible combinations.
+#'   create a very big number of possible combinations. For parallel evaluation
+#'   of the grid, see \code{parallel} and 'Parallel grid search' below.
+#' @param parallel An integer for parallel processing during a global grid
+#'   search. Default is 0 (sequential evaluation). A positive integer runs the
+#'   grid in parallel on several processors; higher values usually reduce run
+#'   time up to a limit (see 'Parallel grid search' below). Only allowed when
+#'   \code{grid = TRUE}. Using every core on the machine can make the system
+#'   unresponsive and, in extreme cases, destabilize R; leaving one or two
+#'   cores free is advised (check with \code{parallel::detectCores()} or
+#'   \code{parallelly::availableCores()}).
 #' @param search_type A character string describing the search type. If
 #'   "horizontal" (default), the searching algorithm increases or decreases by 1
 #'   the order of each variable in each iteration. When the order of the last
@@ -90,6 +99,28 @@
 #'   P \tab 0 \tab 1 \tab 2
 #'   }
 #'
+#' @section Parallel grid search: With \code{parallel > 0} and \code{grid = TRUE},
+#'   the same models are evaluated as with a sequential grid search; only the
+#'   work is distributed across workers and the top 20 lists are merged and
+#'   re-ranked by the selection criterion.
+#'
+#'   The search is split along one lag dimension. Among variables not fixed in
+#'   \code{fixed_order}, the dimension with the most grid values is chosen (the
+#'   first in case of a tie): \eqn{p} uses \code{max_order[1]} values from 1 to
+#'   the maximum, or from \code{starting_order[1]} to the maximum when
+#'   \code{starting_order} is set; each \eqn{q} uses \code{max_order + 1}
+#'   values from 0 to the maximum. For each of those values, a full grid search
+#'   is run with that order held fixed. For example, if
+#'   \code{max_order = c(5,4,4,4)} and no orders are fixed, there are five
+#'   parallel tasks corresponding to \eqn{p = 1, \ldots, 5}.
+#'
+#'   Effective cores: the minimum of the requested \code{parallel} value, the
+#'   number of detected cores, and the number of parallel tasks on the split
+#'   dimension.
+#'
+#'   On Unix (Linux and macOS) workers use forking; on Windows, separate R
+#'   sessions communicate via sockets.
+#'
 #' @seealso \code{\link{ardl}}
 #' @author Kleanthis Natsiopoulos, \email{klnatsio@@gmail.com}
 #' @keywords optimize models ts
@@ -119,6 +150,13 @@
 #' # It may take more than 10 seconds
 #' model_grid <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
 #'                         max_order = c(5,4,4,4), grid = TRUE)
+#'
+#' ## Parallel grid search ------------------------------------------------
+#'
+#' # Same global search using 2 cores (Unix: fork; Windows: cluster)
+#' model_grid_par <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
+#'                             max_order = c(5,4,4,4), grid = TRUE, parallel = 2)
+#' model_grid_par$top_orders
 #'
 #' ## Different selection criteria ----------------------------------------
 #'
@@ -226,12 +264,32 @@ auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order
         starting_order_null <- TRUE
     }
     if (any(fixed_order > max_order)) {stop("'fixed_order' can't be greater than 'max_order'.", call. = FALSE)}
+    if (length(parallel) != 1) {
+        stop("'parallel' must be a single value.", call. = FALSE)
+    }
+    if (anyNA(parallel) || !is.numeric(parallel) || parallel < 0 || parallel != floor(parallel)) {
+        stop("'parallel' must be 0 (default) or a positive integer.", call. = FALSE)
+    }
+    if (parallel > 0 && !isTRUE(grid)) {
+        stop("'parallel' is only allowed when grid = TRUE.", call. = FALSE)
+    }
     start_sample <- start
     end_sample <- end
 
     # parallel processing
-    if (parallel != 0 && grid == TRUE) {
-        parallel_position <- which.max(replace(max_order, fixed_order != -1, -Inf))
+    if (parallel > 0 && isTRUE(grid)) {
+        parallel_slices <- vapply(seq_along(max_order), function(i) {
+            if (i == 1L) {
+                if (is.null(starting_order)) {
+                    max_order[i]
+                } else {
+                    max_order[i] - starting_order[1] + 1L
+                }
+            } else {
+                max_order[i] + 1L
+            }
+        }, numeric(1))
+        parallel_position <- which.max(replace(parallel_slices, fixed_order != -1, -Inf))
         kz_list <- parse_formula(formula = formula, colnames_data = colnames(data))$kz
         if (length(fixed_order) == 1 && fixed_order == -1) {
             new_fixed_order_list <- as.list(rep(-1, kz_list))
@@ -240,28 +298,60 @@ auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order
         }
         new_fixed_order_list[[parallel_position]] <- quote(parallel_order)
 
-        n_parallel <- max_order[parallel_position]
+        if (parallel_position == 1L) {
+            if (is.null(starting_order)) {
+                parallel_orders <- seq_len(max_order[1])
+            } else {
+                parallel_orders <- starting_order[1]:max_order[1]
+            }
+        } else {
+            parallel_orders <- 0:max_order[parallel_position]
+        }
+        n_parallel_tasks <- length(parallel_orders)
         avail_cores <- parallel::detectCores()
-        selected_cores <- min(parallel, avail_cores, n_parallel)
-        if (FALSE){ #(.Platform$OS.type == "windows") {
-            parallel_auto_ardl <- function(parallel_order, new_fixed_order_list, parallel_position,
-                                           formula, data, max_order, fixed_order, starting_order, selection, selection_minmax,
-                                           grid, parallel, search_type, start, end) {
+        selected_cores <- min(parallel, avail_cores, n_parallel_tasks)
+        if (parallel >= avail_cores) {
+            cores_msg <- paste0(
+                "'parallel' (", parallel, ") is not less than the number of detected cores (",
+                avail_cores, "). Using all (or more) cores can make the system unresponsive ",
+                "and may destabilize R. Consider setting 'parallel' to at most ",
+                max(1L, avail_cores - 1L), " and leaving 1-2 cores free."
+            )
+            if (interactive()) {
+                ans <- readline(paste0(cores_msg, " Continue anyway? [y/N]: "))
+                if (!tolower(substr(trimws(ans), 1, 1)) %in% c("y")) {
+                    stop("Parallel grid search aborted.", call. = FALSE)
+                }
+            } else {
+                warning(cores_msg, call. = FALSE)
+            }
+        }
+        if (.Platform$OS.type == "windows") {
+            dots <- list(...)
+            worker <- function(parallel_order, parallel_position, new_fixed_order_list,
+                               formula, data, max_order, starting_order, selection,
+                               selection_minmax, search_type, start, end, dots) {
                 current_list <- new_fixed_order_list
                 current_list[[parallel_position]] <- parallel_order
                 new_fixed_order <- unlist(current_list)
-                auto_ardl(formula = formula, data = data, max_order = max_order, fixed_order = new_fixed_order,
-                          starting_order = starting_order, selection = selection, selection_minmax = selection_minmax,
-                          grid = grid, parallel = 0, search_type = search_type, start = start, end = end) #, ...
+                args <- list(
+                    formula = formula, data = data, max_order = max_order,
+                    fixed_order = new_fixed_order, selection = selection,
+                    selection_minmax = selection_minmax, grid = TRUE, parallel = 0,
+                    search_type = search_type, start = start, end = end
+                    )
+                do.call(auto_ardl, c(args, dots))
             }
+            environment(worker) <- .GlobalEnv
             cl <- parallel::makeCluster(selected_cores)
             parallel::clusterEvalQ(cl, library(ARDL))
-            auto_list <- parallel::parLapply(cl, 1:n_parallel, function(parallel_order) {
-                parallel_auto_ardl(parallel_order, new_fixed_order_list = new_fixed_order_list, parallel_position = parallel_position,
-                                   formula = formula, data = data, max_order = max_order, fixed_order = fixed_order, starting_order = starting_order,
-                                   selection = selection, selection_minmax = selection_minmax, grid = grid, parallel = parallel,
-                                   search_type = search_type, start = start, end = end)
-            })
+            auto_list <- parallel::parLapply(
+                cl, parallel_orders, worker,
+                parallel_position = parallel_position, new_fixed_order_list = new_fixed_order_list,
+                formula = formula, data = data, max_order = max_order, starting_order = starting_order,
+                selection = selection, selection_minmax = selection_minmax, search_type = search_type,
+                start = start, end = end, dots = dots
+            )
             parallel::stopCluster(cl)
         } else if (.Platform$OS.type == "unix") {
             parallel_auto_ardl <- function(parallel_order, new_fixed_order_list, parallel_position) {
@@ -272,14 +362,16 @@ auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order
                           starting_order = starting_order, selection = selection, selection_minmax = selection_minmax,
                           grid = grid, parallel = 0, search_type = search_type, start = start, end = end, ...)
             }
-            auto_list <- parallel::mclapply(1:n_parallel, function(parallel_order) {
+            auto_list <- parallel::mclapply(parallel_orders, function(parallel_order) {
                 parallel_auto_ardl(parallel_order, new_fixed_order_list = new_fixed_order_list, parallel_position = parallel_position)
             }, mc.cores = selected_cores)
+        } else {
+            stop("Parallel grid search is not supported on this platform.", call. = FALSE)
         }
 
         top_orders_all <- data.frame()
-        for (parallel_order in 1:n_parallel) {
-            top_orders_all <- rbind(top_orders_all, auto_list[[parallel_order]]$top_orders)
+        for (i in seq_along(auto_list)) {
+            top_orders_all <- rbind(top_orders_all, auto_list[[i]]$top_orders)
         }
         full_order <- order(top_orders_all[,ncol(top_orders_all)], decreasing = ifelse(selection_minmax == "min", FALSE, TRUE))
         which_set <- ceiling(full_order[1]/nrow(auto_list[[1]]$top_orders))
