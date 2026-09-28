@@ -170,3 +170,12 @@ test_that("wrong type causes expected error", {
     expect_error(multipliers(uecm(ardl_model), type = "aa"),
                  "'type' should be one of 'lr', 'sr' or a number between 0 and 200")
 })
+
+test_that("error on use of uecm input and supplied vcov matrix", {
+  library(sandwich)
+  ardl_model <- ardl(w ~ Prod + UR + Wedge + Union | D7475 + D7579,
+                     data = PSS2001, start = c(1972, 01),
+                     order=c(6,1,5,4,5))
+  expect_error(multipliers(uecm(ardl_model), type = 50, vcov_matrix = vcovHC(uecm(ardl_model), type = "HC3"), se = TRUE),
+               "When 'vcov_matrix' is provided and 'type' is a number between 0 and 200, use an ardl class model and it's robust vcov matrix as inputs, instead of a uecm model and it's robust vcov matrix. \n As the two models are equivalent, the results will be the same, that's only for internal consistency reasons.")
+})
