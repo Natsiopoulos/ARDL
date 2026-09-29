@@ -15,6 +15,7 @@ auto_ardl(
   grid = FALSE,
   parallel = 0,
   search_type = c("horizontal", "vertical"),
+  balanced_sample = FALSE,
   start = NULL,
   end = NULL,
   ...
@@ -99,6 +100,15 @@ by 1 the order of a variable until it converges. Then it continues the same
 for the next variable. The two options result to very similar top orders.
 The default ("horizontal"), sometimes is a little more accurate, but the
 "vertical" is almost 2 times faster. Not applicable if \code{grid = TRUE}.}
+
+\item{balanced_sample}{If \code{FALSE} (default), each candidate model is
+estimated on the sample implied by its own lags, so a shorter order uses
+more observations than a longer one. If \code{TRUE}, every candidate is
+estimated on the same sample: the start is moved forward by the longest
+lag allowed in the search (the corresponding \code{max_order}, or
+\code{fixed_order} where that lag is held fixed). If \code{start} is also
+supplied, the later of the two dates is used: the one implied by
+\code{balanced_sample} and the one given in \code{start}.}
 
 \item{start}{Start of the time period which should be used for fitting the
 model.}
@@ -279,6 +289,19 @@ model1_lrm3_ibo2$top_orders
 model1_76q1 <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
                         max_order = c(5,4,4,4), start = "1976 Q1")
 start(model1_76q1$best_model)
+
+## Balanced sample -----------------------------------------------------
+
+# Every candidate uses the sample implied by the longest lag in max_order
+# (here 3). The estimation starts at 1974 Q4
+model_bal <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
+                       max_order = c(3,1,1,1), balanced_sample = TRUE)
+start(model_bal$best_model)
+
+# Without it, the selected shorter order starts earlier (1974 Q2)
+model_unbal <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
+                         max_order = c(3,1,1,1))
+start(model_unbal$best_model)
 }
 }
 \seealso{

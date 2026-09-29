@@ -130,6 +130,49 @@ test_that("starting_order > max_order causes expected error", {
                  "'starting_order' can't be greater than 'max_order'.")
 })
 
+test_that("balanced_sample aligns the estimation start with the longest lag", {
+    ref <- ardl(LRM ~ LRY + IBO + IDE, data = denmark, order = c(3,1,1,1))
+    bal <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
+                     max_order = c(3,1,1,1), balanced_sample = TRUE)
+    expect_equal(start(bal$best_model), start(ref))
+    expect_equal(nobs(bal$best_model), nobs(ref))
+
+    # starting_order does not shorten the burn-in
+    bal_so <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
+                        max_order = c(4,1,1,1), starting_order = c(2,0,0,0),
+                        balanced_sample = TRUE)
+    ref_so <- ardl(LRM ~ LRY + IBO + IDE, data = denmark, order = c(4,1,1,1))
+    expect_equal(start(bal_so$best_model), start(ref_so))
+
+    # fixed p does not ignore a longer q
+    bal_fx <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
+                        max_order = c(5,4,1,1), fixed_order = c(1,-1,-1,-1),
+                        balanced_sample = TRUE)
+    ref_fx <- ardl(LRM ~ LRY + IBO + IDE, data = denmark, order = c(1,4,1,1))
+    expect_equal(start(bal_fx$best_model), start(ref_fx))
+
+    # an earlier user start is moved forward only when balanced_sample = TRUE
+    # (1974 Q2 is before the longest lag in max_order, which starts at 1974 Q4)
+    early <- "1974 Q2"
+    ub_st <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
+                       max_order = c(3,1,1,1), start = early,
+                       balanced_sample = FALSE)
+    bal_st <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
+                        max_order = c(3,1,1,1), start = early,
+                        balanced_sample = TRUE)
+    expect_equal(start(bal_st$best_model), start(ref))
+    expect_equal(start(ub_st$best_model),
+                 start(ardl(LRM ~ LRY + IBO + IDE, data = denmark,
+                            order = ub_st$best_order, start = early)))
+    expect_false(isTRUE(all.equal(start(ub_st$best_model), start(bal_st$best_model))))
+})
+
+test_that("balanced_sample rejects a sample that is too short", {
+    expect_error(auto_ardl(LRM ~ LRY, data = denmark[1:4, ],
+                           max_order = c(5, 1), balanced_sample = TRUE),
+                 "Not enough observations")
+})
+
 test_that("fixed_order > max_order causes expected error", {
     expect_error(auto_ardl(w ~ Prod + UR + Wedge + Union | D7475 + D7579,
                            data = PSS2001, start = c(1972, 01),

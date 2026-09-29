@@ -9,6 +9,11 @@ the number of parallel tasks and the cores detected on the machine. On Unix
 (Linux and macOS) workers use forking; on Windows, separate R sessions are used
 via sockets.
 
+* `auto_ardl()` has a new argument `balanced_sample` (default `FALSE`). When
+`TRUE`, every candidate model is estimated on the same sample, using the
+longest lag allowed by `max_order` and `fixed_order`. If `start` is also
+supplied, the later of that date and the balanced-sample start is used.
+
 ### Bug fix
 
 * When `uecm` was used as an input in `multipliers()`, the SEs of the delay 

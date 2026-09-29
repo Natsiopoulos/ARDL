@@ -67,6 +67,14 @@
 #'   for the next variable. The two options result to very similar top orders.
 #'   The default ("horizontal"), sometimes is a little more accurate, but the
 #'   "vertical" is almost 2 times faster. Not applicable if \code{grid = TRUE}.
+#' @param balanced_sample If \code{FALSE} (default), each candidate model is
+#'   estimated on the sample implied by its own lags, so a shorter order uses
+#'   more observations than a longer one. If \code{TRUE}, every candidate is
+#'   estimated on the same sample: the start is moved forward by the longest
+#'   lag allowed in the search (the corresponding \code{max_order}, or
+#'   \code{fixed_order} where that lag is held fixed). If \code{start} is also
+#'   supplied, the later of the two dates is used: the one implied by
+#'   \code{balanced_sample} and the one given in \code{start}.
 #' @inheritParams ardl
 #'
 #' @return \code{auto_ardl} returns a list which contains:
@@ -235,12 +243,25 @@
 #' model1_76q1 <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
 #'                         max_order = c(5,4,4,4), start = "1976 Q1")
 #' start(model1_76q1$best_model)
+#'
+#' ## Balanced sample -----------------------------------------------------
+#'
+#' # Every candidate uses the sample implied by the longest lag in max_order
+#' # (here 3). The estimation starts at 1974 Q4
+#' model_bal <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
+#'                        max_order = c(3,1,1,1), balanced_sample = TRUE)
+#' start(model_bal$best_model)
+#'
+#' # Without it, the selected shorter order starts earlier (1974 Q2)
+#' model_unbal <- auto_ardl(LRM ~ LRY + IBO + IDE, data = denmark,
+#'                          max_order = c(3,1,1,1))
+#' start(model_unbal$best_model)
 #' }
 
 auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order = NULL,
                       selection = "AIC", selection_minmax = c("min", "max"),
                       grid = FALSE, parallel = 0, search_type = c("horizontal", "vertical"),
-                      start = NULL, end = NULL, ...) {
+                      balanced_sample = FALSE, start = NULL, end = NULL, ...) {
 
     if (!any(c("ts", "zoo", "zooreg") %in% class(data))) {
         data <- stats::ts(data, start = 1, end = nrow(data), frequency = 1)
@@ -273,8 +294,15 @@ auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order
     if (parallel > 0 && !isTRUE(grid)) {
         stop("'parallel' is only allowed when grid = TRUE.", call. = FALSE)
     }
+    if (length(balanced_sample) != 1 || is.na(balanced_sample) || !is.logical(balanced_sample)) {
+        stop("'balanced_sample' must be either TRUE or FALSE.", call. = FALSE)
+    }
     start_sample <- start
     end_sample <- end
+    if (isTRUE(balanced_sample)) {
+        order_caps <- ifelse(fixed_order == -1, max_order, fixed_order)
+        start_sample <- balanced_estimation_start(data, order_caps, start = start, end = end)
+    }
 
     # parallel processing
     if (parallel > 0 && isTRUE(grid)) {
@@ -350,7 +378,7 @@ auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order
                 parallel_position = parallel_position, new_fixed_order_list = new_fixed_order_list,
                 formula = formula, data = data, max_order = max_order, starting_order = starting_order,
                 selection = selection, selection_minmax = selection_minmax, search_type = search_type,
-                start = start, end = end, dots = dots
+                start = start_sample, end = end, dots = dots
             )
             parallel::stopCluster(cl)
         } else if (.Platform$OS.type == "unix") {
@@ -360,7 +388,8 @@ auto_ardl <- function(formula, data, max_order, fixed_order = -1, starting_order
                 new_fixed_order <- unlist(current_list)
                 auto_ardl(formula = formula, data = data, max_order = max_order, fixed_order = new_fixed_order,
                           starting_order = starting_order, selection = selection, selection_minmax = selection_minmax,
-                          grid = grid, parallel = 0, search_type = search_type, start = start, end = end, ...)
+                          grid = grid, parallel = 0, search_type = search_type,
+                          balanced_sample = FALSE, start = start_sample, end = end, ...)
             }
             auto_list <- parallel::mclapply(parallel_orders, function(parallel_order) {
                 parallel_auto_ardl(parallel_order, new_fixed_order_list = new_fixed_order_list, parallel_position = parallel_position)
